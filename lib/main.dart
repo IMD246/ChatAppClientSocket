@@ -8,6 +8,7 @@ import 'package:testsocketchatapp/data/models/environment.dart';
 import 'package:testsocketchatapp/data/repositories/auth_repository.dart';
 import 'package:testsocketchatapp/presentation/extensions/google_sign_in_extension.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
 
 void main() {
@@ -37,11 +38,12 @@ class MyApp extends StatelessWidget {
               builder: (context, child) {
                 return BlocProvider<AuthBloc>(
                   create: (context) => AuthBloc(
-                      googleSignInExtension: GoogleSignInExtension(),
-                      sharedPref: SharedPreferences.getInstance(),
-                      authRepository: AuthRepository(
-                        baseUrl: value.env.baseURL,
-                      ),),
+                    googleSignInExtension: GoogleSignInExtension(),
+                    sharedPref: SharedPreferences.getInstance(),
+                    authRepository: AuthRepository(
+                      baseUrl: value.env.baseURL,
+                    ),
+                  )..add(AuthEventLoginWithToken()),
                   child: const App(),
                 );
               },

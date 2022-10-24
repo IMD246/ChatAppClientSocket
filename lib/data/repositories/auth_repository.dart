@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:testsocketchatapp/data/interfaces/i_service_api.dart';
 import 'package:testsocketchatapp/data/models/base_response.dart';
+import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/network/base_api_services.dart';
 import 'package:testsocketchatapp/data/network/network_api_services.dart';
 
@@ -26,8 +27,8 @@ class AuthRepository implements IServiceAPI {
   }
 
   @override
-  convertDynamicToObject(value) {
-    throw UnimplementedError();
+  UserInformation convertDynamicToObject(value) {
+    return UserInformation.fromJson(value);
   }
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
-import 'package:flutter_basic_utilities/helper/loading/loading_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_state.dart';
@@ -15,9 +14,9 @@ class App extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.isLoading) {
-          LoadingScreen().show(context: context, text: state.textLoading);
+          ShowLoadingParallelScreen().showLoading(context: context);
         } else {
-          LoadingScreen().hide();
+          ShowLoadingParallelScreen().hideLoading();
         }
       },
       builder: (context, state) {

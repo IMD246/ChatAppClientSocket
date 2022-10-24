@@ -24,6 +24,59 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }) : super(
           AuthStateLoading(isLoading: false),
         ) {
+    on<AuthEventLoginWithToken>(
+      (event, emit) async {
+        try {
+          emit(
+            AuthStateLoggedOut(
+              isLoading: true,
+            ),
+          );
+          final pref = await sharedPref;
+          final token = pref.getString("token");
+          if (token == null) {
+            emit(
+              AuthStateLoggedOut(
+                isLoading: false,
+              ),
+            );
+          } else {
+            final checkInfoToken = await authRepository.getData(
+              body: {},
+              urlAPI: authRepository.loginByTokenURL,
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token'
+              },
+            );
+            if (checkInfoToken != null) {
+              final userInfor =
+                  authRepository.convertDynamicToObject(checkInfoToken.data[0]);
+              emit(
+                AuthStateLoggedIn(
+                  userInformation: userInfor,
+                  isLoading: false,
+                ),
+              );
+            } else {
+              emit(
+                AuthStateLoggedOut(
+                  isLoading: false,
+                ),
+              );
+            }
+          }
+        } catch (e) {
+          log(e.toString());
+          emit(
+            AuthStateLoggedOut(
+              isLoading: false,
+            ),
+          );
+        }
+      },
+    );
     on<AuthEventLogin>(
       (event, emit) async {
         try {
@@ -42,14 +95,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               },
               headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
               },
               urlAPI: authRepository.loginByGoogleURL,
             );
             if (ValidateUtilities.checkBaseResponse(
                 baseResponse: loginResponse)) {
+              final userInfor = authRepository.convertDynamicToObject(
+                loginResponse!.data[0],
+              );
+              final pref = await sharedPref;
+              await pref.setString("token", userInfor.accessToken!.token ?? "");
               emit(
                 AuthStateLoggedIn(
                   isLoading: false,
+                  userInformation: userInfor,
                 ),
               );
             } else {
@@ -59,68 +119,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 ),
               );
             }
-            // if (loginResponse == null) {
-            //   final registerResponse = await authRepository.getData(
-            //     body: {
-            //       "email": googleSignInAcc.email,
-            //       "name": googleSignInAcc.displayName,
-            //       "urlImage": googleSignInAcc.photoUrl,
-            //     },
-            //     headers: {
-            //       'Content-Type': 'application/json',
-            //     },
-            //     urlAPI: authRepository.registerURL,
-            //   );
-            //   if (registerResponse != null) {
-            //     emit(
-            //       AuthStateLoggedIn(
-            //         isLoading: false,
-            //       ),
-            //     );
-            //   } else {
-            //     emit(
-            //       AuthStateLoggedOut(
-            //         isLoading: false,
-            //       ),
-            //     );
-            //   }
-            // }
-            // // if (ValidateUtilities.checkBaseResponse(
-            //     baseResponse: loginResponse)) {
-            //   final registerResponse = await authRepository.getData(
-            //     body: {
-            //       "email": googleSignInAcc.email,
-            //       "name": googleSignInAcc.displayName,
-            //       "urlImage": googleSignInAcc.photoUrl,
-            //     },
-            //     headers: {
-            //       'Content-Type': 'application/json',
-            //     },
-            //     urlAPI: authRepository.registerURL,
-            //   );
-            //   if (ValidateUtilities.checkBaseResponse(
-            //       baseResponse: registerResponse)) {
-            //     final loginResponse = await authRepository.getData(
-            //       body: {
-            //         "email": googleSignInAcc.email,
-            //       },
-            //       headers: {
-            //         'Content-Type': 'application/json',
-            //       },
-            //       urlAPI: authRepository.loginURL,
-            //     );
-            //     if (ValidateUtilities.checkBaseResponse(
-            //         baseResponse: loginResponse)) {
-            //       emit(AuthStateLoggedIn(isLoading: false));
-            //     } else {
-            //       emit(AuthStateLoggedOut(isLoading: false));
-            //     }
-            //   } else {
-            //     emit(AuthStateLoggedOut(isLoading: false));
-            //   }
-            // } else {
-            //   emit(AuthStateLoggedOut(isLoading: false));
-            // }
           } else {
             emit(
               AuthStateLoggedOut(
