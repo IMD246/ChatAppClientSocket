@@ -9,11 +9,7 @@ import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_state
 import 'package:testsocketchatapp/presentation/utilities/validate.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  // {
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json',
-  //       'Authorization': 'Bearer $tokenUser'
-  //     }
+ 
   final Future<SharedPreferences> sharedPref;
   final AuthRepository authRepository;
   final GoogleSignInExtension googleSignInExtension;
@@ -138,18 +134,43 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<AuthEventLogOut>(
       (event, emit) async {
-        emit(
-          AuthStateLoggedOut(
-            isLoading: true,
-          ),
-        );
         try {
-          await googleSignInExtension.logout();
           emit(
-            AuthStateLoggedOut(isLoading: false),
+            AuthStateLoggedIn(
+              userInformation: event.userInformation,
+              isLoading: true,
+            ),
           );
+          final logoutResponse = await authRepository.getData(
+            body: {"userID": event.userInformation.user?.sId},
+            urlAPI: authRepository.logoutURL,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          );
+          log(logoutResponse!.result.toString());
+          if (ValidateUtilities.checkBaseResponse(
+              baseResponse: logoutResponse)) {
+            await googleSignInExtension.logout();
+            emit(
+              AuthStateLoggedOut(isLoading: false),
+            );
+          } else {
+            emit(
+              AuthStateLoggedIn(
+                userInformation: event.userInformation,
+                isLoading: false,
+              ),
+            );
+          }
         } catch (e) {
           log(e.toString());
+          emit(
+            AuthStateLoggedIn(
+              userInformation: event.userInformation,
+              isLoading: false,
+            ),
+          );
         }
       },
     );

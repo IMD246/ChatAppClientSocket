@@ -3,7 +3,7 @@ import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_state.dart';
-import 'package:testsocketchatapp/presentation/views/chat/components/chat_screen.dart';
+import 'package:testsocketchatapp/presentation/views/chat/chat_screen.dart';
 import 'package:testsocketchatapp/presentation/views/welcome/login_screen.dart';
 
 class App extends StatelessWidget {
@@ -25,7 +25,9 @@ class App extends StatelessWidget {
             body: LoginScreen(),
           );
         } else if (state is AuthStateLoggedIn) {
-          return const ChatScreen();
+          return ChatScreen(
+            userInformation: state.userInformation,
+          );
         } else {
           return Scaffold(
             body: textWidget(
