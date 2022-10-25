@@ -9,7 +9,6 @@ import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_state
 import 'package:testsocketchatapp/presentation/utilities/validate.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
- 
   final Future<SharedPreferences> sharedPref;
   final AuthRepository authRepository;
   final GoogleSignInExtension googleSignInExtension;
@@ -47,8 +46,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               },
             );
             if (checkInfoToken != null) {
-              final userInfor =
-                  authRepository.convertDynamicToObject(checkInfoToken.data[0]);
+              final userInfor = authRepository.convertDynamicToObject(
+                checkInfoToken.data[0],
+              );
               emit(
                 AuthStateLoggedIn(
                   userInformation: userInfor,
@@ -148,7 +148,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               'Content-Type': 'application/json',
             },
           );
-          log(logoutResponse!.result.toString());
           if (ValidateUtilities.checkBaseResponse(
               baseResponse: logoutResponse)) {
             await googleSignInExtension.logout();

@@ -12,9 +12,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     required this.chatManager,
   }) : super(LeavedChatState(userInformation: userInformation)) {
     on<InitializeChatEvent>((event, emit) {});
-    on<LogoutChatEvent>(
+    on<GoToSettingChatEvent>(
       (event, emit) {
-        
+        emit(
+          InsideSettingChatState(
+            userInformation: event.userInformation,
+          ),
+        );
+      },
+    );
+    on<BackToHomeChatEvent>(
+      (event, emit) {
+        emit(
+          LeavedChatState(
+            userInformation: event.userInformation,
+          ),
+        );
       },
     );
   }

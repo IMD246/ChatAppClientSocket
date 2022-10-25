@@ -11,3 +11,12 @@ class LeavedChatState extends ChatState {
 }
 
 class JoinedChatState extends ChatState {}
+
+class InsideSettingChatState extends ChatState {
+  final UserInformation userInformation;
+  InsideSettingChatState({required this.userInformation});
+}
+
+class InsideUpdateInfoChatState extends ChatState {}
+
+class InsideUpdateThemeModeChatState extends ChatState {}

@@ -1,18 +1,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/widgets/outline_button_widget.dart';
 import 'package:flutter_basic_utilities/widgets/text_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
-
-import '../../services/bloc/authBloc/auth_bloc.dart';
-import '../../services/bloc/authBloc/auth_event.dart';
+import 'package:testsocketchatapp/presentation/views/chat/components/body_chat_screen.dart';
+import 'package:testsocketchatapp/presentation/views/setting/components/setting_screen.dart';
+import 'package:testsocketchatapp/presentation/views/widgets/animated_switcher_widget.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
@@ -67,31 +65,17 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       child: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
-          if (state is LeavedChatState) {
-            return Scaffold(
-              body: Column(
-                children: [
-                  textWidget(
-                    text: "You logged successfully",
-                  ),
-                  FillOutlineButton(
-                    press: () {
-                      BlocProvider.of<AuthBloc>(context).add(
-                        AuthEventLogOut(
-                          userInformation: state.userInformation,
-                        ),
-                      );
-                    },
-                    text: "Logout",
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Scaffold(
-              body: textWidget(text: "Chưa có màn hình"),
-            );
-          }
+          return AnimatedSwitcherWidget(
+            widget: (state is LeavedChatState)
+                ? BodyChatScreen(userInformation: state.userInformation)
+                : (state is InsideSettingChatState)
+                    ? SettingScreen(
+                        userInformation: state.userInformation,
+                      )
+                    : Scaffold(
+                        body: textWidget(text: "Chưa có màn hình"),
+                      ),
+          );
         },
       ),
     );

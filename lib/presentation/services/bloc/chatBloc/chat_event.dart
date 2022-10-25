@@ -9,9 +9,18 @@ class LeaveChatEvent extends ChatEvent {}
 
 class InitializeChatEvent extends ChatEvent {}
 
-class LogoutChatEvent extends ChatEvent{
+class GoToSettingChatEvent extends ChatEvent {
   final UserInformation userInformation;
-  LogoutChatEvent({
+  GoToSettingChatEvent({
     required this.userInformation,
   });
 }
+class BackToHomeChatEvent extends ChatEvent{
+   final UserInformation userInformation;
+  BackToHomeChatEvent({
+    required this.userInformation,
+  });
+}
+class GoToUpdateInfoChatEvent extends ChatEvent {}
+
+class GoToUpdateThemeModeChatEvent extends ChatEvent {}
