@@ -30,5 +30,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         );
       },
     );
+    on<GoToSearchFriendChatEvent>(
+      (event, emit) {
+        emit(
+          InsideSearchChatState(userInformation: event.userInformation),
+        );
+      },
+    );
   }
 }

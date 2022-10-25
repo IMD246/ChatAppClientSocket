@@ -20,3 +20,8 @@ class InsideSettingChatState extends ChatState {
 class InsideUpdateInfoChatState extends ChatState {}
 
 class InsideUpdateThemeModeChatState extends ChatState {}
+
+class InsideSearchChatState extends ChatState {
+   final UserInformation userInformation;
+  InsideSearchChatState({required this.userInformation});
+}

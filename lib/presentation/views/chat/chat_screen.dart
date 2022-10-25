@@ -9,6 +9,7 @@ import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
 import 'package:testsocketchatapp/presentation/views/chat/components/body_chat_screen.dart';
+import 'package:testsocketchatapp/presentation/views/searchFriend/search_friend_screen.dart';
 import 'package:testsocketchatapp/presentation/views/setting/components/setting_screen.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/animated_switcher_widget.dart';
 
@@ -66,18 +67,26 @@ class _ChatScreenState extends State<ChatScreen> {
       child: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           return AnimatedSwitcherWidget(
-            widget: (state is LeavedChatState)
-                ? BodyChatScreen(userInformation: state.userInformation)
-                : (state is InsideSettingChatState)
-                    ? SettingScreen(
-                        userInformation: state.userInformation,
-                      )
-                    : Scaffold(
-                        body: textWidget(text: "Chưa có màn hình"),
-                      ),
+            widget: dynamicScreen(state),
           );
         },
       ),
     );
+  }
+
+  Widget dynamicScreen(ChatState state) {
+    if (state is LeavedChatState) {
+      return BodyChatScreen(userInformation: state.userInformation);
+    } else if (state is InsideSettingChatState) {
+      return SettingScreen(
+        userInformation: state.userInformation,
+      );
+    } else if (state is InsideSearchChatState) {
+      return SearchFriendScreen(userInformation: state.userInformation,);
+    } else {
+      return Scaffold(
+        body: textWidget(text: "Chưa có màn hình"),
+      );
+    }
   }
 }
