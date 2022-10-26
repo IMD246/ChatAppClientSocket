@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
                     authRepository: AuthRepository(
                       baseUrl: value.env.baseURL,
                     ),
-                  )..add(AuthEventLoginWithToken()),
+                  )..add(AuthEventLoginWithToken(),),
                   child: const App(),
                 );
               },

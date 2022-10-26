@@ -3,7 +3,8 @@ import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
+
+import '../../services/bloc/chatBloc/chat_event.dart';
 
 class SearchFriendScreen extends StatelessWidget {
   const SearchFriendScreen({super.key, required this.userInformation});
@@ -16,7 +17,7 @@ class SearchFriendScreen extends StatelessWidget {
           BackButton(
             onPressed: () {
               BlocProvider.of<ChatBloc>(context).add(
-                BackToHomeChatEvent(
+                BackToWaitingChatEvent(
                   userInformation: userInformation,
                 ),
               );

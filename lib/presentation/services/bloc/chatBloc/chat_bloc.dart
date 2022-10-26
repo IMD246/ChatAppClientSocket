@@ -10,32 +10,31 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc({
     required this.userInformation,
     required this.chatManager,
-  }) : super(LeavedChatState(userInformation: userInformation)) {
+  }) : super(
+          BackToWaitingChatState(
+            userInformation: userInformation,
+          ),
+        ) {
+    chatManager.listenSocket();
+    on<GoToMenuSettingEvent>(
+      (event, emit) {
+        emit(
+          WentToSettingMenuChatState(
+            userInformation: userInformation,
+          ),
+        );
+      },
+    );
+    on<BackToWaitingChatEvent>(
+      (event, emit) {
+        chatManager.socket.emit("hello", "hello1");
+        emit(
+          BackToWaitingChatState(
+            userInformation: userInformation,
+          ),
+        );
+      },
+    );
     on<InitializeChatEvent>((event, emit) {});
-    on<GoToSettingChatEvent>(
-      (event, emit) {
-        emit(
-          InsideSettingChatState(
-            userInformation: event.userInformation,
-          ),
-        );
-      },
-    );
-    on<BackToHomeChatEvent>(
-      (event, emit) {
-        emit(
-          LeavedChatState(
-            userInformation: event.userInformation,
-          ),
-        );
-      },
-    );
-    on<GoToSearchFriendChatEvent>(
-      (event, emit) {
-        emit(
-          InsideSearchChatState(userInformation: event.userInformation),
-        );
-      },
-    );
   }
 }

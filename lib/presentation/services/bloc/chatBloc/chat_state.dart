@@ -1,27 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:testsocketchatapp/data/models/user_info.dart';
 
 abstract class ChatState {}
 
-class LeavedChatState extends ChatState {
+class BackToWaitingChatState extends ChatState {
   final UserInformation userInformation;
-  LeavedChatState({
+  BackToWaitingChatState({
     required this.userInformation,
   });
 }
 
 class JoinedChatState extends ChatState {}
-
-class InsideSettingChatState extends ChatState {
+class WentToSettingMenuChatState extends ChatState{
   final UserInformation userInformation;
-  InsideSettingChatState({required this.userInformation});
-}
-
-class InsideUpdateInfoChatState extends ChatState {}
-
-class InsideUpdateThemeModeChatState extends ChatState {}
-
-class InsideSearchChatState extends ChatState {
-   final UserInformation userInformation;
-  InsideSearchChatState({required this.userInformation});
+  WentToSettingMenuChatState({
+    required this.userInformation,
+  });
 }

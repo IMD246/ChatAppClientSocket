@@ -4,7 +4,12 @@ abstract class ChatEvent {}
 
 class JoinChatEvent extends ChatEvent {}
 
-class LeaveChatEvent extends ChatEvent {}
+class BackToWaitingChatEvent extends ChatEvent {
+  final UserInformation userInformation;
+  BackToWaitingChatEvent({
+    required this.userInformation,
+  });
+}
 
 class InitializeChatEvent extends ChatEvent {}
 
@@ -14,19 +19,9 @@ class GoToSearchFriendChatEvent extends ChatEvent {
     required this.userInformation,
   });
 }
-
-class GoToSettingChatEvent extends ChatEvent {
+class GoToMenuSettingEvent extends ChatEvent {
   final UserInformation userInformation;
-  GoToSettingChatEvent({
+  GoToMenuSettingEvent({
     required this.userInformation,
   });
 }
-class BackToHomeChatEvent extends ChatEvent{
-   final UserInformation userInformation;
-  BackToHomeChatEvent({
-    required this.userInformation,
-  });
-}
-class GoToUpdateInfoChatEvent extends ChatEvent {}
-
-class GoToUpdateThemeModeChatEvent extends ChatEvent {}
