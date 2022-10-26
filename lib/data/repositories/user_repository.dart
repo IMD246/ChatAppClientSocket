@@ -7,7 +7,7 @@ import 'package:testsocketchatapp/data/network/base_api_services.dart';
 import 'package:testsocketchatapp/data/network/network_api_services.dart';
 
 class UserRepository implements IServiceAPI {
-  String registerURL = "auth/register";
+  String registerURL = "user/register";
   String loginURL = "auth/login";
   String loginByTokenURL = "auth/loginwithaccesstoken";
   String logoutURL = "auth/logout";

@@ -25,6 +25,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         );
       },
     );
+    on<GoToSearchFriendChatEvent>(
+      (event, emit) {
+        emit(
+          WentToSearchChatState(
+            userInformation: userInformation,
+          ),
+        );
+      },
+    );
     on<BackToWaitingChatEvent>(
       (event, emit) {
         chatManager.socket.emit("hello", "hello1");

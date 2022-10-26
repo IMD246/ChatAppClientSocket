@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
           },
           child: Center(
             child: Container(
-              width: 180.w,
+              width: 200.w,
               height: 50.h,
               padding: EdgeInsets.symmetric(
                 horizontal: 8.w,

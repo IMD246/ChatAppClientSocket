@@ -16,3 +16,9 @@ class WentToSettingMenuChatState extends ChatState{
     required this.userInformation,
   });
 }
+class WentToSearchChatState extends ChatState{
+  final UserInformation userInformation;
+  WentToSearchChatState({
+    required this.userInformation,
+  });
+}

@@ -41,9 +41,11 @@ class MyApp extends StatelessWidget {
                     googleSignInExtension: GoogleSignInExtension(),
                     sharedPref: SharedPreferences.getInstance(),
                     authRepository: AuthRepository(
-                      baseUrl: value.env.baseURL,
+                      baseUrl: value.env.apiURL,
                     ),
-                  )..add(AuthEventLoginWithToken(),),
+                  )..add(
+                      AuthEventLoginWithToken(),
+                    ),
                   child: const App(),
                 );
               },
