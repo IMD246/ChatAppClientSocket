@@ -31,6 +31,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_basic_utilities:
     git:
       url: https://github.com/IMD246/Flutter_Basic_Utilities.git
@@ -42,6 +44,7 @@ dependencies:
   flutter_screenutil: ^5.5.4
   provider: ^6.0.4
   http: ^0.13.5
+  intl: ^0.17.0
   shared_preferences: ^2.0.15
   socket_io_client: ^2.0.0
   cached_network_image: ^3.2.2
@@ -67,6 +70,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
@@ -14,8 +12,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatManager chatManager;
   final UserInformation userInformation;
   final UserRepository userRepository;
-  final PublishSubject<List<ChatUserAndPresence>> listChatController =
-      PublishSubject<List<ChatUserAndPresence>>();
+  late final BehaviorSubject<List<ChatUserAndPresence>> listChatController =
+      BehaviorSubject<List<ChatUserAndPresence>>();
+  late final $chats = listChatController.stream;
   ChatBloc({
     required this.userInformation,
     required this.chatManager,
@@ -23,7 +22,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }) : super(
           BackToWaitingChatState(
             userInformation: userInformation,
-            chats: PublishSubject<List<ChatUserAndPresence>>(),
+            listChatController: BehaviorSubject<List<ChatUserAndPresence>>(),
           ),
         ) {
     chatManager.listenSocket();
@@ -51,7 +50,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(
           BackToWaitingChatState(
             userInformation: userInformation,
-            chats: listChatController.stream,
+            listChatController: listChatController,
           ),
         );
       },
@@ -72,7 +71,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(
         BackToWaitingChatState(
           userInformation: userInformation,
-          chats: listChatController.stream,
+          listChatController: listChatController,
         ),
       );
     });

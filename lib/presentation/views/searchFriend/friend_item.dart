@@ -3,6 +3,7 @@ import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../data/models/friend.dart';
+import '../widgets/online_icon_widget.dart';
 
 class FriendItem extends StatelessWidget {
   const FriendItem({super.key, required this.friend, required this.press});
@@ -30,18 +31,5 @@ class FriendItem extends StatelessWidget {
     );
   }
 
-  Widget onlineIcon() {
-    return Positioned(
-      bottom: 0,
-      right: 2,
-      child: Container(
-        width: 10.w,
-        height: 10.h,
-        decoration: const BoxDecoration(
-          color: Colors.green,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
+  
 }

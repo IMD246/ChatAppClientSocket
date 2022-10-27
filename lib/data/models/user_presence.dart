@@ -2,6 +2,7 @@ class UserPresence {
   String? sId;
   String? userID;
   bool? presence;
+  String? presenceTimeStamp;
   int? iV;
 
   UserPresence({this.sId, this.userID, this.presence, this.iV});
@@ -10,6 +11,7 @@ class UserPresence {
     sId = json['_id'];
     userID = json['userID'];
     presence = json['presence'];
+    presenceTimeStamp = json['presenceTimeStamp'];
     iV = json['__v'];
   }
 
@@ -18,6 +20,7 @@ class UserPresence {
     data['_id'] = sId;
     data['userID'] = userID;
     data['presence'] = presence;
+    data['presenceTimeStamp'] = presenceTimeStamp;
     data['__v'] = iV;
     return data;
   }

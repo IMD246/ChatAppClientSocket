@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         userInformation: widget.userInformation,
         userRepository: UserRepository(
-          baseUrl: configAppProvider.env.baseURL,
+          baseUrl: configAppProvider.env.apiURL,
         ),
       )..add(
           InitializeChatEvent(
@@ -68,7 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (state is BackToWaitingChatState) {
       return BodyChatScreen(
         userInformation: state.userInformation,
-        $chats:state.chats,
+        $chats: state.listChatController,
       );
     } else if (state is WentToSettingMenuChatState) {
       return SettingScreen(

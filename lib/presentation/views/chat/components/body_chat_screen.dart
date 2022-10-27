@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,7 @@ class BodyChatScreen extends StatefulWidget {
   const BodyChatScreen(
       {super.key, required this.userInformation, required this.$chats});
   final UserInformation userInformation;
-  final Stream<List<ChatUserAndPresence>> $chats;
+  final StreamController<List<ChatUserAndPresence>> $chats;
   @override
   State<BodyChatScreen> createState() => _BodyChatScreenState();
 }
@@ -53,7 +55,7 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
             ),
             searchWidget(context),
             Observer(
-              stream: widget.$chats,
+              stream: widget.$chats.stream,
               onSuccess: (context, data) {
                 final listChat = data;
                 if (listChat == null || listChat.isEmpty) {
