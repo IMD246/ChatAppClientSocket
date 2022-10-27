@@ -5,8 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../data/models/friend.dart';
 
 class FriendItem extends StatelessWidget {
-  const FriendItem({super.key, required this.friend});
+  const FriendItem({super.key, required this.friend, required this.press});
   final Friend friend;
+  final VoidCallback press;
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -15,8 +16,9 @@ class FriendItem extends StatelessWidget {
         alignment: AlignmentDirectional.bottomCenter,
         children: [
           circleImageWidget(
-            urlImage:
-                friend.user?.urlImage ?? "https://i.stack.imgur.com/l60Hf.png",
+            urlImage: (friend.user!.urlImage!.isNotEmpty)
+                ? friend.user!.urlImage!
+                : "https://i.stack.imgur.com/l60Hf.png",
             radius: 20.w,
           ),
           if (friend.presence?.presence ?? false) onlineIcon(),

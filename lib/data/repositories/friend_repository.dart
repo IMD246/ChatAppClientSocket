@@ -1,14 +1,13 @@
 import 'dart:developer';
 
 import 'package:testsocketchatapp/data/interfaces/i_service_api.dart';
-import 'package:testsocketchatapp/data/models/base_response.dart';
 import 'package:testsocketchatapp/data/models/friend.dart';
-import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/network/base_api_services.dart';
 import 'package:testsocketchatapp/data/network/network_api_services.dart';
 
 class FriendRepository implements IServiceAPI {
   String getFriendKeywordURL = "user/getchatkeyword";
+  String createOrURL = "user/getchatkeyword";
   BaseApiServices apiServices = NetworkApiService();
   FriendRepository({required String baseUrl}) {
     getFriendKeywordURL = baseUrl + getFriendKeywordURL;

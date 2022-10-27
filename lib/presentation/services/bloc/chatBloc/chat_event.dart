@@ -11,7 +11,12 @@ class BackToWaitingChatEvent extends ChatEvent {
   });
 }
 
-class InitializeChatEvent extends ChatEvent {}
+class InitializeChatEvent extends ChatEvent {
+  final UserInformation userInformation;
+  InitializeChatEvent({
+    required this.userInformation,
+  });
+}
 
 class GoToSearchFriendChatEvent extends ChatEvent {
   final UserInformation userInformation;

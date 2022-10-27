@@ -48,11 +48,9 @@ class LoginScreen extends StatelessWidget {
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   textWidget(text: "Login with google"),
-                  SizedBox(
-                    width: 8.w,
-                  ),
                   imageAssetWidget(
                     urlImage: ImageSoruces.imgGooleIcon,
                     packageName: null,

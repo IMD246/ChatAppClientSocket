@@ -2,33 +2,33 @@ import 'dart:developer';
 
 import 'package:testsocketchatapp/data/interfaces/i_service_api.dart';
 import 'package:testsocketchatapp/data/models/base_response.dart';
-import 'package:testsocketchatapp/data/models/user_info.dart';
+import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/network/base_api_services.dart';
 import 'package:testsocketchatapp/data/network/network_api_services.dart';
 
 class UserRepository implements IServiceAPI {
-  String registerURL = "user/register";
-  String loginURL = "auth/login";
-  String loginByTokenURL = "auth/loginwithaccesstoken";
-  String logoutURL = "auth/logout";
-  String loginByGoogleURL = "auth/loginwithgoogle";
+  String getChatsURL = "user/getchats";
   BaseApiServices apiServices = NetworkApiService();
   UserRepository({required String baseUrl}) {
-    registerURL = baseUrl + registerURL;
-    loginURL = baseUrl + loginURL;
-    loginByTokenURL = baseUrl + loginByTokenURL;
-    logoutURL = baseUrl + logoutURL;
-    loginByGoogleURL = baseUrl + loginByGoogleURL;
+    getChatsURL = baseUrl + getChatsURL;
   }
 
   @override
-  List convertDynamicToList({required BaseResponse value}) {
-    throw UnimplementedError();
+  List<ChatUserAndPresence> convertDynamicToList({required dynamic value}) {
+    if (value.data == null) {
+      return [];
+    } else {
+      return (value.data as List)
+          .map(
+            (e) => convertDynamicToObject(e),
+          )
+          .toList();
+    }
   }
 
   @override
-  UserInformation convertDynamicToObject(value) {
-    return UserInformation.fromJson(value);
+  ChatUserAndPresence convertDynamicToObject(value) {
+    return ChatUserAndPresence.fromJson(value);
   }
 
   @override

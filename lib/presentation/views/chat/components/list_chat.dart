@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'item_chat.dart';
 
 class ListChat extends StatelessWidget {
-  const ListChat({super.key});
-
+  const ListChat({super.key, required this.chats});
+  final List<ChatUserAndPresence> chats;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: 12,
+      itemCount: chats.length,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return const ItemChatScreen(online: false);
+        final chat = chats.elementAt(index);
+        return ItemChatScreen(chat:chat);
       },
     );
   }

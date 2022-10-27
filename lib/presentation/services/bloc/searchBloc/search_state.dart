@@ -1,16 +1,15 @@
 import 'package:testsocketchatapp/data/models/friend.dart';
 
 abstract class SearchState {
-  List<Friend> listFriend;
-  SearchState({
-    required this.listFriend,
-  });
+  SearchState();
 }
 
 class RecommendedResultSearchState extends SearchState {
-  RecommendedResultSearchState({required super.listFriend});
+  final List<Friend> listFriend;
+  RecommendedResultSearchState({required this.listFriend});
 }
 
 class ResultMatchKeywordSearchState extends SearchState {
-  ResultMatchKeywordSearchState({required super.listFriend});
+  final Stream<List<Friend>> $friends;
+  ResultMatchKeywordSearchState({required this.$friends});
 }

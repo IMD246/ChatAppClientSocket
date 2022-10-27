@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/user_info.dart';
+import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
 import 'package:testsocketchatapp/presentation/views/chat/components/body_chat_screen.dart';
@@ -44,7 +46,14 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
         userInformation: widget.userInformation,
-      ),
+        userRepository: UserRepository(
+          baseUrl: configAppProvider.env.baseURL,
+        ),
+      )..add(
+          InitializeChatEvent(
+            userInformation: widget.userInformation,
+          ),
+        ),
       child: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           return AnimatedSwitcherWidget(
@@ -59,6 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (state is BackToWaitingChatState) {
       return BodyChatScreen(
         userInformation: state.userInformation,
+        $chats:state.chats,
       );
     } else if (state is WentToSettingMenuChatState) {
       return SettingScreen(

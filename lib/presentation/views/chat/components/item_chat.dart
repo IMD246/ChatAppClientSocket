@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
+import 'package:date_format/date_format.dart';
 
 class ItemChatScreen extends StatelessWidget {
-  const ItemChatScreen({super.key, required this.online});
-  final bool online;
+  const ItemChatScreen({super.key, required this.chat});
+  final ChatUserAndPresence chat;
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -13,29 +15,30 @@ class ItemChatScreen extends StatelessWidget {
         alignment: AlignmentDirectional.bottomCenter,
         children: [
           circleImageWidget(
-            urlImage: "https://i.stack.imgur.com/l60Hf.png",
+            urlImage: chat.user!.urlImage!.isEmpty
+                ? "https://i.stack.imgur.com/l60Hf.png"
+                : chat.user!.urlImage!,
             radius: 20.w,
           ),
-          if (online) onlineIcon(),
-          if (!online) offlineIcon(),
+          if (chat.presence?.presence ?? false) onlineIcon(),
+          if (chat.presence?.presence ?? false) offlineIcon(),
         ],
       ),
       title: textWidget(
-        text: "Unknown",
+        text: chat.user?.name ?? "Unknown",
       ),
       subtitle: Row(
         children: [
           Flexible(
             child: textWidget(
               maxLines: 1,
-              text: "Unknown",
+              text: chat.chat?.lastMessage ?? "",
               textOverflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(width: 16.w),
           textWidget(
-            text: "14:21",
-          )
+              text: DateTime.parse(chat.chat!.timeLastMessage!).toString()),
         ],
       ),
     );
