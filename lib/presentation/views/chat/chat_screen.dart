@@ -62,9 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return MessageChatScreen(
-                    callBackPop: (_) {},
-                  );
+                  return const MessageChatScreen();
                 },
               ),
             ).then((value) {

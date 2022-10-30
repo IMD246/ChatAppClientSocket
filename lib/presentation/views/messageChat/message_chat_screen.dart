@@ -6,9 +6,9 @@ import 'package:testsocketchatapp/presentation/views/messageChat/body_message_ch
 import '../widgets/online_icon_widget.dart';
 
 class MessageChatScreen extends StatelessWidget {
-  const MessageChatScreen({Key? key, required this.callBackPop})
-      : super(key: key);
-  final Function callBackPop;
+  const MessageChatScreen({
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +34,7 @@ class MessageChatScreen extends StatelessWidget {
             children: [
               circleImageWidget(
                 urlImage: "https://i.stack.imgur.com/l60Hf.png",
-                radius: 18.w,
+                radius: 20.w,
               ),
               onlineIcon(),
             ],
@@ -45,7 +45,7 @@ class MessageChatScreen extends StatelessWidget {
             children: [
               textWidget(
                 text: "Nguyễn Thành Duy",
-                size: 13.h,
+                size: 16.sp,
               ),
               RichText(
                 text: TextSpan(
@@ -53,14 +53,14 @@ class MessageChatScreen extends StatelessWidget {
                     TextSpan(
                       text: "Online ",
                       style: TextStyle(
-                        fontSize: 12.h,
+                        fontSize: 16.sp,
                         color: Colors.black54,
                       ),
                     ),
                     TextSpan(
                       text: "3 months ago",
                       style: TextStyle(
-                        fontSize: 12.h,
+                        fontSize: 16.sp,
                         color: Colors.black54,
                       ),
                     ),

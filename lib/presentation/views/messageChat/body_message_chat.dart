@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_basic_utilities/widgets/text_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyMessageChat extends StatefulWidget {
@@ -11,11 +12,12 @@ class BodyMessageChat extends StatefulWidget {
 class _BodyMessageChatState extends State<BodyMessageChat> {
   late final FocusNode focusNode;
   late final TextEditingController textController;
+  late final ScrollController scrollController;
   @override
   void initState() {
     focusNode = FocusNode();
     textController = TextEditingController();
-
+    scrollController = ScrollController();
     super.initState();
   }
 
@@ -23,18 +25,19 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Expanded(
-        //   child: ScrollablePositionedList.builder(
-        //     shrinkWrap: true,
-        //     itemCount: 5,
-        //     itemBuilder: (context, index) {
-        //       return textWidget(
-        //         text: "asd",
-        //       );
-        //     },
-        //   ),
-        // ),
-        const Spacer(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: 50,
+            controller: scrollController,
+            reverse: true,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return textWidget(
+                text: "asd",
+              );
+            },
+          ),
+        ),
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: 4.w,
