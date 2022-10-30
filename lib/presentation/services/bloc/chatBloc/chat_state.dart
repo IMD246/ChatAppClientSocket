@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:rxdart/rxdart.dart';
+
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 
@@ -12,7 +14,14 @@ class BackToWaitingChatState extends ChatState {
     required this.listChatController, 
   });
 }
-class JoinedChatState extends ChatState {}
+class JoinedChatState extends ChatState {
+  final ChatUserAndPresence chatUserAndPresence;
+  final UserInformation userInformation;
+  JoinedChatState({
+    required this.chatUserAndPresence,
+    required this.userInformation,
+  });
+}
 
 class WentToSettingMenuChatState extends ChatState {
   final UserInformation userInformation;

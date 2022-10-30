@@ -39,7 +39,7 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
           child: circleImageWidget(
             urlImage: widget.userInformation.user?.urlImage ??
                 "https://i.stack.imgur.com/l60Hf.png",
-            radius: 14.h,
+            radius: 20.h,
           ),
         ),
         title: textWidget(
@@ -59,7 +59,21 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
               onSuccess: (context, data) {
                 final listChat = data;
                 if (listChat == null || listChat.isEmpty) {
-                  return textWidget(text: "Let find some chat");
+                  return Padding(
+                    padding: EdgeInsets.only(top: 280.0.h),
+                    child: TextButton(
+                      onPressed: () {
+                        context.read<ChatBloc>().add(
+                              GoToSearchFriendChatEvent(
+                                userInformation: widget.userInformation,
+                              ),
+                            );
+                      },
+                      child: textWidget(
+                        text: "Let find some chat",
+                      ),
+                    ),
+                  );
                 } else {
                   return ListChat(chats: listChat);
                 }
@@ -85,8 +99,8 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
         },
         borderRadius: BorderRadius.circular(20.w),
         child: Container(
-          width: 300.w,
-          height: 40.h,
+          width: 360.w,
+          height: 60.h,
           padding: EdgeInsets.symmetric(horizontal: 8.0.w),
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.4),

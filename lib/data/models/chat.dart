@@ -7,6 +7,7 @@ class Chat {
   String? createdAt;
   String? updatedAt;
   int? iV;
+  List<dynamic>? messages;
 
   Chat(
       {this.sId,
@@ -20,6 +21,12 @@ class Chat {
 
   Chat.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
+    if (json['messages'] != null) {
+      messages = <Null>[];
+      json['messages'].forEach((v) {
+        // messages!.add(new Null.fromJson(v));
+      });
+    }
     users = json['users'].cast<String>();
     lastMessage = json['lastMessage'];
     timeLastMessage = json['timeLastMessage'];
@@ -32,6 +39,7 @@ class Chat {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
+    data['messages'] = messages;
     data['users'] = users;
     data['lastMessage'] = lastMessage;
     data['timeLastMessage'] = timeLastMessage;

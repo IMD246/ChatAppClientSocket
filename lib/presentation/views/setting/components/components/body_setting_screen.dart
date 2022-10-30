@@ -45,7 +45,7 @@ class BodySettingScreen extends StatelessWidget {
           ImageAndName(
             userInformation: userInformation,
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 16.h),
           SettingItemMenuButton(
             text: 'Đăng xuất',
             press: () {
@@ -56,7 +56,7 @@ class BodySettingScreen extends StatelessWidget {
                   );
             },
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 16.h),
           SettingItemMenuButton(
             text: 'Update Infomation',
             press: () {

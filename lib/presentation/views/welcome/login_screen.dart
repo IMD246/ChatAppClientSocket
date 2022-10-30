@@ -20,8 +20,8 @@ class LoginScreen extends StatelessWidget {
         imageAssetWidget(
           urlImage: ImageSoruces.imgChatIcon,
           packageName: null,
-          width: 200.w.toInt(),
-          height: 200.h.toInt(),
+          width: 300.w.toInt(),
+          height: 300.h.toInt(),
         ),
         InkWell(
           borderRadius: BorderRadius.circular(16.w),
@@ -32,8 +32,8 @@ class LoginScreen extends StatelessWidget {
           },
           child: Center(
             child: Container(
-              width: 200.w,
-              height: 50.h,
+              width: 300.w,
+              height: 100.h,
               padding: EdgeInsets.symmetric(
                 horizontal: 8.w,
                 vertical: 1.h,
@@ -50,12 +50,15 @@ class LoginScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  textWidget(text: "Login with google"),
+                  textWidget(
+                    text: "Login with google",
+                    size: 20.h,
+                  ),
                   imageAssetWidget(
                     urlImage: ImageSoruces.imgGooleIcon,
                     packageName: null,
-                    width: 25.w.toInt(),
-                    height: 25.h.toInt(),
+                    width: 50.w.toInt(),
+                    height: 50.h.toInt(),
                   ),
                 ],
               ),

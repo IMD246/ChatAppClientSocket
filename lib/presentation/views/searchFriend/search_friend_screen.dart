@@ -39,7 +39,9 @@ class SearchFriendScreen extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.h),
+                SizedBox(
+                  height: 32.h,
+                ),
                 Row(
                   children: [
                     BackButton(
@@ -84,7 +86,6 @@ class SearchFriendScreen extends StatelessWidget {
                   RecommmendedListFriend(listFriend: state.listFriend)
                 else if (state is ResultMatchKeywordSearchState)
                   Observer<List<Friend>>(
-                    onError: null,
                     onSuccess: (context, data) {
                       return ListView.builder(
                         shrinkWrap: true,
@@ -92,15 +93,14 @@ class SearchFriendScreen extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           final friend = data!.elementAt(index);
-                            return FriendItem(
-                              friend: friend,
-                              press: () {},
-                            );
+                          return FriendItem(
+                            friend: friend,
+                            press: () {},
+                          );
                         },
                       );
                     },
                     stream: state.$friends,
-                    onLoading: null,
                   ),
               ],
             );

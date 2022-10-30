@@ -4,7 +4,8 @@ import 'package:testsocketchatapp/presentation/views/searchFriend/friend_item.da
 
 class RecommmendedListFriend extends StatelessWidget {
   const RecommmendedListFriend({super.key, required this.listFriend});
-  final List<Friend> listFriend;@override
+  final List<Friend> listFriend;
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,

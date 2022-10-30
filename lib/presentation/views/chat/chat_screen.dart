@@ -10,6 +10,7 @@ import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
 import 'package:testsocketchatapp/presentation/views/chat/components/body_chat_screen.dart';
+import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_screen.dart';
 import 'package:testsocketchatapp/presentation/views/searchFriend/search_friend_screen.dart';
 import 'package:testsocketchatapp/presentation/views/setting/components/setting_screen.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/animated_switcher_widget.dart';
@@ -54,7 +55,27 @@ class _ChatScreenState extends State<ChatScreen> {
             userInformation: widget.userInformation,
           ),
         ),
-      child: BlocBuilder<ChatBloc, ChatState>(
+      child: BlocConsumer<ChatBloc, ChatState>(
+        listener: (context, state) {
+          if (state is JoinedChatState) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return MessageChatScreen(
+                    callBackPop: (_) {},
+                  );
+                },
+              ),
+            ).then((value) {
+              context.read<ChatBloc>().add(
+                    BackToWaitingChatEvent(
+                      userInformation: state.userInformation,
+                    ),
+                  );
+            });
+          }
+        },
         builder: (context, state) {
           return AnimatedSwitcherWidget(
             widget: dynamicScreen(state),

@@ -21,6 +21,7 @@ class ImageAndName extends StatelessWidget {
               circleImageWidget(
                 urlImage: userInformation.user?.urlImage ??
                     "https://i.stack.imgur.com/l60Hf.png",
+                radius: 60.h,
               ),
               Positioned(
                 bottom: 3.h,
@@ -31,7 +32,10 @@ class ImageAndName extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: Colors.white54,
                   ),
-                  child: const Icon(Icons.edit),
+                  child: Icon(
+                    Icons.edit,
+                    size: 32.h,
+                  ),
                 ),
               ),
             ],
@@ -40,7 +44,7 @@ class ImageAndName extends StatelessWidget {
         textWidget(
           text: userInformation.user?.name ?? "Unknown",
           fontWeight: FontWeight.bold,
-          size: 18.h,
+          size: 20.h,
         ),
       ],
     );

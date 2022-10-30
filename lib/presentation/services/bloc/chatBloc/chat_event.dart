@@ -1,8 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:testsocketchatapp/data/models/user_info.dart';
+
+import '../../../../data/models/chat_user_and_presence.dart';
 
 abstract class ChatEvent {}
 
-class JoinChatEvent extends ChatEvent {}
+class JoinChatEvent extends ChatEvent {
+  final ChatUserAndPresence chatUserAndPresence;
+  JoinChatEvent({
+    required this.chatUserAndPresence,
+  });
+}
 
 class BackToWaitingChatEvent extends ChatEvent {
   final UserInformation userInformation;
@@ -24,6 +32,7 @@ class GoToSearchFriendChatEvent extends ChatEvent {
     required this.userInformation,
   });
 }
+
 class GoToMenuSettingEvent extends ChatEvent {
   final UserInformation userInformation;
   GoToMenuSettingEvent({

@@ -75,5 +75,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
     });
+    on<JoinChatEvent>((event, emit) {
+      emit(
+        JoinedChatState(
+          chatUserAndPresence: event.chatUserAndPresence,
+          userInformation: userInformation,
+        ),
+      );
+    });
   }
 }
