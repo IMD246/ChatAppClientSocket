@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
-import 'package:flutter_basic_utilities/widgets/circle_image_widget.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_state.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/body_message_chat.dart';
 
 import '../widgets/online_icon_widget.dart';

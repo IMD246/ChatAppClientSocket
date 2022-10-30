@@ -5,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/utilities/format_date.dart';
-
-import '../../../../data/models/user_info.dart';
 import '../../../services/bloc/chatBloc/chat_bloc.dart';
 import '../../widgets/offline_icon_widget.dart';
 import '../../widgets/online_icon_widget.dart';
