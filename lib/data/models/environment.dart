@@ -3,8 +3,8 @@ class Environment {
   late String apiURL;
   Environment({required bool isProduct}) {
     if (isProduct) {
-      baseURL = "http://192.168.1.6:5000";
-      apiURL = "http://192.168.1.6:5000/api/";
+      baseURL = "https://chatappsocketclient.herokuapp.com";
+      apiURL = "https://chatappsocketclient.herokuapp.com/api/";
     } else {
       baseURL = "http://192.168.1.6:5000";
       apiURL = "http://192.168.1.6:5000/api/";
