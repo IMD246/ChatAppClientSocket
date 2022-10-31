@@ -62,7 +62,10 @@ class _ChatScreenState extends State<ChatScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return const MessageChatScreen();
+                  return MessageChatScreen(
+                    chatManager: state.chatManager,
+                    chatUserAndPresence: state.chatUserAndPresence,
+                  );
                 },
               ),
             ).then((value) {

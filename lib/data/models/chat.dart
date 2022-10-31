@@ -1,3 +1,5 @@
+import 'package:testsocketchatapp/data/models/message.dart';
+
 class Chat {
   String? sId;
   List<String>? users;
@@ -7,7 +9,7 @@ class Chat {
   String? createdAt;
   String? updatedAt;
   int? iV;
-  List<dynamic>? messages;
+  List<Message>? messages;
 
   Chat(
       {this.sId,
@@ -17,16 +19,11 @@ class Chat {
       this.active,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.messages});
 
   Chat.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    if (json['messages'] != null) {
-      messages = <Null>[];
-      json['messages'].forEach((v) {
-        // messages!.add(new Null.fromJson(v));
-      });
-    }
     users = json['users'].cast<String>();
     lastMessage = json['lastMessage'];
     timeLastMessage = json['timeLastMessage'];
@@ -34,12 +31,17 @@ class Chat {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    if (json['messages'] != null) {
+      messages = <Message>[];
+      json['messages'].forEach((v) {
+        messages!.add(Message.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
-    data['messages'] = messages;
     data['users'] = users;
     data['lastMessage'] = lastMessage;
     data['timeLastMessage'] = timeLastMessage;
@@ -47,6 +49,9 @@ class Chat {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['__v'] = iV;
+    if (messages != null) {
+      data['messages'] = messages!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

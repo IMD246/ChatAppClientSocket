@@ -23,15 +23,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           BackToWaitingChatState(
             userInformation: userInformation,
             listChatController: BehaviorSubject<List<ChatUserAndPresence>>(),
+            chatManager: chatManager,
           ),
         ) {
     chatManager.listenSocket();
+    chatManager.emitLoggedInApp(userInformation.user?.sId ?? "");
     on<GoToMenuSettingEvent>(
       (event, emit) {
         emit(
           WentToSettingMenuChatState(
-            userInformation: userInformation,
-          ),
+              userInformation: userInformation, chatManager: chatManager),
         );
       },
     );
@@ -39,8 +40,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           WentToSearchChatState(
-            userInformation: userInformation,
-          ),
+              userInformation: userInformation, chatManager: chatManager),
         );
       },
     );
@@ -49,9 +49,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         chatManager.socket.emit("hello", "hello1");
         emit(
           BackToWaitingChatState(
-            userInformation: userInformation,
-            listChatController: listChatController,
-          ),
+              userInformation: userInformation,
+              listChatController: listChatController,
+              chatManager: chatManager),
         );
       },
     );
@@ -70,17 +70,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
       emit(
         BackToWaitingChatState(
-          userInformation: userInformation,
-          listChatController: listChatController,
-        ),
+            userInformation: userInformation,
+            listChatController: listChatController,
+            chatManager: chatManager),
       );
     });
     on<JoinChatEvent>((event, emit) {
+      chatManager.emitJoinChat(
+        event.chatUserAndPresence.chat?.sId ?? "",
+        event.chatUserAndPresence.user?.sId ?? "",
+      );
       emit(
         JoinedChatState(
-          chatUserAndPresence: event.chatUserAndPresence,
-          userInformation: userInformation,
-        ),
+            chatUserAndPresence: event.chatUserAndPresence,
+            userInformation: userInformation,
+            chatManager: chatManager),
       );
     });
   }

@@ -29,4 +29,23 @@ class ChatManager {
     );
     socket.on("helloclient", (data) => log(data));
   }
+
+  void emitLoggedInApp(String userID) {
+    if (userID.isNotEmpty) {
+      socket.emit("LoggedIn", {
+        "userID": userID,
+      });
+    }
+  }
+
+  void emitJoinChat(String chatID, String userID) {
+    if (chatID.isNotEmpty) {
+      if (userID.isNotEmpty) {
+        socket.emit("JoinChat", {
+          "chatID": chatID,
+          "userID": userID,
+        });
+      }
+    }
+  }
 }

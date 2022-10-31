@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/widgets/text_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:testsocketchatapp/data/models/message.dart';
+import 'package:testsocketchatapp/presentation/views/messageChat/components/listview_message.dart';
 
 class BodyMessageChat extends StatefulWidget {
-  const BodyMessageChat({Key? key}) : super(key: key);
-
+  const BodyMessageChat({Key? key, required this.messages}) : super(key: key);
+  final List<Message> messages;
   @override
   State<BodyMessageChat> createState() => _BodyMessageChatState();
 }
@@ -12,12 +13,10 @@ class BodyMessageChat extends StatefulWidget {
 class _BodyMessageChatState extends State<BodyMessageChat> {
   late final FocusNode focusNode;
   late final TextEditingController textController;
-  late final ScrollController scrollController;
   @override
   void initState() {
     focusNode = FocusNode();
     textController = TextEditingController();
-    scrollController = ScrollController();
     super.initState();
   }
 
@@ -25,26 +24,14 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: 50,
-            controller: scrollController,
-            reverse: true,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return textWidget(
-                text: "asd",
-              );
-            },
-          ),
-        ),
+        ListViewMessage(messages: widget.messages),
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: 4.w,
             vertical: 8.h,
           ),
           decoration: BoxDecoration(
-            color: Colors.greenAccent.withOpacity(0.6),
+            color: const Color(0xFF00BF6D).withOpacity(0.1),
             boxShadow: [
               BoxShadow(
                 offset: const Offset(0, 4),
@@ -60,8 +47,8 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(32.w),
+                      color: const Color(0xFF00BF6D).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(40.w),
                     ),
                     child: Row(
                       children: [
