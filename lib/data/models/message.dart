@@ -3,7 +3,7 @@ class Message {
   String? message;
   String? urlImageMessage;
   String? urlRecordMessage;
-  int? stampTimeMessage;
+  String? stampTimeMessage;
   String? typeMessage;
   String? messageStatus;
 

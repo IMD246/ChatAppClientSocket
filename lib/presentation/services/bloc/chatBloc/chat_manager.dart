@@ -27,7 +27,6 @@ class ChatManager {
         log("socketio Server disconnected");
       },
     );
-    socket.on("helloclient", (data) => log(data));
   }
 
   void emitLoggedInApp(String userID) {

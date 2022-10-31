@@ -1,26 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
+import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_state.dart';
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final MessageManager messageManager;
-  final BehaviorSubject<ChatUserAndPresence> chatUserAndPresenceSubject =
-      BehaviorSubject<ChatUserAndPresence>();
-  MessageBloc(this.messageManager)
+  final UserInformation userInformation;
+  MessageBloc(this.messageManager, this.userInformation)
       : super(
-          InsideMessageState(
-            $chatUserAndPresence: BehaviorSubject<ChatUserAndPresence>().stream,
+          InsideMessageState($messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
           ),
         ) {
     on<InitializingMessageEvent>((event, emit) {
-      chatUserAndPresenceSubject.add(event.chatUserAndPresence);
       emit(
         InsideMessageState(
-          $chatUserAndPresence: chatUserAndPresenceSubject.stream,
+          $messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
         ),
       );
     });
@@ -29,7 +24,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         messageManager.emitLeaveChat(event.chatID, event.userID);
         emit(
           LeavedChatMessageState(
-            $chatUserAndPresence: chatUserAndPresenceSubject.stream,
+            $messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
           ),
         );
       },

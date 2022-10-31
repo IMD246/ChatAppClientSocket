@@ -64,7 +64,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 builder: (context) {
                   return MessageChatScreen(
                     chatManager: state.chatManager,
-                    chatUserAndPresence: state.chatUserAndPresence,
+                    chatUserAndPresence: state.chatUserAndPresence, 
+                    userInformation: state.userInformation,
                   );
                 },
               ),

@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/message.dart';
+import 'package:testsocketchatapp/presentation/enum/enum.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/components/listview_message.dart';
+import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 
 class BodyMessageChat extends StatefulWidget {
-  const BodyMessageChat({Key? key, required this.messages}) : super(key: key);
-  final List<Message> messages;
+  const BodyMessageChat(
+      {Key? key, required this.messages, required this.chatUserAndPresence})
+      : super(key: key);
+  final Stream<List<Message>> messages;
+  final ChatUserAndPresence chatUserAndPresence;
   @override
   State<BodyMessageChat> createState() => _BodyMessageChatState();
 }
@@ -22,9 +31,16 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
 
   @override
   Widget build(BuildContext context) {
+    final messageBloc = context.read<MessageBloc>();
     return Column(
       children: [
-        ListViewMessage(messages: widget.messages),
+        Observer<List<Message>>(
+          onSuccess: (context, data) {
+            final messages = data ?? [];
+            return ListViewMessage(messages: messages);
+          },
+          stream: widget.messages,
+        ),
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: 4.w,
@@ -76,9 +92,29 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (textController.text.isNotEmpty) {
+                      context.read<MessageBloc>().add(
+                            SendTextMessageEvent(
+                              chatID:
+                                  widget.chatUserAndPresence.chat?.sId ?? "",
+                              message: Message(
+                                userID: messageBloc.userInformation.user!.sId,
+                                message: textController.text,
+                                messageStatus: "Sent",
+                                typeMessage: TypeMessage.text.name,
+                                urlImageMessage: "",
+                                urlRecordMessage: "",
+                              ),
+                            ),
+                          );
+                      textController.clear();
+                      focusNode.unfocus();
+                    }
+                  },
                   icon: const Icon(
                     Icons.send,
+                    color: Color(0xFF00BF6D),
                   ),
                 ),
               ],
