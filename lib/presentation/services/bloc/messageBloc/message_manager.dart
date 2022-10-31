@@ -47,7 +47,6 @@ class MessageManager {
   void getMessage() {
     socket.on("serverSendMessage", (data) {
       messages.add(Message.fromJson(data));
-
       listMessageSubject.add(messages);
     });
   }
@@ -57,6 +56,8 @@ class MessageManager {
       "chatID": chatID,
       "userID": userID,
     });
+    messages = [];
+    listMessageSubject.add([]);
   }
 
   void sendMessage(Message message, String chatID) {
@@ -70,4 +71,6 @@ class MessageManager {
       "messageStatus": message.messageStatus,
     });
   }
+
+  void dispose() {}
 }
