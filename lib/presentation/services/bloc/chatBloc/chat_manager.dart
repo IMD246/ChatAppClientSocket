@@ -27,6 +27,10 @@ class ChatManager {
         log("socketio Server disconnected");
       },
     );
+    socket.on("receivedMessage", (data) {
+      log(data["newMessage"]);
+      log(data["timeLastMessage"]);
+    });
   }
 
   void emitLoggedInApp(String userID) {
@@ -37,12 +41,12 @@ class ChatManager {
     }
   }
 
-  void emitJoinChat(String chatID, String userID) {
+  void emitJoinChat(String chatID, String userID,List<String> listUserChat) {
     if (chatID.isNotEmpty) {
       if (userID.isNotEmpty) {
         socket.emit("JoinChat", {
           "chatID": chatID,
-          "userID": userID,
+          "userID": userID
         });
       }
     }

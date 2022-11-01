@@ -60,7 +60,9 @@ class MessageManager {
     listMessageSubject.add([]);
   }
 
-  void sendMessage(Message message, String chatID) {
+  void sendMessage(Message message, String chatID, List<String> usersID) {
+    messages.add(message);
+    listMessageSubject.add(messages);
     socket.emit("clientSendMessage", {
       "chatID": chatID,
       "userID": message.userID,
@@ -69,6 +71,7 @@ class MessageManager {
       "urlRecordMessage": message.urlRecordMessage,
       "typeMessage": message.typeMessage,
       "messageStatus": message.messageStatus,
+      "usersID": usersID,
     });
   }
 

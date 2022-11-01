@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_manager.dart';
@@ -7,7 +8,8 @@ import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final MessageManager messageManager;
   final UserInformation userInformation;
-  MessageBloc(this.messageManager, this.userInformation)
+  final ChatUserAndPresence chatUserAndPresence;
+  MessageBloc(this.messageManager, this.userInformation, this.chatUserAndPresence)
       : super(
           InsideMessageState($messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
           ),
@@ -31,7 +33,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     );
     on<SendTextMessageEvent>(
       (event, emit) {
-        messageManager.sendMessage(event.message, event.chatID);
+        messageManager.sendMessage(event.message, event.chatID,chatUserAndPresence.chat!.users!);
       },
     );
   }

@@ -38,7 +38,8 @@ class MessageChatScreen extends StatelessWidget {
             listMessage: chatUserAndPresence.chat!.messages ?? [],
             userPresence: chatUserAndPresence.presence!,
           ),
-          userInformation)
+          userInformation,
+          chatUserAndPresence)
         ..add(
           InitializingMessageEvent(
             chatUserAndPresence: chatUserAndPresence,

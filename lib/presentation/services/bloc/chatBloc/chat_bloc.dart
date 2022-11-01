@@ -79,6 +79,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       chatManager.emitJoinChat(
         event.chatUserAndPresence.chat?.sId ?? "",
         event.chatUserAndPresence.user?.sId ?? "",
+        event.chatUserAndPresence.chat!.users!,
       );
       emit(
         JoinedChatState(
