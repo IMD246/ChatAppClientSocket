@@ -12,8 +12,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatManager chatManager;
   final UserInformation userInformation;
   final UserRepository userRepository;
-  late final BehaviorSubject<List<ChatUserAndPresence>> listChatController =
-      BehaviorSubject<List<ChatUserAndPresence>>();
   ChatBloc({
     required this.userInformation,
     required this.chatManager,
@@ -38,18 +36,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           WentToSearchChatState(
-              userInformation: userInformation, chatManager: chatManager,
-              userRepository:userRepository,),
+            userInformation: userInformation,
+            chatManager: chatManager,
+            userRepository: userRepository,
+          ),
         );
       },
     );
     on<BackToWaitingChatEvent>(
       (event, emit) {
-        chatManager.socket.emit("hello", "hello1");
         emit(
           BackToWaitingChatState(
               userInformation: userInformation,
-              listChatController: listChatController,
+              listChatController: chatManager.listChatController,
               chatManager: chatManager),
         );
       },
@@ -63,14 +62,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (ValidateUtilities.checkBaseResponse(baseResponse: chatResponse)) {
         final listChat =
             userRepository.convertDynamicToList(value: chatResponse!);
-        listChatController.add(listChat);
+        chatManager.listChatController.add(listChat);
+        chatManager.listChat = listChat;
       } else {
-        listChatController.add([]);
+        chatManager.listChatController.add([]);
       }
       emit(
         BackToWaitingChatState(
             userInformation: userInformation,
-            listChatController: listChatController,
+            listChatController: chatManager.listChatController,
             chatManager: chatManager),
       );
     });
