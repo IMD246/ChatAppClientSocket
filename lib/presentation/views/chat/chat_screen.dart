@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/widgets/text_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -44,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
             <String, dynamic>{
               "transports": ["websocket"],
             },
-          ),
+          ), userID: widget.userInformation.user!.sId!,
         ),
         userInformation: widget.userInformation,
         userRepository: UserRepository(
@@ -57,25 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       child: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
-          if (state is JoinedChatState) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return MessageChatScreen(
-                    chatUserAndPresence: state.chatUserAndPresence, 
-                    userInformation: state.userInformation, socket: state.chatManager.socket,
-                  );
-                },
-              ),
-            ).then((value) {
-              context.read<ChatBloc>().add(
-                    BackToWaitingChatEvent(
-                      userInformation: state.userInformation,
-                    ),
-                  );
-            });
-          }
+          _listeningState(context: context, state: state);
         },
         builder: (context, state) {
           return AnimatedSwitcherWidget(
@@ -92,19 +73,70 @@ class _ChatScreenState extends State<ChatScreen> {
         userInformation: state.userInformation,
         $chats: state.listChatController,
       );
-    } else if (state is WentToSettingMenuChatState) {
-      return SettingScreen(
-        userInformation: state.userInformation,
-      );
-    } else if (state is WentToSearchChatState) {
-      return SearchFriendScreen(
-        userInformation: state.userInformation,
-        userRepository: state.userRepository, socket: state.chatManager.socket,
-      );
     } else {
-      return Scaffold(
-        body: textWidget(text: "Chưa có màn hình"),
-      );
+      return const Scaffold();
     }
+  }
+
+  void _listeningState(
+      {required BuildContext context, required ChatState state}) {
+  // #region listenState methods
+    if (state is JoinedChatState) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return MessageChatScreen(
+              chatUserAndPresence: state.chatUserAndPresence,
+              userInformation: state.userInformation,
+              socket: state.chatManager.socket,
+            );
+          },
+        ),
+      ).then((value) {
+        context.read<ChatBloc>().add(
+              BackToWaitingChatEvent(
+                userInformation: state.userInformation,
+              ),
+            );
+      });
+    } else if (state is WentToSearchChatState) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return SearchFriendScreen(
+              userRepository: state.userRepository,
+              userInformation: state.userInformation,
+              socket: state.chatManager.socket,
+            );
+          },
+        ),
+      ).then((value) {
+        context.read<ChatBloc>().add(
+              BackToWaitingChatEvent(
+                userInformation: state.userInformation,
+              ),
+            );
+      });
+    } else if (state is WentToSettingMenuChatState) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return SettingScreen(
+              userInformation: state.userInformation,
+            );
+          },
+        ),
+      ).then((value) {
+        context.read<ChatBloc>().add(
+              BackToWaitingChatEvent(
+                userInformation: state.userInformation,
+              ),
+            );
+      });
+    }
+  // #endregion
   }
 }

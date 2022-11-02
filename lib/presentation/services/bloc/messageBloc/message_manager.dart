@@ -12,13 +12,13 @@ class MessageManager {
   final BehaviorSubject<List<Message>> listMessageSubject =
       BehaviorSubject<List<Message>>();
   List<Message> messages = [];
-  MessageManager({
-    required this.socket,
-    required UserPresence userPresence,
-    required List<Message> listMessage,
-  }) {
+  final String chatID;
+  MessageManager(
+      {required this.socket,
+      required UserPresence userPresence,
+      required List<Message> listMessage,
+      required this.chatID}) {
     initValue(userPresence: userPresence, listMessage: listMessage);
-    listenSocket();
   }
   initValue(
       {required UserPresence userPresence,
@@ -32,6 +32,7 @@ class MessageManager {
     socket.onConnect(
       (data) {
         log("Connection established");
+        emitJoinChat();
       },
     );
 
@@ -58,6 +59,14 @@ class MessageManager {
     });
     messages = [];
     listMessageSubject.add([]);
+  }
+
+  void emitJoinChat() {
+    if (chatID.isNotEmpty) {
+      socket.emit("JoinChat", {
+        "chatID": chatID,
+      });
+    }
   }
 
   void sendMessage(Message message, String chatID, List<String> usersID) {

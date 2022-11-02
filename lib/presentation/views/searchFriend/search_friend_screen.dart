@@ -7,7 +7,6 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/repositories/friend_repository.dart';
 import 'package:testsocketchatapp/data/repositories/user_repository.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_manager.dart';
@@ -16,10 +15,8 @@ import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_sc
 import 'package:testsocketchatapp/presentation/views/searchFriend/recommded_list_friend.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 import '../../../data/models/friend.dart';
-import '../../services/bloc/chatBloc/chat_event.dart';
 import '../../services/provider/config_app_provider.dart';
 import 'friend_item.dart';
-
 class SearchFriendScreen extends StatelessWidget {
   const SearchFriendScreen(
       {super.key,
@@ -31,7 +28,6 @@ class SearchFriendScreen extends StatelessWidget {
   final io.Socket socket;
   @override
   Widget build(BuildContext context) {
-    final chatBloc = BlocProvider.of<ChatBloc>(context);
     final configApp = Provider.of<ConfigAppProvider>(context);
     final TextEditingController searchText = TextEditingController();
     return BlocProvider<SearchBloc>(
@@ -81,11 +77,7 @@ class SearchFriendScreen extends StatelessWidget {
                   children: [
                     BackButton(
                       onPressed: () {
-                        chatBloc.add(
-                          BackToWaitingChatEvent(
-                            userInformation: userInformation,
-                          ),
-                        );
+                        Navigator.of(context).pop();
                       },
                     ),
                     Expanded(

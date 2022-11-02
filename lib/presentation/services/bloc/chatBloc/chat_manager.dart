@@ -4,13 +4,16 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatManager {
   final io.Socket socket;
+  final String userID;
   ChatManager({
     required this.socket,
+    required this.userID,
   });
   listenSocket() {
     socket.onConnect(
       (data) {
         log("Connection established");
+        emitLoggedInApp();
       },
     );
 
@@ -33,19 +36,11 @@ class ChatManager {
     });
   }
 
-  void emitLoggedInApp(String userID) {
+  void emitLoggedInApp() {
     if (userID.isNotEmpty) {
       socket.emit("LoggedIn", {
         "userID": userID,
       });
-    }
-  }
-
-  void emitJoinChat(String chatID) {
-    if (chatID.isNotEmpty) {
-        socket.emit("JoinChat", {
-          "chatID": chatID,
-        });
     }
   }
 }

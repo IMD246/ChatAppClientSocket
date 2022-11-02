@@ -10,9 +10,6 @@ import 'package:testsocketchatapp/presentation/views/setting/components/componen
 
 import '../../../../services/bloc/authBloc/auth_bloc.dart';
 import '../../../../services/bloc/authBloc/auth_event.dart';
-import '../../../../services/bloc/chatBloc/chat_bloc.dart';
-import '../../../../services/bloc/chatBloc/chat_event.dart';
-
 class BodySettingScreen extends StatelessWidget {
   const BodySettingScreen({
     Key? key,
@@ -28,11 +25,7 @@ class BodySettingScreen extends StatelessWidget {
         leading: BackButton(
           color: Colors.black,
           onPressed: () {
-            context.read<ChatBloc>().add(
-                  BackToWaitingChatEvent(
-                    userInformation: userInformation,
-                  ),
-                );
+            Navigator.of(context).pop();
           },
         ),
         title: textWidget(

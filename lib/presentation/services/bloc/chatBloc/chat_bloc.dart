@@ -14,7 +14,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final UserRepository userRepository;
   late final BehaviorSubject<List<ChatUserAndPresence>> listChatController =
       BehaviorSubject<List<ChatUserAndPresence>>();
-  late final $chats = listChatController.stream;
   ChatBloc({
     required this.userInformation,
     required this.chatManager,
@@ -27,7 +26,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           ),
         ) {
     chatManager.listenSocket();
-    chatManager.emitLoggedInApp(userInformation.user?.sId ?? "");
     on<GoToMenuSettingEvent>(
       (event, emit) {
         emit(
@@ -77,9 +75,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       );
     });
     on<JoinChatEvent>((event, emit) {
-      chatManager.emitJoinChat(
-        event.chatUserAndPresence.chat?.sId ?? "",
-      );
       emit(
         JoinedChatState(
             chatUserAndPresence: event.chatUserAndPresence,

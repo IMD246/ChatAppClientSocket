@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<ConfigAppProvider>(
       create: (context) => ConfigAppProvider(
         env: Environment(
-          isProduct: true,
+          isProduct: false,
         ),
       ),
       child: Consumer<ConfigAppProvider>(

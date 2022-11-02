@@ -9,16 +9,21 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final MessageManager messageManager;
   final UserInformation userInformation;
   final ChatUserAndPresence chatUserAndPresence;
-  MessageBloc(this.messageManager, this.userInformation, this.chatUserAndPresence)
+  MessageBloc(
+      this.messageManager, this.userInformation, this.chatUserAndPresence)
       : super(
-          InsideMessageState($messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
-          ),
+          InsideMessageState(
+              $messages: messageManager.listMessageSubject.stream,
+              userInformation: userInformation,
+              userPresence: messageManager.userPresenceSubject.stream),
         ) {
+    messageManager.listenSocket();
     on<InitializingMessageEvent>((event, emit) {
       emit(
         InsideMessageState(
-          $messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
-        ),
+            $messages: messageManager.listMessageSubject.stream,
+            userInformation: userInformation,
+            userPresence: messageManager.userPresenceSubject.stream),
       );
     });
     on<LeaveChatMessageEvent>(
@@ -26,14 +31,16 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         messageManager.emitLeaveChat(event.chatID, event.userID);
         emit(
           LeavedChatMessageState(
-            $messages: messageManager.listMessageSubject.stream, userInformation: userInformation, userPresence: messageManager.userPresenceSubject.stream
-          ),
+              $messages: messageManager.listMessageSubject.stream,
+              userInformation: userInformation,
+              userPresence: messageManager.userPresenceSubject.stream),
         );
       },
     );
     on<SendTextMessageEvent>(
       (event, emit) {
-        messageManager.sendMessage(event.message, event.chatID,chatUserAndPresence.chat!.users!);
+        messageManager.sendMessage(
+            event.message, event.chatID, chatUserAndPresence.chat!.users!);
       },
     );
   }
