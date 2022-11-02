@@ -8,9 +8,11 @@ import 'package:testsocketchatapp/data/network/network_api_services.dart';
 
 class UserRepository implements IServiceAPI {
   String getChatsURL = "user/getchats";
+  String joinChatURL = "user/createandjoinchat";
   BaseApiServices apiServices = NetworkApiService();
   UserRepository({required String baseUrl}) {
     getChatsURL = baseUrl + getChatsURL;
+    joinChatURL = baseUrl + joinChatURL;
   }
 
   @override

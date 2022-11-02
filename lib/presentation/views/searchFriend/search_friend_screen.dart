@@ -3,12 +3,16 @@ import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/repositories/friend_repository.dart';
+import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_event.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_state.dart';
+import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_screen.dart';
 import 'package:testsocketchatapp/presentation/views/searchFriend/recommded_list_friend.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 import '../../../data/models/friend.dart';
@@ -17,24 +21,55 @@ import '../../services/provider/config_app_provider.dart';
 import 'friend_item.dart';
 
 class SearchFriendScreen extends StatelessWidget {
-  const SearchFriendScreen({super.key, required this.userInformation});
+  const SearchFriendScreen(
+      {super.key,
+      required this.userInformation,
+      required this.userRepository,
+      required this.socket});
   final UserInformation userInformation;
+  final UserRepository userRepository;
+  final io.Socket socket;
   @override
   Widget build(BuildContext context) {
     final chatBloc = BlocProvider.of<ChatBloc>(context);
     final configApp = Provider.of<ConfigAppProvider>(context);
+    final TextEditingController searchText = TextEditingController();
     return BlocProvider<SearchBloc>(
       create: (context) => SearchBloc(
         friendRepository: FriendRepository(
           baseUrl: configApp.env.apiURL,
         ),
+        userInformation: userInformation,
+        userRepository: userRepository,
+        searchManager: SearchManager(socket: socket),
       )..add(
           InitializeSearchEvent(
             keyWord: "",
           ),
         ),
       child: Scaffold(
-        body: BlocBuilder<SearchBloc, SearchState>(
+        body: BlocConsumer<SearchBloc, SearchState>(
+          listener: (context, state) {
+            if (state is JoinedChatSuccessSearchState) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MessageChatScreen(
+                      socket: state.socket,
+                      chatUserAndPresence: state.chatUserAndPresence,
+                      userInformation: state.userInformation,
+                    );
+                  },
+                ),
+              ).then((value) {
+                context.read<SearchBloc>().add(
+                      TypingSearchEvent(
+                        keyWord: searchText.text,
+                      ),
+                    );
+              });
+            }
+          },
           builder: (context, state) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,6 +90,8 @@ class SearchFriendScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextFieldWidget(
+                        textField: searchText.text,
+                        controller: searchText,
                         onSubmitted: (value) {},
                         onChanged: (value) {
                           context.read<SearchBloc>().add(

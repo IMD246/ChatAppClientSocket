@@ -1,15 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:testsocketchatapp/data/models/friend.dart';
+
 abstract class SearchEvent {
-  final String? keyWord;
-  SearchEvent({
-    required this.keyWord,
-  });
+  SearchEvent();
 }
 
 class InitializeSearchEvent extends SearchEvent {
-  InitializeSearchEvent({required super.keyWord});
-  
+  final String? keyWord;
+  InitializeSearchEvent({required this.keyWord});
 }
 
 class TypingSearchEvent extends SearchEvent {
-  TypingSearchEvent({required super.keyWord});
+  final String? keyWord;
+  TypingSearchEvent({required this.keyWord});
+}
+
+class CreateAndJoinChatSearchEvent extends SearchEvent {
+  final Friend friend;
+  CreateAndJoinChatSearchEvent({
+    required this.friend,
+  });
 }

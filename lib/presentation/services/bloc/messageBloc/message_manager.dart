@@ -61,8 +61,6 @@ class MessageManager {
   }
 
   void sendMessage(Message message, String chatID, List<String> usersID) {
-    messages.add(message);
-    listMessageSubject.add(messages);
     socket.emit("clientSendMessage", {
       "chatID": chatID,
       "userID": message.userID,

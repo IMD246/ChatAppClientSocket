@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
@@ -21,11 +22,11 @@ import '../widgets/online_icon_widget.dart';
 class MessageChatScreen extends StatelessWidget {
   const MessageChatScreen({
     Key? key,
-    required this.chatManager,
+    required this.socket,
     required this.chatUserAndPresence,
     required this.userInformation,
   }) : super(key: key);
-  final ChatManager chatManager;
+  final Socket socket;
   final UserInformation userInformation;
   final ChatUserAndPresence chatUserAndPresence;
 
@@ -34,7 +35,7 @@ class MessageChatScreen extends StatelessWidget {
     return BlocProvider<MessageBloc>(
       create: (context) => MessageBloc(
           MessageManager(
-            socket: chatManager.socket,
+            socket: socket,
             listMessage: chatUserAndPresence.chat!.messages ?? [],
             userPresence: chatUserAndPresence.presence!,
           ),

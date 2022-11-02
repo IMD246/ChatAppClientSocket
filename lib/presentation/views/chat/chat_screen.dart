@@ -63,9 +63,8 @@ class _ChatScreenState extends State<ChatScreen> {
               MaterialPageRoute(
                 builder: (context) {
                   return MessageChatScreen(
-                    chatManager: state.chatManager,
                     chatUserAndPresence: state.chatUserAndPresence, 
-                    userInformation: state.userInformation,
+                    userInformation: state.userInformation, socket: state.chatManager.socket,
                   );
                 },
               ),
@@ -100,6 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } else if (state is WentToSearchChatState) {
       return SearchFriendScreen(
         userInformation: state.userInformation,
+        userRepository: state.userRepository, socket: state.chatManager.socket,
       );
     } else {
       return Scaffold(

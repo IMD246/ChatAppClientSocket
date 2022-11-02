@@ -40,7 +40,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           WentToSearchChatState(
-              userInformation: userInformation, chatManager: chatManager),
+              userInformation: userInformation, chatManager: chatManager,
+              userRepository:userRepository,),
         );
       },
     );
@@ -78,8 +79,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<JoinChatEvent>((event, emit) {
       chatManager.emitJoinChat(
         event.chatUserAndPresence.chat?.sId ?? "",
-        event.chatUserAndPresence.user?.sId ?? "",
-        event.chatUserAndPresence.chat!.users!,
       );
       emit(
         JoinedChatState(

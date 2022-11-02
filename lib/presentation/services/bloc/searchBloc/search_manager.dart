@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-class ChatManager {
+class SearchManager {
   final io.Socket socket;
-  ChatManager({
+  SearchManager({
     required this.socket,
   });
   listenSocket() {
@@ -27,10 +27,6 @@ class ChatManager {
         log("socketio Server disconnected");
       },
     );
-    socket.on("receivedMessage", (data) {
-      log(data["newMessage"]);
-      log(data["timeLastMessage"]);
-    });
   }
 
   void emitLoggedInApp(String userID) {

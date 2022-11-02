@@ -1,8 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:rxdart/rxdart.dart';
-
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
+import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 
 abstract class ChatState {
@@ -42,7 +41,9 @@ class WentToSettingMenuChatState extends ChatState {
 
 class WentToSearchChatState extends ChatState {
   final UserInformation userInformation;
+  final UserRepository userRepository;
   WentToSearchChatState({
+    required this.userRepository, 
     required this.userInformation,
     required ChatManager chatManager,
   }) : super(chatManager: chatManager);

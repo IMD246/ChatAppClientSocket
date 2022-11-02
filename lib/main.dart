@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<ConfigAppProvider>(
       create: (context) => ConfigAppProvider(
         env: Environment(
-          isProduct: false,
+          isProduct: true,
         ),
       ),
       child: Consumer<ConfigAppProvider>(
