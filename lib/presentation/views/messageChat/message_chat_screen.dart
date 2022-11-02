@@ -18,7 +18,7 @@ import '../../../data/models/chat.dart';
 import '../../../data/models/user.dart';
 import '../widgets/online_icon_widget.dart';
 
-class MessageChatScreen extends StatelessWidget {
+class MessageChatScreen extends StatefulWidget {
   const MessageChatScreen({
     Key? key,
     required this.socket,
@@ -30,20 +30,46 @@ class MessageChatScreen extends StatelessWidget {
   final ChatUserAndPresence chatUserAndPresence;
 
   @override
+  State<MessageChatScreen> createState() => _MessageChatScreenState();
+}
+
+class _MessageChatScreenState extends State<MessageChatScreen> {
+  late String presence;
+  void startTimer(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        presence = differenceInCalendarDaysLocalization(
+          DateTime.parse(
+            widget.chatUserAndPresence.presence!.presenceTimeStamp!,
+          ),
+          context,
+        );
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    presence = differenceInCalendarDaysLocalization(
+      DateTime.parse(
+        widget.chatUserAndPresence.presence!.presenceTimeStamp!,
+      ),
+      context,
+    );
+    startTimer(context);
     return BlocProvider<MessageBloc>(
       create: (context) => MessageBloc(
           MessageManager(
-            socket: socket,
-            listMessage: chatUserAndPresence.chat!.messages ?? [],
-            userPresence: chatUserAndPresence.presence!,
-            chatID: chatUserAndPresence.chat!.sId!,
+            socket: widget.socket,
+            listMessage: widget.chatUserAndPresence.chat!.messages ?? [],
+            userPresence: widget.chatUserAndPresence.presence!,
+            chatID: widget.chatUserAndPresence.chat!.sId!,
           ),
-          userInformation,
-          chatUserAndPresence)
+          widget.userInformation,
+          widget.chatUserAndPresence)
         ..add(
           InitializingMessageEvent(
-            chatUserAndPresence: chatUserAndPresence,
+            chatUserAndPresence: widget.chatUserAndPresence,
           ),
         ),
       child: BlocConsumer<MessageBloc, MessageState>(
@@ -55,22 +81,29 @@ class MessageChatScreen extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             appBar: buildAppbar(
+                presence,
                 context,
                 state.userPresence,
-                chatUserAndPresence.chat!,
-                chatUserAndPresence.user!,
+                widget.chatUserAndPresence.chat!,
+                widget.chatUserAndPresence.user!,
                 state.userInformation),
             body: BodyMessageChat(
-                messages: state.$messages,
-                chatUserAndPresence: chatUserAndPresence),
+              messages: state.$messages,
+              chatUserAndPresence: widget.chatUserAndPresence,
+            ),
           );
         },
       ),
     );
   }
 
-  AppBar buildAppbar(BuildContext context, Stream<UserPresence> userPresence,
-      Chat chat, User user, UserInformation userInformation) {
+  AppBar buildAppbar(
+      String presence,
+      BuildContext context,
+      Stream<UserPresence> userPresence,
+      Chat chat,
+      User user,
+      UserInformation userInformation) {
     return AppBar(
       backgroundColor: Colors.greenAccent,
       leading: BackButton(
@@ -123,12 +156,7 @@ class MessageChatScreen extends StatelessWidget {
                         ),
                         if (userPresence?.presence == false)
                           TextSpan(
-                            text: differenceInCalendarDaysLocalization(
-                              DateTime.parse(
-                                userPresence!.presenceTimeStamp!,
-                              ),
-                              context,
-                            ),
+                            text: presence,
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: Colors.black54,

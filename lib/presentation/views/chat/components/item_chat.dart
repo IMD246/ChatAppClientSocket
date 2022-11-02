@@ -9,19 +9,49 @@ import '../../../services/bloc/chatBloc/chat_bloc.dart';
 import '../../widgets/offline_icon_widget.dart';
 import '../../widgets/online_icon_widget.dart';
 
-class ItemChatScreen extends StatelessWidget {
+class ItemChatScreen extends StatefulWidget {
   const ItemChatScreen({super.key, required this.chat});
   final ChatUserAndPresence chat;
+
+  @override
+  State<ItemChatScreen> createState() => _ItemChatScreenState();
+}
+
+class _ItemChatScreenState extends State<ItemChatScreen> {
+  late String timeMessage;
+  late String presence;
+  void startTimer(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        timeMessage = differenceInCalendarDaysLocalization(
+            DateTime.parse(widget.chat.chat!.timeLastMessage!), context);
+        presence = differenceInCalendarPresence(
+          DateTime.parse(
+            widget.chat.presence?.presenceTimeStamp ?? "",
+          ),
+        );
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    timeMessage = differenceInCalendarDaysLocalization(
+        DateTime.parse(widget.chat.chat!.timeLastMessage!), context);
+    presence = differenceInCalendarPresence(
+      DateTime.parse(
+        widget.chat.presence?.presenceTimeStamp ?? "",
+      ),
+    );
+    startTimer(context);
     final chatBloc = context.read<ChatBloc>();
     return InkWell(
       onTap: () {
         chatBloc.add(
-              JoinChatEvent(
-                chatUserAndPresence: chat,
-              ),
-            );
+          JoinChatEvent(
+            chatUserAndPresence: widget.chat,
+          ),
+        );
       },
       child: ListTile(
         leading: Stack(
@@ -29,41 +59,32 @@ class ItemChatScreen extends StatelessWidget {
           alignment: AlignmentDirectional.bottomCenter,
           children: [
             circleImageWidget(
-              urlImage: chat.user!.urlImage!.isEmpty
+              urlImage: widget.chat.user!.urlImage!.isEmpty
                   ? "https://i.stack.imgur.com/l60Hf.png"
-                  : chat.user!.urlImage!,
+                  : widget.chat.user!.urlImage!,
               radius: 20.w,
             ),
-            if (chat.presence!.presence!) onlineIcon(),
-            if (!chat.presence!.presence!)
+            if (widget.chat.presence!.presence!) onlineIcon(),
+            if (!widget.chat.presence!.presence!)
               offlineIcon(
-                text: differenceInCalendarPresence(
-                  DateTime.parse(
-                    chat.presence?.presenceTimeStamp ?? "",
-                  ),
-                ),
+                text: presence,
               ),
           ],
         ),
         title: textWidget(
-          text: chat.user?.name ?? "Unknown",
+          text: widget.chat.user?.name ?? "Unknown",
         ),
         subtitle: Row(
           children: [
             Flexible(
               child: textWidget(
                 maxLines: 1,
-                text: chat.chat?.lastMessage ?? "",
+                text: widget.chat.chat?.lastMessage ?? "",
                 textOverflow: TextOverflow.ellipsis,
               ),
             ),
             SizedBox(width: 16.w),
-            textWidget(
-              text: differenceInCalendarDaysLocalization(
-                DateTime.parse(chat.chat!.timeLastMessage!),
-                context,
-              ),
-            ),
+            textWidget(text: timeMessage),
           ],
         ),
       ),

@@ -56,6 +56,7 @@ String differenceInCalendarDaysLocalization(
   return "";
 }
 
+
 String differenceInCalendarPresence(DateTime earlier) {
   DateTime later = DateTime.now();
   if (later.difference(earlier).inHours >= 0 &&

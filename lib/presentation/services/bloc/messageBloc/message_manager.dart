@@ -42,6 +42,7 @@ class MessageManager {
         log("connection failed + $data");
       },
     );
+    emitJoinChat();
     getMessage();
   }
 
