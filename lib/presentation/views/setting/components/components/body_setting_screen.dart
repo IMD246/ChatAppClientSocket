@@ -10,6 +10,7 @@ import 'package:testsocketchatapp/presentation/views/setting/components/componen
 
 import '../../../../services/bloc/authBloc/auth_bloc.dart';
 import '../../../../services/bloc/authBloc/auth_event.dart';
+
 class BodySettingScreen extends StatelessWidget {
   const BodySettingScreen({
     Key? key,
@@ -47,6 +48,7 @@ class BodySettingScreen extends StatelessWidget {
                       userInformation: userInformation,
                     ),
                   );
+              Navigator.pop(context);
             },
           ),
           SizedBox(height: 16.h),

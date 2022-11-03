@@ -13,14 +13,19 @@ import 'package:testsocketchatapp/presentation/views/widgets/online_icon_widget.
 import '../../../enum/enum.dart';
 
 class MessageItem extends StatefulWidget {
-  const MessageItem(
-      {super.key,
-      required this.message,
-      required this.index,
-      required this.messages});
+  const MessageItem({
+    super.key,
+    required this.message,
+    required this.index,
+    required this.nextMessage,
+    required this.previousMessage,
+    required this.totalCountIndex,
+  });
   final Message message;
-  final Iterable<Message> messages;
+  final Message? nextMessage;
+  final Message? previousMessage;
   final int index;
+  final int totalCountIndex;
   @override
   State<MessageItem> createState() => _MessageItemState();
 }
@@ -33,14 +38,13 @@ class _MessageItemState extends State<MessageItem> {
   bool checkLastestMessageIsNotMine = false;
   _checkTimeShowTimeMessage() {
     setState(() {
-      if (widget.index == 0) {
+      if (widget.index == widget.totalCountIndex) {
         isNeedShowMessageTime = true;
       } else if (widget.index > 0) {
         isNeedShowMessageTime =
             checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
+          DateTime.parse(widget.nextMessage!.stampTimeMessage!),
           DateTime.parse(widget.message.stampTimeMessage!),
-          DateTime.parse(
-              widget.messages.elementAt(widget.index - 1).stampTimeMessage!),
         );
       } else {
         isNeedShowMessageTime = false;
@@ -51,14 +55,6 @@ class _MessageItemState extends State<MessageItem> {
   @override
   void initState() {
     _checkTimeShowTimeMessage();
-    setState(() {
-      if (widget.index < widget.messages.length - 1) {
-        if (widget.message.userID !=
-            widget.messages.elementAt(widget.index + 1).userID) {
-          isLastestMessageOfThisSeries = true;
-        }
-      }
-    });
     super.initState();
   }
 
@@ -67,12 +63,20 @@ class _MessageItemState extends State<MessageItem> {
     final messageBloc = context.read<MessageBloc>();
     final isUserMessage =
         messageBloc.userInformation.user!.sId! == widget.message.userID;
+    bool isShowLeftAvartar = false;
+    if (!isUserMessage) {
+      if (widget.previousMessage == null) {
+        isShowLeftAvartar = true;
+      } else {
+        if (widget.previousMessage!.userID! == widget.message.userID) {
+          isShowLeftAvartar = false;
+        } else {
+          isShowLeftAvartar = true;
+        }
+      }
+    }
     return Column(
       children: [
-        if (widget.index == widget.messages.length - 1)
-          SizedBox(
-            height: 16.h,
-          ),
         Visibility(
           visible: isNeedShowMessageTime || showMessageTime,
           child: textWidget(
@@ -99,7 +103,7 @@ class _MessageItemState extends State<MessageItem> {
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      if (!isUserMessage) leftAvatar(messageBloc),
+                      if (isShowLeftAvartar) leftAvatar(messageBloc),
                       GestureDetector(
                         onTap: () {
                           setState(() {

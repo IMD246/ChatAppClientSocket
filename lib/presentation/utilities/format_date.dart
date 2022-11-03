@@ -139,7 +139,7 @@ bool checkDifferenceBeforeAndCurrentIndexInMinutes(
 
 bool checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
     DateTime earlier, DateTime later) {
-  if (later.difference(earlier).inMinutes >= 30) {
+  if (later.difference(earlier).inMinutes >= 10) {
     return true;
   } else {
     return false;
