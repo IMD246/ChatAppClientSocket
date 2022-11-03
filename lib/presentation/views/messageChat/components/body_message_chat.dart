@@ -102,6 +102,7 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                                 userID: messageBloc.userInformation.user!.sId,
                                 message: textController.text,
                                 messageStatus: "Sent",
+                                stampTimeMessage: DateTime.now().toString(),
                                 typeMessage: TypeMessage.text.name,
                                 urlImageMessage: "",
                                 urlRecordMessage: "",

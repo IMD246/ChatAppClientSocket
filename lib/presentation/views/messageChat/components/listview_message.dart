@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/message.dart';
-import 'package:testsocketchatapp/presentation/views/messageChat/components/text_message.dart';
+import 'package:testsocketchatapp/presentation/views/messageChat/components/message_item.dart';
 
-import '../../../enum/enum.dart';
 
 class ListViewMessage extends StatefulWidget {
   const ListViewMessage({super.key, required this.messages});
@@ -34,27 +31,9 @@ class _ListViewMessageState extends State<ListViewMessage> {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           final message = widget.messages.reversed.elementAt(index);
-          return Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8.w,
-                  vertical: 8.h,
-                ),
-                child: dynamicTypeMessageWidget(message: message),
-              ),
-            ],
-          );
+          return MessageItem(message:message,index:index,messages: widget.messages.reversed);
         },
       ),
     );
-  }
-
-  Widget dynamicTypeMessageWidget({required Message message}) {
-    if (TypeMessage.text.name == message.typeMessage) {
-      return TextMessage(message: message);
-    } else {
-      return textWidget(text: "Dont build this type message widget yet!");
-    }
   }
 }

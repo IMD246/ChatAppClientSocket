@@ -13,9 +13,10 @@ class MessageManager {
       BehaviorSubject<List<Message>>();
   List<Message> messages = [];
   final String chatID;
+  late UserPresence userPresence;
   MessageManager(
       {required this.socket,
-      required UserPresence userPresence,
+      required this.userPresence,
       required List<Message> listMessage,
       required this.chatID}) {
     initValue(userPresence: userPresence, listMessage: listMessage);
@@ -44,6 +45,23 @@ class MessageManager {
     );
     emitJoinChat();
     getMessage();
+    socket.on("userOnline", (data) {
+      log("start received Message");
+      final presence = UserPresence.fromJson(data["presence"]);
+      if (userPresence.sId == presence.sId) {
+        userPresence = presence;
+        userPresenceSubject.add(userPresence);
+      }
+    });
+    socket.on("userDisconnected", (data) {
+      log("start received Message");
+      final presence = UserPresence.fromJson(data["presence"]);
+      presence.presenceTimeStamp = DateTime.now().toString();
+      if (userPresence.sId == presence.sId) {
+        userPresence = presence;
+        userPresenceSubject.add(userPresence);
+      }
+    });
   }
 
   void getMessage() {

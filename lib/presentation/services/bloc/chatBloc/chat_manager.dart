@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/chat.dart';
+import 'package:testsocketchatapp/data/models/user_presence.dart';
 
 import '../../../../data/models/chat_user_and_presence.dart';
 
@@ -46,6 +47,33 @@ class ChatManager {
           listChatController.add(listChat);
           log("check list chat element i new");
           log(listChat.elementAt(i).chat!.lastMessage!);
+          break;
+        }
+      }
+    });
+    socket.on("userOnline", (data) {
+      log("start received Message");
+      final presence = UserPresence.fromJson(data["presence"]);
+      for (var i = 0; i < listChat.length; i++) {
+        if (presence.sId == listChat[i].presence!.sId) {
+          listChat.elementAt(i).presence = presence;
+          listChatController.add(listChat);
+          log("check list presence element i new");
+          log(listChat.elementAt(i).presence!.presence.toString());
+          break;
+        }
+      }
+    });
+    socket.on("userDisconnected", (data) {
+      log("start received Message");
+      final presence = UserPresence.fromJson(data["presence"]);
+      presence.presenceTimeStamp = DateTime.now().toString();
+      for (var i = 0; i < listChat.length; i++) {
+        if (presence.sId == listChat[i].presence!.sId) {
+          listChat.elementAt(i).presence = presence;
+          listChatController.add(listChat);
+          log("check list presence element i new");
+          log(listChat.elementAt(i).presence!.presence.toString());
           break;
         }
       }
