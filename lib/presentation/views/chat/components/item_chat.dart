@@ -27,7 +27,7 @@ class _ItemChatScreenState extends State<ItemChatScreen> {
           chatBloc.userInformation.user!.sId) {
         return "${context.loc.you}: ";
       } else {
-        return "${widget.chat.user?.name ?? "Unknown"}: ";
+        return "";
       }
     } else {
       return "";

@@ -43,8 +43,10 @@ class _MessageItemState extends State<MessageItem> {
       } else if (widget.index > 0) {
         isNeedShowMessageTime =
             checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
-          DateTime.parse(widget.nextMessage!.stampTimeMessage!),
-          DateTime.parse(widget.message.stampTimeMessage!),
+          DateTime.parse(widget.nextMessage!.stampTimeMessage ??
+              DateTime.now().toString()),
+          DateTime.parse(
+              widget.message.stampTimeMessage ?? DateTime.now().toString()),
         );
       } else {
         isNeedShowMessageTime = false;

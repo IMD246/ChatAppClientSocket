@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/message.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/components/message_item.dart';
 
 class ListViewMessage extends StatefulWidget {
@@ -13,21 +15,20 @@ class ListViewMessage extends StatefulWidget {
 
 class _ListViewMessageState extends State<ListViewMessage> {
   late final FocusNode focusNode;
-  late final ScrollController scrollController;
   @override
   void initState() {
     focusNode = FocusNode();
-    scrollController = ScrollController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final messageBloc = context.read<MessageBloc>();
     final messages = widget.messages.reversed;
     return Expanded(
       child: ListView.builder(
         itemCount: messages.length,
-        controller: scrollController,
+        controller: messageBloc.messageManager.scrollController,
         reverse: true,
         shrinkWrap: true,
         itemBuilder: (context, index) {

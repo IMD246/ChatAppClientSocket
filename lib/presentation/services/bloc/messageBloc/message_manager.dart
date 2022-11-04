@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/message.dart';
@@ -12,6 +13,7 @@ class MessageManager {
   final BehaviorSubject<List<Message>> listMessageSubject =
       BehaviorSubject<List<Message>>();
   List<Message> messages = [];
+  late ScrollController scrollController;
   final String chatID;
   late UserPresence userPresence;
   MessageManager(
@@ -19,6 +21,7 @@ class MessageManager {
       required this.userPresence,
       required List<Message> listMessage,
       required this.chatID}) {
+    scrollController = ScrollController();
     initValue(userPresence: userPresence, listMessage: listMessage);
   }
   initValue(
@@ -65,9 +68,16 @@ class MessageManager {
   }
 
   void getMessage() {
-    socket.on("serverSendMessage", (data) {
+    socket.on("serverSendMessage", (data) async {
       messages.add(Message.fromJson(data));
       listMessageSubject.add(messages);
+      if (scrollController.hasClients) {
+        await scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 1),
+          curve: Curves.bounceIn,
+        );
+      }
     });
   }
 

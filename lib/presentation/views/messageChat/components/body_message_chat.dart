@@ -94,13 +94,15 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                 IconButton(
                   onPressed: () {
                     if (textController.text.isNotEmpty) {
+                      final String value = textController.text;
+                      textController.clear();
                       context.read<MessageBloc>().add(
                             SendTextMessageEvent(
                               chatID:
                                   widget.chatUserAndPresence.chat?.sId ?? "",
                               message: Message(
                                 userID: messageBloc.userInformation.user!.sId,
-                                message: textController.text,
+                                message: value,
                                 messageStatus: "Sent",
                                 stampTimeMessage: DateTime.now().toString(),
                                 typeMessage: TypeMessage.text.name,
@@ -109,8 +111,6 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                               ),
                             ),
                           );
-                      textController.clear();
-                      focusNode.unfocus();
                     }
                   },
                   icon: const Icon(
