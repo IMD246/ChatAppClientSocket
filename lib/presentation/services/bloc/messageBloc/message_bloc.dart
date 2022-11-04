@@ -40,7 +40,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<SendTextMessageEvent>(
       (event, emit) async {
         messageManager.sendMessage(
-            event.message, event.chatID, chatUserAndPresence.chat!.users!);
+            event.message, event.chatID, chatUserAndPresence.chat!.users!,
+            chatUserAndPresence.user!.deviceToken!);
       },
     );
   }

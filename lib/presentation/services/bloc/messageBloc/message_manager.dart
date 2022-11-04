@@ -98,7 +98,7 @@ class MessageManager {
     }
   }
 
-  void sendMessage(Message message, String chatID, List<String> usersID) {
+  void sendMessage(Message message, String chatID, List<String> usersID,String deviceToken) {
     socket.emit("clientSendMessage", {
       "chatID": chatID,
       "userID": message.userID,
@@ -108,8 +108,7 @@ class MessageManager {
       "typeMessage": message.typeMessage,
       "messageStatus": message.messageStatus,
       "usersID": usersID,
+      "deviceToken":deviceToken
     });
   }
-
-  void dispose() {}
 }

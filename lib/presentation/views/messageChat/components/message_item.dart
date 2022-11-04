@@ -178,7 +178,8 @@ class _MessageItemState extends State<MessageItem> {
                 : messageBloc.chatUserAndPresence.user!.urlImage!,
             radius: 12.w,
           ),
-          if (messageBloc.chatUserAndPresence.presence!.presence!) onlineIcon(),
+          if (messageBloc.chatUserAndPresence.presence!.presence!)
+            onlineIcon(widget: 8.w, height: 8.h),
         ],
       ),
     );

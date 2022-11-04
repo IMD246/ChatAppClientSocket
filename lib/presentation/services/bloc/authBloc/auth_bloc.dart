@@ -31,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final pref = await sharedPref;
           final token = pref.getString("token");
           final deviceToken = await FirebaseMessaging.instance.getToken();
+          log("Device Token${deviceToken ?? "Dont have data"}");
           if (token == null || token.isEmpty) {
             emit(
               AuthStateLoggedOut(
@@ -39,9 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             );
           } else {
             final checkInfoToken = await authRepository.getData(
-              body: {
-                "deviceToken": deviceToken ?? ""
-              },
+              body: {"deviceToken": deviceToken ?? ""},
               urlAPI: authRepository.loginByTokenURL,
               headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +92,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 "email": googleSignInAcc.email,
                 "name": googleSignInAcc.displayName,
                 "urlImage": googleSignInAcc.photoUrl,
-                "deviceToken":deviceToken
+                "deviceToken": deviceToken
               },
               headers: {
                 'Content-Type': 'application/json',
