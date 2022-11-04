@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'item_chat.dart';
 
@@ -13,7 +14,10 @@ class ListChat extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final chat = chats.elementAt(index);
-        return ItemChatScreen(chat:chat);
+        return Padding(
+          padding: EdgeInsets.only(top: index == 0 ? 8.0.h : 0),
+          child: ItemChatScreen(chat: chat),
+        );
       },
     );
   }

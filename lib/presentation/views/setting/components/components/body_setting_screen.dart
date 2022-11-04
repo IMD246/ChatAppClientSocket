@@ -48,7 +48,7 @@ class BodySettingScreen extends StatelessWidget {
                       userInformation: userInformation,
                     ),
                   );
-              Navigator.pop(context);
+              Navigator.popUntil(context, ModalRoute.withName("/"));
             },
           ),
           SizedBox(height: 16.h),

@@ -5,6 +5,7 @@ class Chat {
   List<String>? users;
   String? lastMessage;
   String? timeLastMessage;
+  String? userIDLastMessage;
   bool? active;
   String? createdAt;
   String? updatedAt;
@@ -27,6 +28,7 @@ class Chat {
     users = json['users'].cast<String>();
     lastMessage = json['lastMessage'];
     timeLastMessage = json['timeLastMessage'];
+    userIDLastMessage = json['userIDLastMessage'];
     active = json['active'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -45,6 +47,7 @@ class Chat {
     data['users'] = users;
     data['lastMessage'] = lastMessage;
     data['timeLastMessage'] = timeLastMessage;
+    data['userIDLastMessage'] = userIDLastMessage;
     data['active'] = active;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,8 +13,9 @@ import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -59,6 +61,7 @@ class HomeApp extends StatelessWidget {
         locale: Locale(Platform.localeName),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
+        initialRoute: '/',
         home: const App(),
       ),
     );

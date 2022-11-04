@@ -4,6 +4,7 @@ class User {
   String? name;
   bool? isDarkMode;
   String? urlImage;
+  String? deviceToken;
   int? iV;
 
   User(
@@ -20,6 +21,7 @@ class User {
     name = json['name'];
     isDarkMode = json['isDarkMode'];
     urlImage = json['urlImage'];
+    deviceToken = json['deviceToken'];
     iV = json['__v'];
   }
 
@@ -30,6 +32,7 @@ class User {
     data['name'] = name;
     data['isDarkMode'] = isDarkMode;
     data['urlImage'] = urlImage;
+    data['deviceToken'] = deviceToken;
     data['__v'] = iV;
     return data;
   }

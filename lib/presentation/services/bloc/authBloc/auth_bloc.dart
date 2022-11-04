@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testsocketchatapp/data/repositories/auth_repository.dart';
@@ -29,7 +30,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
           final pref = await sharedPref;
           final token = pref.getString("token");
-          if (token == null) {
+          final deviceToken = await FirebaseMessaging.instance.getToken();
+          if (token == null || token.isEmpty) {
             emit(
               AuthStateLoggedOut(
                 isLoading: false,
@@ -37,7 +39,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             );
           } else {
             final checkInfoToken = await authRepository.getData(
-              body: {},
+              body: {
+                "deviceToken": deviceToken ?? ""
+              },
               urlAPI: authRepository.loginByTokenURL,
               headers: {
                 'Content-Type': 'application/json',
@@ -82,12 +86,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             ),
           );
           final googleSignInAcc = await googleSignInExtension.login();
+          final deviceToken = await FirebaseMessaging.instance.getToken();
           if (googleSignInAcc != null) {
             final loginResponse = await authRepository.getData(
               body: {
                 "email": googleSignInAcc.email,
                 "name": googleSignInAcc.displayName,
                 "urlImage": googleSignInAcc.photoUrl,
+                "deviceToken":deviceToken
               },
               headers: {
                 'Content-Type': 'application/json',
@@ -141,6 +147,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               isLoading: true,
             ),
           );
+          final pref = await sharedPref;
+          await pref.setString("token", "");
           final logoutResponse = await authRepository.getData(
             body: {"userID": event.userInformation.user?.sId},
             urlAPI: authRepository.logoutURL,

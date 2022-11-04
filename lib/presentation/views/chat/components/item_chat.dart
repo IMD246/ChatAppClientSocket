@@ -3,6 +3,7 @@ import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/utilities/format_date.dart';
 import '../../../services/bloc/chatBloc/chat_bloc.dart';
@@ -20,6 +21,19 @@ class ItemChatScreen extends StatefulWidget {
 class _ItemChatScreenState extends State<ItemChatScreen> {
   late String timeMessage;
   late String presence;
+  String _handleMessageChat(BuildContext context, ChatBloc chatBloc) {
+    if (widget.chat.chat!.userIDLastMessage != "") {
+      if (widget.chat.chat!.userIDLastMessage ==
+          chatBloc.userInformation.user!.sId) {
+        return "${context.loc.you}: ";
+      } else {
+        return "${widget.chat.user?.name ?? "Unknown"}: ";
+      }
+    } else {
+      return "";
+    }
+  }
+
   void startTimer(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
@@ -45,6 +59,7 @@ class _ItemChatScreenState extends State<ItemChatScreen> {
     );
     startTimer(context);
     final chatBloc = context.read<ChatBloc>();
+    final handleMessage = _handleMessageChat(context, chatBloc);
     return InkWell(
       onTap: () {
         chatBloc.add(
@@ -79,7 +94,7 @@ class _ItemChatScreenState extends State<ItemChatScreen> {
             Flexible(
               child: textWidget(
                 maxLines: 1,
-                text: widget.chat.chat?.lastMessage ?? "",
+                text: handleMessage + (widget.chat.chat?.lastMessage ?? ""),
                 textOverflow: TextOverflow.ellipsis,
               ),
             ),
