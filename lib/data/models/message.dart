@@ -3,7 +3,7 @@ class Message {
   String? message;
   String? urlImageMessage;
   String? urlRecordMessage;
-  DateTime? stampTimeMessage;
+  String? stampTimeMessage;
   String? typeMessage;
   String? messageStatus;
 
@@ -21,7 +21,7 @@ class Message {
     message = json['message'];
     urlImageMessage = json['urlImageMessage'];
     urlRecordMessage = json['urlRecordMessage'];
-    stampTimeMessage = DateTime.parse(json['stampTimeMessage']);
+    stampTimeMessage = json['stampTimeMessage'];
     typeMessage = json['typeMessage'];
     messageStatus = json['messageStatus'];
   }

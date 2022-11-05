@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/widgets/circle_image_widget.dart';
-import 'package:flutter_basic_utilities/widgets/text_widget.dart';
+import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/message.dart';
@@ -31,7 +30,7 @@ class MessageItem extends StatefulWidget {
 }
 
 class _MessageItemState extends State<MessageItem> {
-  late bool isNeedShowMessageTime;
+  bool isNeedShowMessageTime = false;
   bool showStatusMessage = false;
   bool showMessageTime = false;
   bool isLastestMessageOfThisSeries = false;
@@ -41,11 +40,11 @@ class _MessageItemState extends State<MessageItem> {
       if (widget.index == widget.totalCountIndex) {
         isNeedShowMessageTime = true;
       } else {
-        if (widget.index > 0) {
+        if (widget.index >= 0) {
           isNeedShowMessageTime =
               checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
-            widget.nextMessage!.stampTimeMessage!,
-            widget.message.stampTimeMessage!,
+            DateTime.parse(widget.nextMessage!.stampTimeMessage!),
+            DateTime.parse(widget.message.stampTimeMessage!),
           );
         } else {
           isNeedShowMessageTime = false;
@@ -83,7 +82,7 @@ class _MessageItemState extends State<MessageItem> {
           visible: isNeedShowMessageTime || showMessageTime,
           child: textWidget(
             text: differenceInCalendarStampTime(
-              widget.message.stampTimeMessage!,
+              DateTime.parse(widget.message.stampTimeMessage!).toLocal(),
             ),
             color: Colors.black54,
             size: 12.h,

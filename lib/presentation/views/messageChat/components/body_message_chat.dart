@@ -104,7 +104,7 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                                 userID: messageBloc.userInformation.user!.sId,
                                 message: value,
                                 messageStatus: "Sent",
-                                stampTimeMessage: DateTime.now(),
+                                stampTimeMessage: DateTime.now().toString(),
                                 typeMessage: TypeMessage.text.name,
                                 urlImageMessage: "",
                                 urlRecordMessage: "",
