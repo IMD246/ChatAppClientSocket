@@ -72,7 +72,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<CreateAndJoinChatSearchEvent>((event, emit) async {
       final response = await userRepository.getData(
           body: {
-            "listUser": [userInformation.user!.sId, event.friend.user!.sId!],
+            "userID": userInformation.user!.sId,
             "userIDFriend": event.friend.user!.sId!
           },
           urlAPI: userRepository.joinChatURL,

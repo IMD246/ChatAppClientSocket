@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget onlineIcon({double? widget, double? height}) {
+Widget onlineIcon({double? widget, double? height,double? bottom,double? right,}) {
   return Positioned(
-    bottom: -1,
-    right: 0,
+    bottom: bottom ?? -1,
+    right: right ?? 0,
     child: Container(
       decoration: const BoxDecoration(
         color: Colors.white,

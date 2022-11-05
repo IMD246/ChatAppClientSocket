@@ -78,6 +78,22 @@ class ChatManager {
         }
       }
     });
+    socket.on("receivedNewChat", (data) {
+      log("start received new chat");
+      final chatUserAndPresence =
+          ChatUserAndPresence.fromJson(data["chatUserAndPresence"]);
+      final checkChat = listChat
+          .where(
+              (element) => element.chat!.sId == chatUserAndPresence.chat!.sId)
+          .toList();
+      if (checkChat.isEmpty) {
+        listChat.add(chatUserAndPresence);
+        listChatController.add(listChat);
+        log("check new chat");
+        log(listChat.elementAt(listChat.length - 1).chat?.sId ??
+            "Dont have data");
+      }
+    });
   }
 
   void emitLoggedInApp() {

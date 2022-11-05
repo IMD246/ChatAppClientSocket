@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/message.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
 
@@ -98,7 +99,15 @@ class MessageManager {
     }
   }
 
-  void sendMessage(Message message, String chatID, List<String> usersID,String deviceToken) {
+  void emitNewChat({required ChatUserAndPresence chatUserAndPresence}) {
+    socket.emit("clientSendNewChat", {
+      "chatUserAndPresence" : chatUserAndPresence,
+      "usersChat": chatUserAndPresence.chat!.users
+    });
+  }
+
+  void sendMessage(Message message, String chatID, List<String> usersID,
+      String deviceToken, String nameSender, String urlImageSender) {
     socket.emit("clientSendMessage", {
       "chatID": chatID,
       "userID": message.userID,
@@ -108,7 +117,9 @@ class MessageManager {
       "typeMessage": message.typeMessage,
       "messageStatus": message.messageStatus,
       "usersID": usersID,
-      "deviceToken":deviceToken
+      "deviceToken": deviceToken,
+      "nameSender": nameSender,
+      "urlImageSender": urlImageSender,
     });
   }
 }
