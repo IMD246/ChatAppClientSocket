@@ -9,10 +9,8 @@ import 'package:testsocketchatapp/data/models/user_presence.dart';
 
 class MessageManager {
   final io.Socket socket;
-  final BehaviorSubject<UserPresence> userPresenceSubject =
-      BehaviorSubject<UserPresence>();
-  final BehaviorSubject<List<Message>> listMessageSubject =
-      BehaviorSubject<List<Message>>();
+  late BehaviorSubject<UserPresence> userPresenceSubject;
+  late BehaviorSubject<List<Message>> listMessageSubject;
   List<Message> messages = [];
   late ScrollController scrollController;
   final String chatID;
@@ -23,13 +21,16 @@ class MessageManager {
       required List<Message> listMessage,
       required this.chatID}) {
     scrollController = ScrollController();
+
     initValue(userPresence: userPresence, listMessage: listMessage);
   }
   initValue(
       {required UserPresence userPresence,
       required List<Message> listMessage}) {
-    userPresenceSubject.add(userPresence);
+    userPresenceSubject = BehaviorSubject<UserPresence>();
+    listMessageSubject = BehaviorSubject<List<Message>>();
     messages = listMessage;
+    userPresenceSubject.add(userPresence);
     listMessageSubject.add(listMessage);
   }
 
@@ -70,7 +71,8 @@ class MessageManager {
 
   void getMessage() {
     socket.on("serverSendMessage", (data) async {
-      messages.add(Message.fromJson(data));
+      final message = Message.fromJson(data);
+      messages.add(message);
       listMessageSubject.add(messages);
       if (scrollController.hasClients) {
         await scrollController.animateTo(
@@ -87,8 +89,8 @@ class MessageManager {
       "chatID": chatID,
       "userID": userID,
     });
-    messages = [];
-    listMessageSubject.add([]);
+    // messages = [];
+    // listMessageSubject.add([]);
   }
 
   void emitJoinChat() {
@@ -101,7 +103,7 @@ class MessageManager {
 
   void emitNewChat({required ChatUserAndPresence chatUserAndPresence}) {
     socket.emit("clientSendNewChat", {
-      "chatUserAndPresence" : chatUserAndPresence,
+      "chatUserAndPresence": chatUserAndPresence,
       "usersChat": chatUserAndPresence.chat!.users
     });
   }
@@ -121,5 +123,12 @@ class MessageManager {
       "nameSender": nameSender,
       "urlImageSender": urlImageSender,
     });
+  }
+
+  void dispose() async {
+    await userPresenceSubject.drain();
+    await userPresenceSubject.close();
+    await listMessageSubject.drain();
+    await listMessageSubject.close();
   }
 }

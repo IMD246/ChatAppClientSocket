@@ -16,15 +16,25 @@ class ListViewMessage extends StatefulWidget {
 
 class _ListViewMessageState extends State<ListViewMessage> {
   late final FocusNode focusNode;
+  late final MessageBloc messageBloc;
   @override
   void initState() {
     focusNode = FocusNode();
+    setState(() {
+      messageBloc = context.read<MessageBloc>();
+    });
     super.initState();
   }
 
   @override
+  void dispose() {
+    messageBloc.messageManager.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final messageBloc = context.read<MessageBloc>();
+    // final messageBloc = context.read<MessageBloc>();
     final messages = widget.messages.reversed;
     return Expanded(
       child: messages.isEmpty

@@ -13,39 +13,39 @@ import 'package:testsocketchatapp/presentation/utilities/handle_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'home_app.dart';
 
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   // If you're going to use other Firebase services in the background, such as Firestore,
-//   // make sure you call `initializeApp` before using other Firebase services.
-//   await Firebase.initializeApp();
-//   final noti = NotificationService();
-//   await noti.initNotification();
-//   noti.showNotification(
-//       id: 1,
-//       title: message.notification?.title ?? "d",
-//       body: message.notification?.body ?? "d");
-//   log(message.notification?.title ?? "Dont have data");
-// }
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  final noti = NotificationService();
+  await noti.initNotification();
+  await noti.showNotification(
+      id: 1,
+      title: message.notification?.title ?? "d",
+      body: message.notification?.body ?? "d");
+  log(message.notification?.title ?? "Dont have data");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final noti = NotificationService();
   await noti.initNotification();
-  FirebaseMessaging.onBackgroundMessage(
-    (message) async {
-      await Firebase.initializeApp();
-      log("check url Image");
-      log(message.data["urlImageSender"] ?? "");
-      final image = await UtilsDownloadFile.downloadFile(
-          message.data["urlImageSender"] ?? "", "largeIcon");
-      await noti.showNotification(
-          id: 1,
-          title: message.notification?.title ?? "d",
-          body: message.notification?.body ?? "d",
-          urlImage: image);
-      log(message.notification?.title ?? "Dont have data");
-    },
-  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  //hide code background for test
+  // (message) async {
+  //   await Firebase.initializeApp();
+  //   log("check url Image");
+  //   log(message.data["urlImageSender"] ?? "");
+  //   final image = await UtilsDownloadFile.downloadFile(
+  //       message.data["urlImageSender"] ?? "", "largeIcon");
+  //   await noti.showNotification(
+  //       id: 1,
+  //       title: message.notification?.title ?? "d",
+  //       body: message.notification?.body ?? "d",
+  //       urlImage: image);
+  //   log(message.notification?.title ?? "Dont have data");
+  // },
   tz.initializeTimeZones();
   RemoteMessage? initialMessage =
       await FirebaseMessaging.instance.getInitialMessage();

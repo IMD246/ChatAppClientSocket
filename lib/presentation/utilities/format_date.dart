@@ -56,7 +56,6 @@ String differenceInCalendarDaysLocalization(
   return "";
 }
 
-
 String differenceInCalendarPresence(DateTime earlier) {
   DateTime later = DateTime.now();
   if (later.difference(earlier).inHours >= 0 &&
@@ -121,7 +120,7 @@ String formatTime(Duration duration) {
 
 bool checkDifferenceInCalendarInMinutes(DateTime earlier) {
   DateTime later = DateTime.now();
-  if (later.difference(earlier).inMinutes <= 0) {
+  if (later.difference(earlier).inMinutes <= 10) {
     return false;
   } else {
     return true;
@@ -139,10 +138,10 @@ bool checkDifferenceBeforeAndCurrentIndexInMinutes(
 
 bool checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
     DateTime earlier, DateTime later) {
-  if (later.difference(earlier).inMinutes >= 10) {
-    return true;
-  } else {
+  if (later.difference(earlier).inMinutes < 10) {
     return false;
+  } else {
+    return true;
   }
 }
 

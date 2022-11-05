@@ -40,16 +40,16 @@ class _MessageItemState extends State<MessageItem> {
     setState(() {
       if (widget.index == widget.totalCountIndex) {
         isNeedShowMessageTime = true;
-      } else if (widget.index > 0) {
-        isNeedShowMessageTime =
-            checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
-          DateTime.parse(widget.nextMessage!.stampTimeMessage ??
-              DateTime.now().toString()),
-          DateTime.parse(
-              widget.message.stampTimeMessage ?? DateTime.now().toString()),
-        );
       } else {
-        isNeedShowMessageTime = false;
+        if (widget.index > 0) {
+          isNeedShowMessageTime =
+              checkDifferenceBeforeAndCurrentTimeGreaterThan10Minutes(
+            widget.nextMessage!.stampTimeMessage!,
+            widget.message.stampTimeMessage!,
+          );
+        } else {
+          isNeedShowMessageTime = false;
+        }
       }
     });
   }
@@ -83,8 +83,7 @@ class _MessageItemState extends State<MessageItem> {
           visible: isNeedShowMessageTime || showMessageTime,
           child: textWidget(
             text: differenceInCalendarStampTime(
-              DateTime.parse(
-                  widget.message.stampTimeMessage ?? DateTime.now().toString()),
+              widget.message.stampTimeMessage!,
             ),
             color: Colors.black54,
             size: 12.h,
