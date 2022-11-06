@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_state.dart';
+import 'package:testsocketchatapp/presentation/services/notification/notification.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
 import 'package:testsocketchatapp/presentation/views/chat/chat_screen.dart';
 import 'package:testsocketchatapp/presentation/views/welcome/login_screen.dart';
@@ -42,9 +43,9 @@ class _AppState extends State<App> {
                     .showSnackbar(content: value["message"], context: context);
                 // log(value["urlImageSender"]);
               });
-              value.noti.onNotificationClick.stream.listen((value) {
-                ShowSnackbarScaffold().showSnackbar(
-                    content: value.toString(), context: context);
+              NotificationService.onNotificationClick.stream.listen((value) {
+                ShowSnackbarScaffold()
+                    .showSnackbar(content: value.toString(), context: context);
                 // log(value["urlImageSender"]);
               });
             }

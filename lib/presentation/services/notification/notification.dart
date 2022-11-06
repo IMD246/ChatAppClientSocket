@@ -7,11 +7,10 @@ import 'package:rxdart/subjects.dart';
 import 'package:timezone/timezone.dart' as tz;
 // ignore: library_prefixes
 
-
 class NotificationService {
   final BehaviorSubject<Map<String, dynamic>> dataSubjectNotification =
       BehaviorSubject<Map<String, dynamic>>();
-  final BehaviorSubject<String?> onNotificationClick =
+  static final BehaviorSubject<String?> onNotificationClick =
       BehaviorSubject<String?>();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -30,10 +29,10 @@ class NotificationService {
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
-    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+        onDidReceiveBackgroundNotificationResponse:
+            onDidReceiveBackgroundNotificationResponse);
   }
 
   Future<void> showNotification({
@@ -75,18 +74,18 @@ class NotificationService {
     );
   }
 
-  void onDidReceiveBackgroundNotificationResponse(
-      NotificationResponse details) {
-    onNotificationClick.add(details.payload);
+  @pragma('vm:entry-point')
+  static void onDidReceiveBackgroundNotificationResponse(
+      NotificationResponse details) async {
+    if (details.payload != null || details.payload!.isNotEmpty) {
+      onNotificationClick.add(details.payload);
+    }
     log("payload : ${details.payload}");
-    // if (details.payload != null) {
-    // }
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
-    onNotificationClick.add(details.payload);
-    log("payload : ${details.payload}");
-    // if (details.payload != null ) {
-    // }
+    if (details.payload != null || details.payload!.isNotEmpty) {
+      onNotificationClick.add(details.payload);
+    }
   }
 }

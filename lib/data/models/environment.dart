@@ -6,8 +6,8 @@ class Environment {
       baseURL = "https://chatappsocketclient.herokuapp.com";
       apiURL = "https://chatappsocketclient.herokuapp.com/api/";
     } else {
-      baseURL = "http://192.168.1.141:5000";
-      apiURL = "http://192.168.1.141:5000/api/";
+      baseURL = "http://192.168.1.3:5000";
+      apiURL = "http://192.168.1.3:5000/api/";
     }
   }
 }
