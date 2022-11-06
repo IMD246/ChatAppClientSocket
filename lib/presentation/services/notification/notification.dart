@@ -1,8 +1,18 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'dart:developer';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// ignore: depend_on_referenced_packages
+import 'package:rxdart/subjects.dart';
 import 'package:timezone/timezone.dart' as tz;
+// ignore: library_prefixes
+
 
 class NotificationService {
+  final BehaviorSubject<Map<String, dynamic>> dataSubjectNotification =
+      BehaviorSubject<Map<String, dynamic>>();
+  final BehaviorSubject<String?> onNotificationClick =
+      BehaviorSubject<String?>();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   NotificationService();
@@ -20,20 +30,26 @@ class NotificationService {
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
   }
 
   Future<void> showNotification({
     required int id,
     required String title,
     required String body,
+    required Map<String, dynamic> data,
+    String? payload,
     String urlImage = "",
   }) async {
+    dataSubjectNotification.add(data);
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
       body,
+      payload: payload,
       tz.TZDateTime.now(tz.local).add(
         const Duration(seconds: 1),
       ),
@@ -57,5 +73,20 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
+  }
+
+  void onDidReceiveBackgroundNotificationResponse(
+      NotificationResponse details) {
+    onNotificationClick.add(details.payload);
+    log("payload : ${details.payload}");
+    // if (details.payload != null) {
+    // }
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse details) {
+    onNotificationClick.add(details.payload);
+    log("payload : ${details.payload}");
+    // if (details.payload != null ) {
+    // }
   }
 }
