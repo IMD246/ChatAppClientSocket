@@ -22,8 +22,6 @@ class BodyChatScreen extends StatefulWidget {
 }
 
 class _BodyChatScreenState extends State<BodyChatScreen> {
-  int count = 0;
-  int index = -1;
   @override
   void initState() {
     super.initState();

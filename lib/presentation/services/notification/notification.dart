@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:testsocketchatapp/constants/constant.dart';
 import 'package:timezone/timezone.dart' as tz;
 // ignore: library_prefixes
 
@@ -40,7 +41,8 @@ class NotificationService {
       String? payload,
       String urlImage = "",
       required bool isBackground}) async {
-    dataSubjectNotification.add(jsonDecode(payload!) as Map<String, dynamic>);
+    dataSubjectNotification.sink
+        .add(jsonDecode(payload!) as Map<String, dynamic>);
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -51,8 +53,8 @@ class NotificationService {
       ),
       NotificationDetails(
         android: AndroidNotificationDetails(
-          'mychannel',
-          "My Channel",
+          Constants.defaultNotificationChannelId,
+          Constants.notificationName,
           importance: Importance.max,
           priority: Priority.max,
           largeIcon: FilePathAndroidBitmap(urlImage),
@@ -69,12 +71,12 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
-    stateNotification.add(isBackground);
+    stateNotification.sink.add(isBackground);
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     if (details.payload != null || details.payload!.isNotEmpty) {
-      onNotificationClick.add(details.payload);
+      onNotificationClick.sink.add(details.payload);
     }
   }
 }

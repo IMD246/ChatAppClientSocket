@@ -8,6 +8,7 @@ import 'package:testsocketchatapp/presentation/extensions/google_sign_in_extensi
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
+import 'package:testsocketchatapp/router/routers.dart';
 import 'app.dart';
 import 'data/repositories/auth_repository.dart';
 
@@ -42,7 +43,7 @@ class _HomeAppState extends State<HomeApp> {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
-        // onGenerateRoute: RouteGenerate.generateRoute,
+        onGenerateRoute: RouteGenerate.generateRoute,
         home: const App(),
       ),
     );

@@ -46,11 +46,9 @@ Future<void> setupInteractedMessage() async {
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    log("3");
     _handleMessage(event, false);
   });
   FirebaseMessaging.onMessage.listen((event) {
-    log("4");
     _handleMessage(event, false);
   });
 }
