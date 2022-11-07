@@ -109,7 +109,7 @@ class MessageManager {
   }
 
   void sendMessage(Message message, String chatID, List<String> usersID,
-      String deviceToken, String nameSender, String urlImageSender) {
+      String deviceToken, String nameSender, String urlImageSender,String userIDSender,String userIDReceiver) {
     socket.emit("clientSendMessage", {
       "chatID": chatID,
       "userID": message.userID,
@@ -122,6 +122,8 @@ class MessageManager {
       "deviceToken": deviceToken,
       "nameSender": nameSender,
       "urlImageSender": urlImageSender,
+      "userIDSender": userIDSender,
+      "userIDReceiver": userIDReceiver
     });
   }
 

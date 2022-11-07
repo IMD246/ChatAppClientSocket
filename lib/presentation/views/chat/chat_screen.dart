@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_sc
 import 'package:testsocketchatapp/presentation/views/searchFriend/search_friend_screen.dart';
 import 'package:testsocketchatapp/presentation/views/setting/components/setting_screen.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/animated_switcher_widget.dart';
+import 'package:testsocketchatapp/router/routers.dart';
 
 import '../../services/provider/config_app_provider.dart';
 
@@ -37,13 +39,15 @@ class _ChatScreenState extends State<ChatScreen> {
     final configAppProvider = Provider.of<ConfigAppProvider>(context);
     return BlocProvider<ChatBloc>(
       create: (context) => ChatBloc(
+        noti: configAppProvider.noti,
         chatManager: ChatManager(
           socket: io.io(
             configAppProvider.env.baseURL,
             <String, dynamic>{
               "transports": ["websocket"],
             },
-          ), userID: widget.userInformation.user!.sId!,
+          ),
+          userID: widget.userInformation.user!.sId!,
         ),
         userInformation: widget.userInformation,
         userRepository: UserRepository(
@@ -80,7 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _listeningState(
       {required BuildContext context, required ChatState state}) {
-  // #region listenState methods
+    // #region listenState methods
     if (state is JoinedChatState) {
       Navigator.push(
         context,
@@ -92,6 +96,9 @@ class _ChatScreenState extends State<ChatScreen> {
               socket: state.chatManager.socket,
             );
           },
+          settings: const RouteSettings(
+            name: RoutePaths.chat,
+          ),
         ),
       ).then((value) {
         context.read<ChatBloc>().add(
@@ -137,6 +144,6 @@ class _ChatScreenState extends State<ChatScreen> {
             );
       });
     }
-  // #endregion
+    // #endregion
   }
 }

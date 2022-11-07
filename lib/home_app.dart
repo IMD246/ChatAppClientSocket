@@ -20,8 +20,6 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
- 
-
   @override
   void initState() {
     super.initState();
@@ -44,6 +42,7 @@ class _HomeAppState extends State<HomeApp> {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
+        // onGenerateRoute: RouteGenerate.generateRoute,
         home: const App(),
       ),
     );

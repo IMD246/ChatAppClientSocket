@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -14,24 +15,52 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'home_app.dart';
 
 late NotificationService noti;
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+void _handleMessage(
+  RemoteMessage message,
+  bool isBackground,
+) async {
+  final image = await UtilsDownloadFile.downloadFile(
+      message.data["urlImageSender"] ?? "", "largeIcon");
   log(message.data["message"]);
   await noti.showNotification(
     id: 1,
-    title: message.notification?.title ?? "d",
-    body: message.notification?.body ?? "d",
-    data: message.data,
-    payload: "Background",
+    title: message.notification?.title ?? "",
+    body: message.notification?.body ?? "",
+    urlImage: image,
+    payload: jsonEncode(message.data),
+    isBackground: isBackground,
   );
 }
+
+Future<void> setupInteractedMessage() async {
+  noti = NotificationService();
+  await noti.initNotification();
+  tz.initializeTimeZones(); // Get any messages which caused the application to open from
+  // a terminated state.
+  await FirebaseMessaging.instance.getInitialMessage().then((value) {
+    if (value != null) {
+      noti.stateNotification.add(true);
+      noti.dataSubjectNotification.add(value.data);
+    }
+  });
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {
+    log("3");
+    _handleMessage(event, false);
+  });
+  FirebaseMessaging.onMessage.listen((event) {
+    log("4");
+    _handleMessage(event, false);
+  });
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  noti = NotificationService();
-  await noti.initNotification();
-  tz.initializeTimeZones();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  setupInteractedMessage();
   runApp(
     const MyApp(),
   );
@@ -45,44 +74,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    await FirebaseMessaging.instance.getInitialMessage().then((value) {
-      if (value != null) {
-        _handleMessage(value);
-      }
-    });
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-    FirebaseMessaging.onMessage.listen(_handleMessage);
-  }
-
-  void _handleMessage(
-    RemoteMessage message,
-  ) async {
-    final image = await UtilsDownloadFile.downloadFile(
-        message.data["urlImageSender"] ?? "", "largeIcon");
-    log(message.data["message"]);
-    await noti.showNotification(
-      id: 1,
-      title: message.notification?.title ?? "d",
-      body: message.notification?.body ?? "d",
-      urlImage: image,
-      payload: "onMessage",
-      data: message.data,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
-    setupInteractedMessage();
   }
 
   @override

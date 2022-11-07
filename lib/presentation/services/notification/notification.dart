@@ -1,6 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
-
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
@@ -8,9 +7,10 @@ import 'package:timezone/timezone.dart' as tz;
 // ignore: library_prefixes
 
 class NotificationService {
-  final BehaviorSubject<Map<String, dynamic>> dataSubjectNotification =
-      BehaviorSubject<Map<String, dynamic>>();
-  static final BehaviorSubject<String?> onNotificationClick =
+  final BehaviorSubject<Map<String, dynamic>?> dataSubjectNotification =
+      BehaviorSubject<Map<String, dynamic>?>();
+  final BehaviorSubject<bool> stateNotification = BehaviorSubject<bool>();
+  final BehaviorSubject<String?> onNotificationClick =
       BehaviorSubject<String?>();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -30,20 +30,19 @@ class NotificationService {
       iOS: iosInitializationSettings,
     );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
-        onDidReceiveBackgroundNotificationResponse:
-            onDidReceiveBackgroundNotificationResponse);
+        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   }
 
   Future<void> showNotification({
     required int id,
     required String title,
     required String body,
-    required Map<String, dynamic> data,
     String? payload,
     String urlImage = "",
+    required bool isBackground
   }) async {
-    dataSubjectNotification.add(data);
+    stateNotification.add(isBackground);
+    dataSubjectNotification.add(jsonDecode(payload!) as Map<String, dynamic>);
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -72,15 +71,6 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
-  }
-
-  @pragma('vm:entry-point')
-  static void onDidReceiveBackgroundNotificationResponse(
-      NotificationResponse details) async {
-    if (details.payload != null || details.payload!.isNotEmpty) {
-      onNotificationClick.add(details.payload);
-    }
-    log("payload : ${details.payload}");
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {

@@ -6,16 +6,20 @@ import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
+import 'package:testsocketchatapp/presentation/services/notification/notification.dart';
 import 'package:testsocketchatapp/presentation/utilities/validate.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatManager chatManager;
   final UserInformation userInformation;
   final UserRepository userRepository;
-  ChatBloc({
+  final NotificationService noti;
+  ChatBloc(
+    {
     required this.userInformation,
     required this.chatManager,
     required this.userRepository,
+    required this.noti, 
   }) : super(
           BackToWaitingChatState(
             userInformation: userInformation,

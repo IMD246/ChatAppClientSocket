@@ -22,6 +22,18 @@ class BodyChatScreen extends StatefulWidget {
 }
 
 class _BodyChatScreenState extends State<BodyChatScreen> {
+  int count = 0;
+  int index = -1;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -45,7 +45,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             chatUserAndPresence.chat!.users!,
             chatUserAndPresence.user!.deviceToken!,
             userInformation.user?.name ?? "",
-            userInformation.user?.urlImage ?? "");
+            userInformation.user?.urlImage ?? "",
+            userInformation.user!.sId!,
+            chatUserAndPresence.user!.sId!);
       },
     );
   }
