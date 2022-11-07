@@ -37,23 +37,25 @@ class _AppState extends State<App> {
           listener: (context, state) {
             if (state is AuthStateLoggedIn) {
               configProvider.noti.stateNotification.stream.listen((value) {
-                if (value) {
-                  configProvider.noti.dataSubjectNotification.stream
-                      .listen((v) {
-                    if (v != null) {
-                      ShowSnackbarScaffold().showSnackbar(
-                          content: v["message"], context: context);
-                    }
-                  });
-                } else {
-                  configProvider.noti.onNotificationClick.stream
-                      .listen((value) {
-                    if (value != null) {
-                      final data = jsonDecode(value);
-                      ShowSnackbarScaffold().showSnackbar(
-                          content: data["message"], context: context);
-                    }
-                  });
+                if (value != null) {
+                  if (value) {
+                    configProvider.noti.dataSubjectNotification.stream
+                        .listen((v) {
+                      if (v != null) {
+                        ShowSnackbarScaffold().showSnackbar(
+                            content: v["message"], context: context);
+                      }
+                    });
+                  } else {
+                    configProvider.noti.onNotificationClick.stream
+                        .listen((value) {
+                      if (value != null) {
+                        final data = jsonDecode(value);
+                        ShowSnackbarScaffold().showSnackbar(
+                            content: data["message"], context: context);
+                      }
+                    });
+                  }
                 }
               });
             }

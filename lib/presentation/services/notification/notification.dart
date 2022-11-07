@@ -9,7 +9,7 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   final BehaviorSubject<Map<String, dynamic>?> dataSubjectNotification =
       BehaviorSubject<Map<String, dynamic>?>();
-  final BehaviorSubject<bool> stateNotification = BehaviorSubject<bool>();
+  final BehaviorSubject<bool?> stateNotification = BehaviorSubject<bool?>();
   final BehaviorSubject<String?> onNotificationClick =
       BehaviorSubject<String?>();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -33,15 +33,13 @@ class NotificationService {
         onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   }
 
-  Future<void> showNotification({
-    required int id,
-    required String title,
-    required String body,
-    String? payload,
-    String urlImage = "",
-    required bool isBackground
-  }) async {
-    stateNotification.add(isBackground);
+  Future<void> showNotification(
+      {required int id,
+      required String title,
+      required String body,
+      String? payload,
+      String urlImage = "",
+      required bool isBackground}) async {
     dataSubjectNotification.add(jsonDecode(payload!) as Map<String, dynamic>);
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
@@ -71,6 +69,7 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
+    stateNotification.add(isBackground);
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {

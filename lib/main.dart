@@ -20,7 +20,7 @@ void _handleMessage(
   bool isBackground,
 ) async {
   final image = await UtilsDownloadFile.downloadFile(
-      message.data["urlImageSender"] ?? "", "largeIcon");
+      message.notification?.android?.imageUrl ?? "", "largeIcon");
   log(message.data["message"]);
   await noti.showNotification(
     id: 1,
