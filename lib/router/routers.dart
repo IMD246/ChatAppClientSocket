@@ -1,34 +1,42 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:testsocketchatapp/page1.dart';
-import 'package:testsocketchatapp/page2.dart';
 
-class RoutePaths {
-  static const String page1 = "/page1";
-  static const String page2 = "/page2";
-}
-
-class RouteGenerate {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case '/page1':
-        return MaterialPageRoute(builder: (_) => const Page1());
-      case '/page2':
-        return MaterialPageRoute(builder: (_) => const Page2());
-      default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text('No route defined for ${settings.name}')),
-          ),
-        );
-    }
-  }
-}
+// class RouteGenerate {
+//   static Route<dynamic> generateRoute(RouteSettings settings) {
+//     switch (settings.name) {
+//       case "/":
+//         return MaterialPageRoute(
+//           builder: (context) {
+//             return const App();
+//           },
+//         );
+//       // case "chat":
+//       //   final value = jsonDecode(settings.arguments.toString());
+//       //   log(value);
+//       //   return MaterialPageRoute(
+//       //     builder: (context) {
+//       //       return MessageChatScreen(
+//       //         socket: value["socket"],
+//       //         chatUserAndPresence: value["chatUserAndPresence"],
+//       //         userInformation: value["userInformation"],
+//       //       );
+//       //     },
+//       //   );
+//       default:
+//         return MaterialPageRoute(
+//           builder: (_) => Scaffold(
+//             body: Center(child: Text('No route defined for ${settings.name}')),
+//           ),
+//         );
+//     }
+//   }
+// }
 
 class RoutesHandler {
-  static bool checkChatPage({required String pathValue}) {
-    if (pathValue.contains(RoutePaths.page1) == true) {
+  static bool checkChatPage(
+      {required String pathValue, required String idChat}) {
+    if (pathValue.contains("chat:$idChat") == true) {
       return true;
     }
     return false;

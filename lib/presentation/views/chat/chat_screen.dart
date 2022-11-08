@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +57,14 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       child: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
+          if (state is BackToWaitingChatState) {
+            configAppProvider.handlerNotification(
+              context: context,
+              listChatUser: state.chatManager.listChat,
+              socket: state.chatManager.socket,
+              userInformation: state.userInformation,
+            );
+          }
           _listeningState(context: context, state: state);
         },
         builder: (context, state) {
@@ -87,14 +94,14 @@ class _ChatScreenState extends State<ChatScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) {
-            return MessageChatScreen(
-              chatUserAndPresence: state.chatUserAndPresence,
-              userInformation: state.userInformation,
-              socket: state.chatManager.socket,
-            );
-          },
-        ),
+            builder: (context) {
+              return MessageChatScreen(
+                chatUserAndPresence: state.chatUserAndPresence,
+                userInformation: state.userInformation,
+                socket: state.chatManager.socket,
+              );
+            },
+            settings: RouteSettings(name: "chat:${state.chatUserAndPresence.chat?.sId ?? ""}"),),
       ).then((value) {
         context.read<ChatBloc>().add(
               BackToWaitingChatEvent(

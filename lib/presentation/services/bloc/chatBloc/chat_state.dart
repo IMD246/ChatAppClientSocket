@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
@@ -11,7 +12,7 @@ abstract class ChatState {
   });
 }
 
-class BackToWaitingChatState extends ChatState {
+class BackToWaitingChatState extends ChatState with EquatableMixin {
   final UserInformation userInformation;
   final BehaviorSubject<List<ChatUserAndPresence>> listChatController;
   BackToWaitingChatState({
@@ -19,6 +20,9 @@ class BackToWaitingChatState extends ChatState {
     required this.listChatController,
     required ChatManager chatManager,
   }) : super(chatManager: chatManager);
+
+  @override
+  List<Object?> get props => [userInformation, chatManager];
 }
 
 class JoinedChatState extends ChatState {
@@ -43,7 +47,7 @@ class WentToSearchChatState extends ChatState {
   final UserInformation userInformation;
   final UserRepository userRepository;
   WentToSearchChatState({
-    required this.userRepository, 
+    required this.userRepository,
     required this.userInformation,
     required ChatManager chatManager,
   }) : super(chatManager: chatManager);

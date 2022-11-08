@@ -23,7 +23,6 @@ void _handleMessage(
 ) async {
   final image = await UtilsDownloadFile.downloadFile(
       message.notification?.android?.imageUrl ?? "", "largeIcon");
-  log(message.data["message"]);
   await noti.showNotification(
     id: 1,
     title: message.notification?.title ?? "",
@@ -83,7 +82,8 @@ class _MyAppState extends State<MyApp> {
         env: Environment(
           isProduct: false,
         ),
-        noti: noti, navigatorKey: GlobalKey<NavigatorState>(),
+        noti: noti,
+        navigatorKey: GlobalKey<NavigatorState>(),
       ),
       child: Consumer<ConfigAppProvider>(
         builder: (context, value, child) {
