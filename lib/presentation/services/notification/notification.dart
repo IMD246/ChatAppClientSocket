@@ -6,8 +6,8 @@ import 'package:testsocketchatapp/constants/constant.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
-  final BehaviorSubject<Map<String, dynamic>?> onNotificationClick =
-      BehaviorSubject<Map<String, dynamic>?>();
+  final PublishSubject<Map<String, dynamic>?> onNotificationClick =
+      PublishSubject<Map<String, dynamic>?>();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   NotificationService();

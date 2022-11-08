@@ -15,7 +15,7 @@ class ConfigAppProvider extends ChangeNotifier {
   ConfigAppProvider(
       {required this.env, required this.noti, required this.navigatorKey});
 
-  handlerNotification({
+  void handlerNotification({
     required BuildContext context,
     required List<ChatUserAndPresence> listChatUser,
     required Socket socket,
@@ -51,7 +51,7 @@ class ConfigAppProvider extends ChangeNotifier {
                   ),
                 );
               } else {
-                _checkChatPageOrReplace(
+                await _checkChatPageOrReplace(
                   namePath: namePath,
                   navigator: navigator,
                   socket: socket,
@@ -61,8 +61,8 @@ class ConfigAppProvider extends ChangeNotifier {
               }
             }
           }
-          await noti.onNotificationClick.drain(null);
         }
+        await noti.onNotificationClick.drain();
       },
     );
   }

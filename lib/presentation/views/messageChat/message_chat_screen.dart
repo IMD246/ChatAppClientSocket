@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,14 +51,14 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
   }
 
   @override
+  void initState() {
+    // startTimer(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    presence = differenceInCalendarDaysLocalization(
-      DateTime.parse(
-        widget.chatUserAndPresence.presence!.presenceTimeStamp!,
-      ),
-      context,
-    );
-    startTimer(context);
+    log("check route name: ${ModalRoute.of(context)!.settings.name!}");
     return BlocProvider<MessageBloc>(
       create: (context) => MessageBloc(
           MessageManager(
@@ -81,7 +83,6 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: buildAppbar(
-                presence,
                 context,
                 state.userPresence,
                 widget.chatUserAndPresence.chat!,
@@ -97,13 +98,8 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
     );
   }
 
-  AppBar buildAppbar(
-      String presence,
-      BuildContext context,
-      Stream<UserPresence> userPresence,
-      Chat chat,
-      User user,
-      UserInformation userInformation) {
+  AppBar buildAppbar(BuildContext context, Stream<UserPresence> userPresence,
+      Chat chat, User user, UserInformation userInformation) {
     return AppBar(
       backgroundColor: Colors.greenAccent,
       leading: BackButton(
@@ -156,7 +152,13 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
                         ),
                         if (userPresence?.presence == false)
                           TextSpan(
-                            text: presence,
+                            text: differenceInCalendarDaysLocalization(
+                              DateTime.parse(
+                                widget.chatUserAndPresence.presence!
+                                    .presenceTimeStamp!,
+                              ),
+                              context,
+                            ),
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: Colors.black54,

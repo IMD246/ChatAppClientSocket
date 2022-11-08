@@ -94,14 +94,16 @@ class _ChatScreenState extends State<ChatScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) {
-              return MessageChatScreen(
-                chatUserAndPresence: state.chatUserAndPresence,
-                userInformation: state.userInformation,
-                socket: state.chatManager.socket,
-              );
-            },
-            settings: RouteSettings(name: "chat:${state.chatUserAndPresence.chat?.sId ?? ""}"),),
+          builder: (context) {
+            return MessageChatScreen(
+              chatUserAndPresence: state.chatUserAndPresence,
+              userInformation: state.userInformation,
+              socket: state.chatManager.socket,
+            );
+          },
+          settings: RouteSettings(
+              name: "chat:${state.chatUserAndPresence.chat?.sId ?? ""}"),
+        ),
       ).then((value) {
         context.read<ChatBloc>().add(
               BackToWaitingChatEvent(
