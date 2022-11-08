@@ -15,6 +15,8 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'home_app.dart';
 
 late NotificationService noti;
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {}
+
 void _handleMessage(
   RemoteMessage message,
   bool isBackground,
@@ -26,39 +28,35 @@ void _handleMessage(
     id: 1,
     title: message.notification?.title ?? "",
     body: message.notification?.body ?? "",
-    urlImage: image,
+    urlImage: image ?? "",
     payload: jsonEncode(message.data),
     isBackground: isBackground,
   );
 }
 
 Future<void> setupInteractedMessage() async {
-  noti = NotificationService();
-  await noti.initNotification();
-  tz.initializeTimeZones(); // Get any messages which caused the application to open from
-  // a terminated state.
-  await FirebaseMessaging.instance.getInitialMessage().then((value) {
-    if (value != null) {
-      noti.stateNotification.add(true);
-      noti.dataSubjectNotification.add(value.data);
-    }
-  });
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    log("initMes");
+    noti.onNotificationClick.add(initialMessage.data);
+  }
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    _handleMessage(event, false);
+    log("onMessOpened");
+    noti.onNotificationClick.add(event.data);
   });
   FirebaseMessaging.onMessage.listen((event) {
+    log("onMessage");
     _handleMessage(event, false);
   });
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
-
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  noti = NotificationService();
   await Firebase.initializeApp();
-  setupInteractedMessage();
+  await noti.initNotification();
+  tz.initializeTimeZones();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
     const MyApp(),
   );
@@ -75,6 +73,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    setupInteractedMessage();
   }
 
   @override
@@ -84,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         env: Environment(
           isProduct: false,
         ),
-        noti: noti,
+        noti: noti, navigatorKey: GlobalKey<NavigatorState>(),
       ),
       child: Consumer<ConfigAppProvider>(
         builder: (context, value, child) {

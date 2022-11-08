@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,38 +33,13 @@ class _AppState extends State<App> {
       builder: (context, child) {
         return BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is AuthStateLoggedIn) {
-              configProvider.noti.stateNotification.listen((value) {
-                if (value != null) {
-                  log("check $value");
-                  if (value) {
-                    configProvider.noti.dataSubjectNotification.listen((v) {
-                      if (v != null) {
-                        ShowSnackbarScaffold().showSnackbar(
-                            content: v["message"], context: context);
-                        configProvider.noti.dataSubjectNotification.sink
-                            .add(null);
-                      }
-                    });
-                  } else {
-                    configProvider.noti.onNotificationClick.listen((value) {
-                      if (value != null) {
-                        final data = jsonDecode(value);
-                        ShowSnackbarScaffold().showSnackbar(
-                            content: data["message"], context: context);
-                        configProvider.noti.onNotificationClick.sink.add(null);
-                      }
-                    });
-                  }
-                  configProvider.noti.stateNotification.sink.add(null);
-                }
-              });
-            }
-
             if (state.isLoading) {
               ShowLoadingParallelScreen().showLoading(context: context);
             } else {
               ShowLoadingParallelScreen().hideLoading();
+            }
+            if (state is AuthStateLoggedIn) {
+              configProvider.handlerNotification(context: context);
             }
           },
           builder: (context, state) {

@@ -1,18 +1,13 @@
-// ignore_for_file: depend_on_referenced_packages
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:testsocketchatapp/constants/constant.dart';
 import 'package:timezone/timezone.dart' as tz;
-// ignore: library_prefixes
 
 class NotificationService {
-  final BehaviorSubject<Map<String, dynamic>?> dataSubjectNotification =
+  final BehaviorSubject<Map<String, dynamic>?> onNotificationClick =
       BehaviorSubject<Map<String, dynamic>?>();
-  final BehaviorSubject<bool?> stateNotification = BehaviorSubject<bool?>();
-  final BehaviorSubject<String?> onNotificationClick =
-      BehaviorSubject<String?>();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   NotificationService();
@@ -41,8 +36,6 @@ class NotificationService {
       String? payload,
       String urlImage = "",
       required bool isBackground}) async {
-    dataSubjectNotification.sink
-        .add(jsonDecode(payload!) as Map<String, dynamic>);
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -57,7 +50,7 @@ class NotificationService {
           Constants.notificationName,
           importance: Importance.max,
           priority: Priority.max,
-          largeIcon: FilePathAndroidBitmap(urlImage),
+          largeIcon: urlImage.isEmpty ? null : FilePathAndroidBitmap(urlImage),
           channelDescription: "Main Channel Notifiaction",
         ),
         iOS: const DarwinNotificationDetails(
@@ -71,12 +64,11 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
-    stateNotification.sink.add(isBackground);
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     if (details.payload != null || details.payload!.isNotEmpty) {
-      onNotificationClick.sink.add(details.payload);
+      onNotificationClick.add(jsonDecode(details.payload!));
     }
   }
 }

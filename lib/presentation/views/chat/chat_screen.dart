@@ -14,8 +14,6 @@ import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_sc
 import 'package:testsocketchatapp/presentation/views/searchFriend/search_friend_screen.dart';
 import 'package:testsocketchatapp/presentation/views/setting/components/setting_screen.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/animated_switcher_widget.dart';
-import 'package:testsocketchatapp/router/routers.dart';
-
 import '../../services/provider/config_app_provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -96,9 +94,6 @@ class _ChatScreenState extends State<ChatScreen> {
               socket: state.chatManager.socket,
             );
           },
-          settings: const RouteSettings(
-            name: RoutePaths.chat,
-          ),
         ),
       ).then((value) {
         context.read<ChatBloc>().add(

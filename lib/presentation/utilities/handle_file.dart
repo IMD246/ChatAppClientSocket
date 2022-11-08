@@ -3,7 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 class UtilsDownloadFile {
-  static Future<String> downloadFile(String url, String fileName) async {
+  static Future<String?> downloadFile(String url, String fileName) async {
+    if (url.isEmpty) {
+      return null;
+    }
     final directory = await getApplicationDocumentsDirectory();
     final filePath = '${directory.path}/$fileName';
     final response = await http.get(Uri.parse(url));

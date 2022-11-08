@@ -38,12 +38,16 @@ class _HomeAppState extends State<HomeApp> {
         ),
       )..add(AuthEventLoginWithToken()),
       child: MaterialApp(
+        navigatorKey: value.navigatorKey,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale(Platform.localeName),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
-        onGenerateRoute: RouteGenerate.generateRoute,
+        onGenerateRoute: (settings) {
+          return RouteGenerate.generateRoute(settings);
+        },
+        // onGenerateRoute: RouteGenerate.generateRoute,
         home: const App(),
       ),
     );
