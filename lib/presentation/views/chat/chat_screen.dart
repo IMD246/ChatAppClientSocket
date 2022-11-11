@@ -58,12 +58,21 @@ class _ChatScreenState extends State<ChatScreen> {
       child: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
           if (state is BackToWaitingChatState) {
-            configAppProvider.handlerNotification(
-              context: context,
-              listChatUser: state.chatManager.listChat,
-              socket: state.chatManager.socket,
-              userInformation: state.userInformation,
-            );
+            if (configAppProvider.count <= 0) {
+              configAppProvider.initNotification(
+                context: context,
+                listChatUser: state.chatManager.listChat,
+                socket: state.chatManager.socket,
+                userInformation: state.userInformation,
+              );
+            } else {
+              configAppProvider.handlerNotification(
+                context: context,
+                listChatUser: state.chatManager.listChat,
+                socket: state.chatManager.socket,
+                userInformation: state.userInformation,
+              );
+            }
           }
           _listeningState(context: context, state: state);
         },

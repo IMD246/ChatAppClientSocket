@@ -52,13 +52,13 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
 
   @override
   void initState() {
-    // startTimer(context);
+    startTimer(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    log("check route name: ${ModalRoute.of(context)!.settings.name!}");
+    startTimer(context);
     return BlocProvider<MessageBloc>(
       create: (context) => MessageBloc(
           MessageManager(
@@ -150,15 +150,9 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
                             color: Colors.black54,
                           ),
                         ),
-                        if (userPresence?.presence == false)
+                        if (userPresence?.presence == true)
                           TextSpan(
-                            text: differenceInCalendarDaysLocalization(
-                              DateTime.parse(
-                                widget.chatUserAndPresence.presence!
-                                    .presenceTimeStamp!,
-                              ),
-                              context,
-                            ),
+                            text: presence,
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: Colors.black54,

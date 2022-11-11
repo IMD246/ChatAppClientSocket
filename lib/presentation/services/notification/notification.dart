@@ -8,6 +8,7 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   final PublishSubject<Map<String, dynamic>?> onNotificationClick =
       PublishSubject<Map<String, dynamic>?>();
+  Map<String, dynamic>? initDataNotification;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   NotificationService();
