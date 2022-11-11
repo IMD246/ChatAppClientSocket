@@ -17,6 +17,7 @@ import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 import '../../../data/models/friend.dart';
 import '../../services/provider/config_app_provider.dart';
 import 'friend_item.dart';
+
 class SearchFriendScreen extends StatelessWidget {
   const SearchFriendScreen(
       {super.key,
@@ -47,7 +48,8 @@ class SearchFriendScreen extends StatelessWidget {
         body: BlocConsumer<SearchBloc, SearchState>(
           listener: (context, state) {
             if (state is JoinedChatSuccessSearchState) {
-              Navigator.of(context).push(
+              Navigator.of(context)
+                  .push(
                 MaterialPageRoute(
                   builder: (context) {
                     return MessageChatScreen(
@@ -56,8 +58,12 @@ class SearchFriendScreen extends StatelessWidget {
                       userInformation: state.userInformation,
                     );
                   },
+                  settings: RouteSettings(
+                    name: "chat:${state.chatUserAndPresence.chat!.sId!}",
+                  ),
                 ),
-              ).then((value) {
+              )
+                  .then((value) {
                 context.read<SearchBloc>().add(
                       TypingSearchEvent(
                         keyWord: searchText.text,

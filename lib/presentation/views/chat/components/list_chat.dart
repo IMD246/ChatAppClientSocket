@@ -13,6 +13,11 @@ class ListChat extends StatelessWidget {
       itemCount: chats.length,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
+        chats.sort(
+          (b, a) => a.chat!.timeLastMessage!.compareTo(
+            b.chat!.timeLastMessage!,
+          ),
+        );
         final chat = chats.elementAt(index);
         return Padding(
           padding: EdgeInsets.only(top: index == 0 ? 8.0.h : 0),
