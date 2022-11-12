@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:testsocketchatapp/data/models/message.dart';
 import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/utilities/format_date.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/components/text_message.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/online_icon_widget.dart';
 
+import '../../../../data/models/chat_message.dart';
 import '../../../enum/enum.dart';
 
 class MessageItem extends StatefulWidget {
@@ -20,9 +20,9 @@ class MessageItem extends StatefulWidget {
     required this.previousMessage,
     required this.totalCountIndex,
   });
-  final Message message;
-  final Message? nextMessage;
-  final Message? previousMessage;
+  final ChatMessage message;
+  final ChatMessage? nextMessage;
+  final ChatMessage? previousMessage;
   final int index;
   final int totalCountIndex;
   @override
@@ -183,7 +183,7 @@ class _MessageItemState extends State<MessageItem> {
     );
   }
 
-  Widget dynamicTypeMessageWidget({required Message message}) {
+  Widget dynamicTypeMessageWidget({required ChatMessage message}) {
     if (TypeMessage.text.name == message.typeMessage) {
       return TextMessage(message: message);
     } else {

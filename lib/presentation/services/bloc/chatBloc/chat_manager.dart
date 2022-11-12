@@ -94,6 +94,11 @@ class ChatManager {
             "Dont have data");
       }
     });
+    socket.on("receivedNewChat", (data) {
+      final newChat = ChatUserAndPresence.fromJson(data);
+      listChat.add(newChat);
+      listChatController.add(listChat);
+    });
   }
 
   void emitLoggedInApp() {

@@ -1,5 +1,5 @@
+import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/data/models/message.dart';
 abstract class MessageEvent {}
 
 class InitializingMessageEvent extends MessageEvent {
@@ -20,6 +20,6 @@ class LeaveChatMessageEvent extends MessageEvent {
 
 class SendTextMessageEvent extends MessageEvent {
   final String chatID;
-  final Message message;
+  final ChatMessage message;
   SendTextMessageEvent({required this.chatID, required this.message});
 }

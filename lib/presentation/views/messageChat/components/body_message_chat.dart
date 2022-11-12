@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/data/models/message.dart';
 import 'package:testsocketchatapp/presentation/enum/enum.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
@@ -13,7 +13,7 @@ class BodyMessageChat extends StatefulWidget {
   const BodyMessageChat(
       {Key? key, required this.messages, required this.chatUserAndPresence})
       : super(key: key);
-  final Stream<List<Message>> messages;
+  final Stream<List<ChatMessage>> messages;
   final ChatUserAndPresence chatUserAndPresence;
   @override
   State<BodyMessageChat> createState() => _BodyMessageChatState();
@@ -34,12 +34,14 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
     final messageBloc = context.read<MessageBloc>();
     return Column(
       children: [
-        Observer<List<Message>>(
-          onSuccess: (context, data) {
-            final messages = data ?? [];
-            return ListViewMessage(messages: messages);
-          },
-          stream: widget.messages,
+        Expanded(
+          child: Observer<List<ChatMessage>>(
+            onSuccess: (context, data) {
+              final messages = data ?? [];
+              return ListViewMessage(messages: messages);
+            },
+            stream: widget.messages,
+          ), 
         ),
         Container(
           padding: EdgeInsets.symmetric(
@@ -100,13 +102,13 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                             SendTextMessageEvent(
                               chatID:
                                   widget.chatUserAndPresence.chat?.sId ?? "",
-                              message: Message(
+                              message: ChatMessage(
                                 userID: messageBloc.userInformation.user!.sId,
                                 message: value,
                                 messageStatus: "Sent",
                                 stampTimeMessage: DateTime.now().toString(),
                                 typeMessage: TypeMessage.text.name,
-                                urlImageMessage: "",
+                                urlImageMessage: [],
                                 urlRecordMessage: "",
                               ),
                             ),

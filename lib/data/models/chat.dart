@@ -1,5 +1,3 @@
-import 'package:testsocketchatapp/data/models/message.dart';
-
 class Chat {
   String? sId;
   List<String>? users;
@@ -10,7 +8,6 @@ class Chat {
   String? createdAt;
   String? updatedAt;
   int? iV;
-  List<Message>? messages;
 
   Chat(
       {this.sId,
@@ -21,7 +18,7 @@ class Chat {
       this.createdAt,
       this.updatedAt,
       this.iV,
-      this.messages});
+      });
 
   Chat.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -33,12 +30,6 @@ class Chat {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
-    if (json['messages'] != null) {
-      messages = <Message>[];
-      json['messages'].forEach((v) {
-        messages!.add(Message.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
@@ -52,9 +43,6 @@ class Chat {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['__v'] = iV;
-    if (messages != null) {
-      data['messages'] = messages!.map((v) => v.toJson()).toList();
-    }
     return data;
   }
 }

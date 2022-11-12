@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:testsocketchatapp/data/models/message.dart';
+import 'package:testsocketchatapp/data/models/chat_message.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({
@@ -8,7 +8,7 @@ class TextMessage extends StatelessWidget {
     required this.message,
   }) : super(key: key);
 
-  final Message message;
+  final ChatMessage message;
   @override
   Widget build(BuildContext context) {
     return Container(

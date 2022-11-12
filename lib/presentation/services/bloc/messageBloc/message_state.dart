@@ -1,10 +1,8 @@
+import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
-
-import '../../../../data/models/message.dart';
-
 abstract class MessageState {
-  final Stream<List<Message>> $messages;
+  final Stream<List<ChatMessage>> $messages;
   final UserInformation userInformation;
   final Stream<UserPresence> userPresence;
   MessageState({required this.$messages,required this.userInformation, required this.userPresence});

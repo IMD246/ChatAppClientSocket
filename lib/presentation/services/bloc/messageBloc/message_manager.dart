@@ -3,42 +3,63 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/data/models/message.dart';
+import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
+import 'package:testsocketchatapp/presentation/utilities/validate.dart';
+
+import '../../../../data/models/chat_user_and_presence.dart';
+import '../../../../data/repositories/chat_message_repository.dart';
 
 class MessageManager {
   final io.Socket socket;
   late BehaviorSubject<UserPresence> userPresenceSubject;
-  late BehaviorSubject<List<Message>> listMessageSubject;
-  List<Message> messages = [];
+  late BehaviorSubject<List<ChatMessage>> listChatMessagesSubject;
+  final ChatMessageRepository chatMessageRepository;
+  List<ChatMessage> chatMessages = [];
   late ScrollController scrollController;
   final String chatID;
   late UserPresence userPresence;
-  MessageManager(
-      {required this.socket,
-      required this.userPresence,
-      required List<Message> listMessage,
-      required this.chatID}) {
+  MessageManager({
+    required this.socket,
+    required this.userPresence,
+    required this.chatID,
+    required this.chatMessageRepository,
+  }) {
     scrollController = ScrollController();
 
-    initValue(userPresence: userPresence, listMessage: listMessage);
+    initValue(userPresence: userPresence);
   }
   initValue(
-      {required UserPresence userPresence,
-      required List<Message> listMessage}) {
+      {required UserPresence userPresence}) {
+    log("check chat id $chatID");
     userPresenceSubject = BehaviorSubject<UserPresence>();
-    listMessageSubject = BehaviorSubject<List<Message>>();
-    messages = listMessage;
+    listChatMessagesSubject = BehaviorSubject<List<ChatMessage>>();
     userPresenceSubject.add(userPresence);
-    listMessageSubject.add(listMessage);
+    fetchChatMessages(chatID: chatID);
+  }
+
+  fetchChatMessages({required String chatID}) async {
+    final response = await chatMessageRepository.getData(
+      body: {"chatID": chatID},
+      urlAPI: chatMessageRepository.getChatMessagesURL,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    if (ValidateUtilities.checkBaseResponse(baseResponse: response)) {
+      chatMessages =
+          chatMessageRepository.convertDynamicToList(value: response!);
+    } else {
+      chatMessages = [];
+    }
+    listChatMessagesSubject.add(chatMessages);
   }
 
   listenSocket() {
     socket.onConnect(
       (data) {
         log("Connection established");
-        emitJoinChat();
       },
     );
 
@@ -48,7 +69,7 @@ class MessageManager {
         log("connection failed + $data");
       },
     );
-    emitJoinChat();
+    // emitJoinChat();
     getMessage();
     socket.on("userOnline", (data) {
       log("start received Message");
@@ -71,9 +92,9 @@ class MessageManager {
 
   void getMessage() {
     socket.on("serverSendMessage", (data) async {
-      final message = Message.fromJson(data);
-      messages.add(message);
-      listMessageSubject.add(messages);
+      final chatMessage = ChatMessage.fromJson(data);
+      chatMessages.add(chatMessage);
+      listChatMessagesSubject.add(chatMessages);
       if (scrollController.hasClients) {
         await scrollController.animateTo(
           0.0,
@@ -83,36 +104,23 @@ class MessageManager {
       }
     });
   }
-
-  void emitLeaveChat(String chatID, String userID) {
-    socket.emit("LeaveChat", {
-      "chatID": chatID,
-      "userID": userID,
-    });
-    // messages = [];
-    // listMessageSubject.add([]);
-  }
-
-  void emitJoinChat() {
-    if (chatID.isNotEmpty) {
-      socket.emit("JoinChat", {
-        "chatID": chatID,
-      });
-    }
-  }
-
   void emitNewChat({required ChatUserAndPresence chatUserAndPresence}) {
     socket.emit("clientSendNewChat", {
       "chatUserAndPresence": chatUserAndPresence,
       "usersChat": chatUserAndPresence.chat!.users
     });
   }
-
-  void sendMessage(Message message, String chatID, List<String> usersID,
-      String deviceToken, String nameSender, String urlImageSender,String userIDSender,String userIDReceiver) {
+  void sendMessage(
+      ChatMessage message,
+      String chatID,
+      List<String> usersID,
+      String deviceToken,
+      String nameSender,
+      String urlImageSender,
+      String userIDSender,
+      String userIDReceiver) {
     socket.emit("clientSendMessage", {
       "chatID": chatID,
-      "userID": message.userID,
       "message": message.message,
       "urlImageMessage": message.urlImageMessage,
       "urlRecordMessage": message.urlRecordMessage,
@@ -130,7 +138,7 @@ class MessageManager {
   void dispose() async {
     await userPresenceSubject.drain();
     await userPresenceSubject.close();
-    await listMessageSubject.drain();
-    await listMessageSubject.close();
+    await listChatMessagesSubject.drain();
+    await listChatMessagesSubject.close();
   }
 }

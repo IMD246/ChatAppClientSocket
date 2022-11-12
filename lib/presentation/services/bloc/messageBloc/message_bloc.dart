@@ -13,7 +13,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       this.messageManager, this.userInformation, this.chatUserAndPresence)
       : super(
           InsideMessageState(
-              $messages: messageManager.listMessageSubject.stream,
+              $messages: messageManager.listChatMessagesSubject.stream,
               userInformation: userInformation,
               userPresence: messageManager.userPresenceSubject.stream),
         ) {
@@ -21,19 +21,19 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<InitializingMessageEvent>((event, emit) {
       emit(
         InsideMessageState(
-            $messages: messageManager.listMessageSubject.stream,
+            $messages: messageManager.listChatMessagesSubject.stream,
             userInformation: userInformation,
             userPresence: messageManager.userPresenceSubject.stream),
       );
     });
     on<LeaveChatMessageEvent>(
       (event, emit) {
-        messageManager.emitLeaveChat(event.chatID, event.userID);
         emit(
           LeavedChatMessageState(
-              $messages: messageManager.listMessageSubject.stream,
+              $messages: messageManager.listChatMessagesSubject.stream,
               userInformation: userInformation,
-              userPresence: messageManager.userPresenceSubject.stream),
+              userPresence: messageManager.userPresenceSubject.stream
+              ,),
         );
       },
     );

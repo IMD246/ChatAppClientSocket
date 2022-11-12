@@ -1,13 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
+import 'package:testsocketchatapp/data/repositories/chat_message_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_manager.dart';
@@ -18,6 +18,7 @@ import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 
 import '../../../data/models/chat.dart';
 import '../../../data/models/user.dart';
+import '../../services/provider/config_app_provider.dart';
 import '../widgets/online_icon_widget.dart';
 
 class MessageChatScreen extends StatefulWidget {
@@ -58,14 +59,17 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    startTimer(context);
+    final configProvider = Provider.of<ConfigAppProvider>(context);
+    // startTimer(context);
     return BlocProvider<MessageBloc>(
       create: (context) => MessageBloc(
           MessageManager(
             socket: widget.socket,
-            listMessage: widget.chatUserAndPresence.chat!.messages ?? [],
             userPresence: widget.chatUserAndPresence.presence!,
             chatID: widget.chatUserAndPresence.chat!.sId!,
+            chatMessageRepository: ChatMessageRepository(
+              baseUrl: configProvider.env.apiURL,
+            ),
           ),
           widget.userInformation,
           widget.chatUserAndPresence)
@@ -150,7 +154,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
                             color: Colors.black54,
                           ),
                         ),
-                        if (userPresence?.presence == true)
+                        if (userPresence?.presence == false)
                           TextSpan(
                             text: presence,
                             style: TextStyle(
