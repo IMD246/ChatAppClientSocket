@@ -6,6 +6,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/chat.dart';
 import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
+import 'package:testsocketchatapp/presentation/enum/enum.dart';
 import 'package:testsocketchatapp/presentation/utilities/validate.dart';
 
 import '../../../../data/repositories/chat_message_repository.dart';
@@ -20,13 +21,16 @@ class MessageManager {
   List<ChatMessage> chatMessages = [];
   late ScrollController scrollController;
   final String chatID;
+  final String ownerUserID;
   late UserPresence userPresence;
-  MessageManager(
-      {required this.socket,
-      required this.userPresence,
-      required this.chatID,
-      required this.chatMessageRepository,
-      required this.chat}) {
+  MessageManager({
+    required this.socket,
+    required this.userPresence,
+    required this.chatID,
+    required this.chatMessageRepository,
+    required this.chat,
+    required this.ownerUserID,
+  }) {
     scrollController = ScrollController();
 
     initValue(userPresence: userPresence);
@@ -57,6 +61,7 @@ class MessageManager {
       chatMessages = [];
     }
     listChatMessagesSubject.add(chatMessages);
+    emitUpdateSentMessages();
   }
 
   listenSocket() {
@@ -72,8 +77,7 @@ class MessageManager {
         log("connection failed + $data");
       },
     );
-    // emitJoinChat();
-    getMessage();
+    getMessage(ownerUserID: ownerUserID);
     socket.on("userOnline", (data) {
       log("start received Message");
       final presence = UserPresence.fromJson(data["presence"]);
@@ -93,23 +97,63 @@ class MessageManager {
     });
   }
 
-  void getMessage() {
+  void getMessage({required String ownerUserID}) {
     socket.on("serverSendMessage", (data) async {
       final chatMessage = ChatMessage.fromJson(data);
       chatMessages.add(chatMessage);
       listChatMessagesSubject.add(chatMessages);
       if (scrollController.hasClients) {
-        await scrollController.animateTo(
-          0.0,
-          duration: const Duration(milliseconds: 1),
-          curve: Curves.bounceIn,
-        );
+        if (chatMessage.userID == ownerUserID) {
+          await scrollController.animateTo(
+            0.0,
+            duration: const Duration(milliseconds: 1),
+            curve: Curves.bounceIn,
+          );
+        }
+      }
+      emitUpdateSentMessages();
+    });
+  }
+
+  void getMessagesUpdated() {
+    int count = 0;
+    socket.on("receiveMessagesUpdated", (data) {
+      final List<dynamic> listIDMessage = data["ListIDMessage"];
+      for (int i = chatMessages.length - 1; i >= 0; i--) {
+        for (int j = 0; j < listIDMessage.length; j++) {
+          count++;
+          if (i - j < 0) {
+            log((i - j).toString());
+            break;
+          }
+          if (chatMessages.elementAt(i - j).sId! == listIDMessage[j]) {
+            chatMessages.elementAt(i - j).messageStatus =
+                MessageStatus.viewed.name;
+          }
+          if (count == listIDMessage.length) {
+            listChatMessagesSubject.add(chatMessages);
+            break;
+          }
+        }
       }
     });
   }
 
   void updateActiveChat() {
     socket.emit("sendActiveChat", {"chatID": chatID});
+  }
+
+  void emitUpdateSentMessages() {
+    final getLastMessage = chatMessages.elementAt(chatMessages.length - 1);
+    if (getLastMessage.userID != ownerUserID &&
+        getLastMessage.messageStatus!.toLowerCase() ==
+            MessageStatus.sent.name.toLowerCase()) {
+      socket.emit(
+        "updateSentMessages",
+        {"chatID": chatID, "userID": ownerUserID},
+      );
+      getMessagesUpdated();
+    }
   }
 
   void sendMessage(

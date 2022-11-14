@@ -118,7 +118,12 @@ class _MessageItemState extends State<MessageItem> {
                           ),
                         ),
                       ),
-                      statusMessage(),
+                      Visibility(
+                        visible: isUserMessage,
+                        child: statusMessage(
+                            statusMessage: widget.message.messageStatus!,
+                            messageBloc: messageBloc),
+                      ),
                     ],
                   ),
                   Visibility(
@@ -141,7 +146,24 @@ class _MessageItemState extends State<MessageItem> {
     );
   }
 
-  Positioned statusMessage() {
+  Widget statusMessage(
+      {required String statusMessage, required MessageBloc messageBloc}) {
+    if (statusMessage.toLowerCase() == MessageStatus.sent.name.toLowerCase()) {
+      return sentIconStatus();
+    } else if (statusMessage.toLowerCase() ==
+        MessageStatus.viewed.name.toLowerCase()) {
+      return rightAvatar(messageBloc);
+    } else {
+      return Visibility(
+        visible: false,
+        child: Positioned(
+          child: Container(),
+        ),
+      );
+    }
+  }
+
+  Positioned sentIconStatus() {
     return Positioned(
       bottom: 0,
       right: -4.w,
@@ -157,6 +179,30 @@ class _MessageItemState extends State<MessageItem> {
           Icons.done,
           color: Colors.white,
           size: 8.h,
+        ),
+      ),
+    );
+  }
+
+  Visibility rightAvatar(MessageBloc messageBloc) {
+    return Visibility(
+      visible: widget.index == 0,
+      child: Positioned(
+        bottom: 0,
+        right: -8.w,
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: AlignmentDirectional.bottomCenter,
+          children: [
+            circleImageWidget(
+              urlImage: messageBloc.chatUserAndPresence.user!.urlImage!.isEmpty
+                  ? "https://i.stack.imgur.com/l60Hf.png"
+                  : messageBloc.chatUserAndPresence.user!.urlImage!,
+              radius: 12.w,
+            ),
+            if (messageBloc.chatUserAndPresence.presence!.presence!)
+              onlineIcon(widget: 8.w, height: 8.h),
+          ],
         ),
       ),
     );
