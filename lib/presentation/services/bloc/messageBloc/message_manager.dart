@@ -36,8 +36,6 @@ class MessageManager {
     initValue(userPresence: userPresence);
   }
   initValue({required UserPresence userPresence}) {
-    log("check chat id $chatID");
-    log("ownerUserID $ownerUserID");
     chatSubject = BehaviorSubject<Chat>();
     userPresenceSubject = BehaviorSubject<UserPresence>();
     listChatMessagesSubject = BehaviorSubject<List<ChatMessage>>();
@@ -61,23 +59,42 @@ class MessageManager {
     } else {
       chatMessages = [];
     }
+    emitUpdateSentMessages();
     listChatMessagesSubject.add(chatMessages);
   }
 
   listenSocket() {
-    socket.onConnect(
+    onConnect();
+
+    // Connect error
+    onConnectError();
+
+    getMessage();
+
+    userOnline();
+
+    userDisconnected();
+
+    getMessagesUpdated();
+  }
+
+  void onConnect() {
+    return socket.onConnect(
       (data) {
         log("Connection established");
       },
     );
+  }
 
-    // Connect error
-    socket.onConnectError(
+  void onConnectError() {
+    return socket.onConnectError(
       (data) {
         log("connection failed + $data");
       },
     );
-    getMessage();
+  }
+
+  void userOnline() {
     socket.on("userOnline", (data) {
       log("start received Message");
       final presence = UserPresence.fromJson(data["presence"]);
@@ -86,6 +103,9 @@ class MessageManager {
         userPresenceSubject.add(userPresence);
       }
     });
+  }
+
+  void userDisconnected() {
     socket.on("userDisconnected", (data) {
       log("start received Message");
       final presence = UserPresence.fromJson(data["presence"]);
@@ -95,7 +115,6 @@ class MessageManager {
         userPresenceSubject.add(userPresence);
       }
     });
-    getMessagesUpdated();
   }
 
   void getMessage() {
@@ -113,8 +132,6 @@ class MessageManager {
         }
       }
       if (chatMessage.userID! != ownerUserID) {
-        log(chatMessage.userID!);
-        log(ownerUserID);
         emitUpdateSentMessages();
       }
     });
@@ -136,8 +153,6 @@ class MessageManager {
   void emitUpdateSentMessages() {
     if (chatMessages.isNotEmpty) {
       final getLastMessage = chatMessages.elementAt(chatMessages.length - 1);
-      log(getLastMessage.userID!);
-      log(ownerUserID);
       if (getLastMessage.userID != ownerUserID &&
           getLastMessage.messageStatus!.toLowerCase() ==
               MessageStatus.sent.name.toLowerCase()) {
@@ -174,7 +189,7 @@ class MessageManager {
     });
   }
 
-  void dispose() async {
+  Future<void> dispose() async {
     await userPresenceSubject.drain();
     await userPresenceSubject.close();
     await listChatMessagesSubject.drain();

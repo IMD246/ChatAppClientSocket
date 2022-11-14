@@ -18,26 +18,70 @@ class ChatManager {
     required this.userID,
   });
   listenSocket() {
-    socket.onConnect(
+    onConnecet();
+    // Connect error
+    onConnectError();
+
+    // disconnect
+    onDisconnect();
+
+    receivedMessage();
+
+    userOnline();
+
+    userDisconnected();
+
+    receiveNewChat();
+  }
+
+  void onConnecet() {
+    return socket.onConnect(
       (data) {
         log("Connection established");
         emitLoggedInApp();
       },
     );
+  }
 
-    // Connect error
-    socket.onConnectError(
-      (data) {
-        log("connection failed + $data");
-      },
-    );
-
-    // disconnect
-    socket.onDisconnect(
+  void onDisconnect() {
+    return socket.onDisconnect(
       (data) {
         log("socketio Server disconnected");
       },
     );
+  }
+
+  void onConnectError() {
+    return socket.onConnectError(
+      (data) {
+        log("connection failed + $data");
+      },
+    );
+  }
+
+  void updateActiveChat() {
+    socket.on("receiveActiveChat", (data) {
+      for (var i = 0; i < listChat.length; i++) {
+        if (data["chatID"] == listChat[i].chat!.sId) {
+          listChat.elementAt(i).chat!.active = true;
+          listChatController.add(listChat);
+          log("check list chat element i new");
+          log(listChat.elementAt(i).chat!.lastMessage!);
+          break;
+        }
+      }
+    });
+  }
+
+  void emitLoggedInApp() {
+    if (userID.isNotEmpty) {
+      socket.emit("LoggedIn", {
+        "userID": userID,
+      });
+    }
+  }
+
+  void receivedMessage() {
     socket.on("receivedMessage", (data) {
       log("start received Message");
       final chat = Chat.fromJson(data["chat"]);
@@ -51,19 +95,9 @@ class ChatManager {
         }
       }
     });
-    socket.on("userOnline", (data) {
-      log("start received Message");
-      final presence = UserPresence.fromJson(data["presence"]);
-      for (var i = 0; i < listChat.length; i++) {
-        if (presence.sId == listChat[i].presence!.sId) {
-          listChat.elementAt(i).presence = presence;
-          listChatController.add(listChat);
-          log("check list presence element i new");
-          log(listChat.elementAt(i).presence!.presence.toString());
-          break;
-        }
-      }
-    });
+  }
+
+  void userDisconnected() {
     socket.on("userDisconnected", (data) {
       log("start received Message");
       final presence = UserPresence.fromJson(data["presence"]);
@@ -78,30 +112,29 @@ class ChatManager {
         }
       }
     });
+  }
+
+  void receiveNewChat() {
     socket.on("receiveNewChat", (data) {
       final newChat = ChatUserAndPresence.fromJson(data["chatUserAndPresence"]);
       listChat.add(newChat);
       listChatController.add(listChat);
     });
   }
-   void updateActiveChat() {
-    socket.on("receiveActiveChat", (data) {
+
+  void userOnline() {
+    socket.on("userOnline", (data) {
+      log("start received Message");
+      final presence = UserPresence.fromJson(data["presence"]);
       for (var i = 0; i < listChat.length; i++) {
-        if (data["chatID"] == listChat[i].chat!.sId) {
-          listChat.elementAt(i).chat!.active = true;
+        if (presence.sId == listChat[i].presence!.sId) {
+          listChat.elementAt(i).presence = presence;
           listChatController.add(listChat);
-          log("check list chat element i new");
-          log(listChat.elementAt(i).chat!.lastMessage!);
+          log("check list presence element i new");
+          log(listChat.elementAt(i).presence!.presence.toString());
           break;
         }
       }
     });
-  }
-  void emitLoggedInApp() {
-    if (userID.isNotEmpty) {
-      socket.emit("LoggedIn", {
-        "userID": userID,
-      });
-    }
   }
 }

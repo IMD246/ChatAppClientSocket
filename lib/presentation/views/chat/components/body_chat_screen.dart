@@ -12,26 +12,11 @@ import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 import '../../../services/bloc/chatBloc/chat_bloc.dart';
 import '../../../services/bloc/chatBloc/chat_event.dart';
 
-class BodyChatScreen extends StatefulWidget {
+class BodyChatScreen extends StatelessWidget {
   const BodyChatScreen(
       {super.key, required this.userInformation, required this.$chats});
   final UserInformation userInformation;
   final StreamController<List<ChatUserAndPresence>> $chats;
-  @override
-  State<BodyChatScreen> createState() => _BodyChatScreenState();
-}
-
-class _BodyChatScreenState extends State<BodyChatScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,12 +27,12 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
           onTap: () {
             context.read<ChatBloc>().add(
                   GoToMenuSettingEvent(
-                    userInformation: widget.userInformation,
+                    userInformation: userInformation,
                   ),
                 );
           },
           child: circleImageWidget(
-            urlImage: widget.userInformation.user?.urlImage ??
+            urlImage: userInformation.user?.urlImage ??
                 "https://i.stack.imgur.com/l60Hf.png",
             radius: 20.h,
           ),
@@ -65,7 +50,7 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
             ),
             searchWidget(context),
             Observer(
-              stream: widget.$chats.stream,
+              stream: $chats.stream,
               onSuccess: (context, data) {
                 final listChat = data;
                 if (listChat == null || listChat.isEmpty) {
@@ -75,7 +60,7 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
                       onPressed: () {
                         context.read<ChatBloc>().add(
                               GoToSearchFriendChatEvent(
-                                userInformation: widget.userInformation,
+                                userInformation: userInformation,
                               ),
                             );
                       },
@@ -103,7 +88,7 @@ class _BodyChatScreenState extends State<BodyChatScreen> {
         onTap: () {
           BlocProvider.of<ChatBloc>(context).add(
             GoToSearchFriendChatEvent(
-              userInformation: widget.userInformation,
+              userInformation: userInformation,
             ),
           );
         },

@@ -34,8 +34,7 @@ class _ListViewMessageState extends State<ListViewMessage> {
   @override
   Widget build(BuildContext context) {
     final messages = widget.messages.reversed;
-    messageBloc.messageManager.emitUpdateSentMessages();
-    return messages.isEmpty
+    return !messageBloc.chatUserAndPresence.chat!.active!
         ? const WelcomeChatMessage()
         : ListView.builder(
             itemCount: messages.length,
