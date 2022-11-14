@@ -22,13 +22,21 @@ class BodyMessageChat extends StatefulWidget {
 class _BodyMessageChatState extends State<BodyMessageChat> {
   late final FocusNode focusNode;
   late final TextEditingController textController;
+  late final MessageBloc messageBloc;
   @override
   void initState() {
     focusNode = FocusNode();
     textController = TextEditingController();
+    setState(() {
+      messageBloc = context.read<MessageBloc>();
+    });
     super.initState();
   }
-
+  @override
+  void dispose() {
+    messageBloc.messageManager.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final messageBloc = context.read<MessageBloc>();
@@ -104,7 +112,7 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                           message: ChatMessage(
                             userID: messageBloc.userInformation.user!.sId,
                             message: value,
-                            messageStatus: "Sent",
+                            messageStatus: MessageStatus.sent.name,
                             stampTimeMessage: DateTime.now().toString(),
                             typeMessage: TypeMessage.text.name,
                             urlImageMessage: [],

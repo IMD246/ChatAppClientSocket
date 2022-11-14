@@ -37,6 +37,7 @@ Future<void> setupInteractedMessage() async {
   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     log("initMes");
+    noti.onNotificationClick.add(initialMessage.data);
     noti.initDataNotification = initialMessage.data;
   }
   FirebaseMessaging.onMessageOpenedApp.listen((event) {

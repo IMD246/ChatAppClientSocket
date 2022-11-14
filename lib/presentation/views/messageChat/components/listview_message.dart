@@ -28,13 +28,13 @@ class _ListViewMessageState extends State<ListViewMessage> {
 
   @override
   void dispose() {
-    messageBloc.messageManager.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final messages = widget.messages.reversed;
+    messageBloc.messageManager.emitUpdateSentMessages();
     return messages.isEmpty
         ? const WelcomeChatMessage()
         : ListView.builder(

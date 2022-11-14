@@ -37,6 +37,7 @@ class MessageManager {
   }
   initValue({required UserPresence userPresence}) {
     log("check chat id $chatID");
+    log("ownerUserID $ownerUserID");
     chatSubject = BehaviorSubject<Chat>();
     userPresenceSubject = BehaviorSubject<UserPresence>();
     listChatMessagesSubject = BehaviorSubject<List<ChatMessage>>();
@@ -61,7 +62,6 @@ class MessageManager {
       chatMessages = [];
     }
     listChatMessagesSubject.add(chatMessages);
-    emitUpdateSentMessages();
   }
 
   listenSocket() {
@@ -77,7 +77,7 @@ class MessageManager {
         log("connection failed + $data");
       },
     );
-    getMessage(ownerUserID: ownerUserID);
+    getMessage();
     socket.on("userOnline", (data) {
       log("start received Message");
       final presence = UserPresence.fromJson(data["presence"]);
@@ -95,9 +95,10 @@ class MessageManager {
         userPresenceSubject.add(userPresence);
       }
     });
+    getMessagesUpdated();
   }
 
-  void getMessage({required String ownerUserID}) {
+  void getMessage() {
     socket.on("serverSendMessage", (data) async {
       final chatMessage = ChatMessage.fromJson(data);
       chatMessages.add(chatMessage);
@@ -111,30 +112,19 @@ class MessageManager {
           );
         }
       }
-      emitUpdateSentMessages();
+      if (chatMessage.userID! != ownerUserID) {
+        log(chatMessage.userID!);
+        log(ownerUserID);
+        emitUpdateSentMessages();
+      }
     });
   }
 
   void getMessagesUpdated() {
-    int count = 0;
     socket.on("receiveMessagesUpdated", (data) {
-      final List<dynamic> listIDMessage = data["ListIDMessage"];
-      for (int i = chatMessages.length - 1; i >= 0; i--) {
-        for (int j = 0; j < listIDMessage.length; j++) {
-          count++;
-          if (i - j < 0) {
-            log((i - j).toString());
-            break;
-          }
-          if (chatMessages.elementAt(i - j).sId! == listIDMessage[j]) {
-            chatMessages.elementAt(i - j).messageStatus =
-                MessageStatus.viewed.name;
-          }
-          if (count == listIDMessage.length) {
-            listChatMessagesSubject.add(chatMessages);
-            break;
-          }
-        }
+      final List<dynamic> listMessagesUpdated = data["ListIDMessage"];
+      if (listMessagesUpdated.isNotEmpty) {
+        fetchChatMessages(chatID: chatID);
       }
     });
   }
@@ -144,15 +134,18 @@ class MessageManager {
   }
 
   void emitUpdateSentMessages() {
-    final getLastMessage = chatMessages.elementAt(chatMessages.length - 1);
-    if (getLastMessage.userID != ownerUserID &&
-        getLastMessage.messageStatus!.toLowerCase() ==
-            MessageStatus.sent.name.toLowerCase()) {
-      socket.emit(
-        "updateSentMessages",
-        {"chatID": chatID, "userID": ownerUserID},
-      );
-      getMessagesUpdated();
+    if (chatMessages.isNotEmpty) {
+      final getLastMessage = chatMessages.elementAt(chatMessages.length - 1);
+      log(getLastMessage.userID!);
+      log(ownerUserID);
+      if (getLastMessage.userID != ownerUserID &&
+          getLastMessage.messageStatus!.toLowerCase() ==
+              MessageStatus.sent.name.toLowerCase()) {
+        socket.emit(
+          "updateSentMessages",
+          {"chatID": chatID, "userID": ownerUserID},
+        );
+      }
     }
   }
 
