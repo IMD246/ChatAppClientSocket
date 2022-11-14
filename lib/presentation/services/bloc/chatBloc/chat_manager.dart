@@ -32,6 +32,10 @@ class ChatManager {
     userDisconnected();
 
     receiveNewChat();
+
+    userLoggedOut();
+
+    emitLoggedInApp();
   }
 
   void onConnecet() {
@@ -114,6 +118,23 @@ class ChatManager {
     });
   }
 
+  void userLoggedOut() {
+    socket.on("userLoggedOut", (data) {
+      log("start received user logged out");
+      final presence = UserPresence.fromJson(data["presence"]);
+      presence.presenceTimeStamp = DateTime.now().toString();
+      for (var i = 0; i < listChat.length; i++) {
+        if (presence.sId == listChat[i].presence!.sId) {
+          listChat.elementAt(i).presence = presence;
+          listChatController.add(listChat);
+          log("check list presence element i new");
+          log(listChat.elementAt(i).presence!.presence.toString());
+          break;
+        }
+      }
+    });
+  }
+
   void receiveNewChat() {
     socket.on("receiveNewChat", (data) {
       final newChat = ChatUserAndPresence.fromJson(data["chatUserAndPresence"]);
@@ -124,7 +145,7 @@ class ChatManager {
 
   void userOnline() {
     socket.on("userOnline", (data) {
-      log("start received Message");
+      log("start received user online");
       final presence = UserPresence.fromJson(data["presence"]);
       for (var i = 0; i < listChat.length; i++) {
         if (presence.sId == listChat[i].presence!.sId) {

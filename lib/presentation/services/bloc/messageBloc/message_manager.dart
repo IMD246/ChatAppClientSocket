@@ -76,6 +76,8 @@ class MessageManager {
     userDisconnected();
 
     getMessagesUpdated();
+
+    userLoggedOut();
   }
 
   void onConnect() {
@@ -112,6 +114,18 @@ class MessageManager {
       presence.presenceTimeStamp = DateTime.now().toString();
       if (userPresence.sId == presence.sId) {
         userPresence = presence;
+        userPresenceSubject.add(userPresence);
+      }
+    });
+  }
+
+  void userLoggedOut() {
+    socket.on("userLoggedOut", (data) {
+      log("start received Message");
+      final presence = UserPresence.fromJson(data["presence"]);
+      presence.presenceTimeStamp = DateTime.now().toString();
+      if (userPresence.sId == presence.sId) {
+      userPresence = presence;
         userPresenceSubject.add(userPresence);
       }
     });
