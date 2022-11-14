@@ -34,7 +34,6 @@ class _ListViewMessageState extends State<ListViewMessage> {
 
   @override
   Widget build(BuildContext context) {
-    // final messageBloc = context.read<MessageBloc>();
     final messages = widget.messages.reversed;
     return messages.isEmpty
         ? const WelcomeChatMessage()

@@ -36,12 +36,4 @@ class SearchManager {
       });
     }
   }
-
-  void emitJoinChat(String chatID) {
-    if (chatID.isNotEmpty) {
-        socket.emit("JoinChat", {
-          "chatID": chatID,
-        });
-    }
-  }
 }

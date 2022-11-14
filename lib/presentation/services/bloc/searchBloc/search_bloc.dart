@@ -72,7 +72,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<CreateAndJoinChatSearchEvent>((event, emit) async {
       final response = await userRepository.getData(
           body: {
-            "userID": userInformation.user!.sId,
+            "userID": userInformation.user!.sId,  
             "userIDFriend": event.friend.user!.sId!
           },
           urlAPI: userRepository.joinChatURL,
@@ -83,7 +83,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       if (ValidateUtilities.checkBaseResponse(baseResponse: response)) {
         final chatUser =
             userRepository.convertDynamicToObject(response!.data[0]);
-        searchManager.emitJoinChat(chatUser.chat?.sId ?? "");
         emit(JoinedChatSuccessSearchState(
           chatUserAndPresence: chatUser,
           userInformation: userInformation,

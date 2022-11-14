@@ -41,7 +41,7 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
               return ListViewMessage(messages: messages);
             },
             stream: widget.messages,
-          ), 
+          ),
         ),
         Container(
           padding: EdgeInsets.symmetric(
@@ -98,21 +98,20 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                     if (textController.text.isNotEmpty) {
                       final String value = textController.text;
                       textController.clear();
-                      context.read<MessageBloc>().add(
-                            SendTextMessageEvent(
-                              chatID:
-                                  widget.chatUserAndPresence.chat?.sId ?? "",
-                              message: ChatMessage(
-                                userID: messageBloc.userInformation.user!.sId,
-                                message: value,
-                                messageStatus: "Sent",
-                                stampTimeMessage: DateTime.now().toString(),
-                                typeMessage: TypeMessage.text.name,
-                                urlImageMessage: [],
-                                urlRecordMessage: "",
-                              ),
-                            ),
-                          );
+                      messageBloc.add(
+                        SendTextMessageEvent(
+                          chatID: widget.chatUserAndPresence.chat?.sId ?? "",
+                          message: ChatMessage(
+                            userID: messageBloc.userInformation.user!.sId,
+                            message: value,
+                            messageStatus: "Sent",
+                            stampTimeMessage: DateTime.now().toString(),
+                            typeMessage: TypeMessage.text.name,
+                            urlImageMessage: [],
+                            urlRecordMessage: "",
+                          ),
+                        ),
+                      );
                     }
                   },
                   icon: const Icon(

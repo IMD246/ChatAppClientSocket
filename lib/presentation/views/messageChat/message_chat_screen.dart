@@ -70,6 +70,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
             chatMessageRepository: ChatMessageRepository(
               baseUrl: configProvider.env.apiURL,
             ),
+            chat: widget.chatUserAndPresence.chat!
           ),
           widget.userInformation,
           widget.chatUserAndPresence)

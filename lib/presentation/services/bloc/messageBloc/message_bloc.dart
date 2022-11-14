@@ -30,15 +30,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       (event, emit) {
         emit(
           LeavedChatMessageState(
-              $messages: messageManager.listChatMessagesSubject.stream,
-              userInformation: userInformation,
-              userPresence: messageManager.userPresenceSubject.stream
-              ,),
+            $messages: messageManager.listChatMessagesSubject.stream,
+            userInformation: userInformation,
+            userPresence: messageManager.userPresenceSubject.stream,
+          ),
         );
       },
     );
     on<SendTextMessageEvent>(
       (event, emit) async {
+        if (messageManager.chatMessages.isEmpty) {
+          messageManager.updateActiveChat();
+        }
         messageManager.sendMessage(
             event.message,
             event.chatID,

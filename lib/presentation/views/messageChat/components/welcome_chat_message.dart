@@ -11,9 +11,6 @@ class WelcomeChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final messageBloc = context.read<MessageBloc>();
-    messageBloc.messageManager.emitNewChat(
-      chatUserAndPresence: messageBloc.chatUserAndPresence,
-    );
     final size = getDeviceSize(context: context);
     return Padding(
       padding: const EdgeInsets.all(8.0),

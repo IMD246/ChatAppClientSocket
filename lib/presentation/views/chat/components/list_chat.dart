@@ -19,9 +19,12 @@ class ListChat extends StatelessWidget {
           ),
         );
         final chat = chats.elementAt(index);
-        return Padding(
-          padding: EdgeInsets.only(top: index == 0 ? 8.0.h : 0),
-          child: ItemChatScreen(chat: chat),
+        return Visibility(
+          visible: chat.chat!.active!,
+          child: Padding(
+            padding: EdgeInsets.only(top: index == 0 ? 8.0.h : 0),
+            child: ItemChatScreen(chat: chat),
+          ),
         );
       },
     );
