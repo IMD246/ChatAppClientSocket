@@ -107,11 +107,9 @@ class BodyChatScreen extends StatelessWidget {
             children: [
               const Icon(
                 Icons.search,
-                color: Colors.black54,
               ),
               textWidget(
                 text: context.loc.search,
-                color: Colors.black54,
               ),
             ],
           ),

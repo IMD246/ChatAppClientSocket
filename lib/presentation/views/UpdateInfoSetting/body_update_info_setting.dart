@@ -60,7 +60,6 @@ class _BodyUpdateInfoSettingState extends State<BodyUpdateInfoSetting> {
             child: TextFieldWidget(
               borderRadius: 20.w,
               controller: firstName,
-              boxDecorationColor: kPrimaryColor.withOpacity(0.8),
               hintText: context.loc.enter_your_first_name,
               isShowSearchButton: false,
               textInputAction: TextInputAction.next,
@@ -101,7 +100,6 @@ class _BodyUpdateInfoSettingState extends State<BodyUpdateInfoSetting> {
             child: TextFieldWidget(
               controller: lastName,
               padding: 12.w,
-              boxDecorationColor: kPrimaryColor.withOpacity(0.8),
               hintText: context.loc.enter_your_last_name,
               textInputAction: TextInputAction.done,
               isShowSearchButton: false,

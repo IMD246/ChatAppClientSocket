@@ -84,7 +84,6 @@ class _MessageItemState extends State<MessageItem> {
             text: differenceInCalendarStampTime(
               DateTime.parse(widget.message.stampTimeMessage!).toLocal(),
             ),
-            color: Colors.black54,
             size: 12.h,
           ),
         ),
@@ -135,7 +134,6 @@ class _MessageItemState extends State<MessageItem> {
                           widget.message.messageStatus!,
                           context,
                         ),
-                        color: Colors.black54,
                         size: 12.h,
                       ),
                     ),

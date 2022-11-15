@@ -179,24 +179,6 @@ String getStringFromList(String value) {
     return value;
   }
 }
-
-// String getStringMessageByTypeMessage(
-//     {required TypeMessage typeMessage,
-//     required String value,
-//     required BuildContext context}) {
-//   if (typeMessage == TypeMessage.text) {
-//     getStringFromList(value);
-//   } else if (typeMessage == TypeMessage.image) {
-//     return handleStringMessageLocalization(
-//       getStringFromList(value),
-//       context,
-//     );
-//   } else if (typeMessage == TypeMessage.audio) {
-//     return context.loc.message_recording;
-//   }
-//   return value;
-// }
-
 String handleStringMessageLocalization(String value, BuildContext context) {
   final List<String> list =
       value.substring(value.length - 9, value.length).split(" ");
