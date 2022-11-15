@@ -34,7 +34,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final configAppProvider = Provider.of<ConfigAppProvider>(context);
-   
     return BlocProvider<ChatBloc>(
       create: (context) => ChatBloc(
         noti: configAppProvider.noti,
@@ -58,21 +57,19 @@ class _ChatScreenState extends State<ChatScreen> {
       child: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
           if (state is BackToWaitingChatState) {
-            if (configAppProvider.count <= 0) {
-              configAppProvider.initNotification(
-                context: context,
-                listChatUser: state.chatManager.listChat,
-                socket: state.chatManager.socket,
-                userInformation: state.chatManager.userInformation,
-              );
-            } else {
-              configAppProvider.handlerNotification(
-                context: context,
-                listChatUser: state.chatManager.listChat,
-                socket: state.chatManager.socket,
-                userInformation: state.chatManager.userInformation,
-              );
-            }
+            configAppProvider.handlerNotification(
+              context: context,
+              listChatUser: state.chatManager.listChat,
+              socket: state.chatManager.socket,
+              userInformation: state.chatManager.userInformation,
+            );
+          } else if (state is InitializeChatState) {
+            configAppProvider.initNotification(
+              context: context,
+              listChatUser: state.chatManager.listChat,
+              socket: state.chatManager.socket,
+              userInformation: state.chatManager.userInformation,
+            );
           }
           _listeningState(context: context, state: state);
         },
@@ -87,6 +84,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget dynamicScreen(ChatState state) {
     if (state is BackToWaitingChatState) {
+      return BodyChatScreen(
+        userInformation: state.chatManager.userInformation,
+        $chats: state.listChatController,
+      );
+    } else if (state is InitializeChatState) {
       return BodyChatScreen(
         userInformation: state.chatManager.userInformation,
         $chats: state.listChatController,
@@ -145,7 +147,8 @@ class _ChatScreenState extends State<ChatScreen> {
         MaterialPageRoute(
           builder: (context) {
             return SettingScreen(
-              userInformation: state.chatManager.userInformation, socket: state.chatManager.socket,
+              userInformation: state.chatManager.userInformation,
+              socket: state.chatManager.socket,
             );
           },
         ),

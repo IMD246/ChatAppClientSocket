@@ -1,11 +1,14 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/environment.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_screen.dart';
 import '../../../router/routers.dart';
+import '../bloc/chatBloc/chat_bloc.dart';
 import '../notification/notification.dart';
 
 class ConfigAppProvider extends ChangeNotifier {
@@ -27,6 +30,11 @@ class ConfigAppProvider extends ChangeNotifier {
       count++;
       notifyListeners();
       final value = noti.initDataNotification;
+      context.read<ChatBloc>().add(
+            BackToWaitingChatEvent(
+              userInformation: userInformation,
+            ),
+          );
       if (value != null) {
         log(value.toString());
         final namePath = RoutesHandler.getNamePath(globalKey: navigatorKey);
@@ -67,7 +75,7 @@ class ConfigAppProvider extends ChangeNotifier {
   }) async {
     final navigator = Navigator.of(context);
     if (count >= 0) {
-      noti.onNotificationClick.stream.listen(
+      noti.onNotificationClick.listen(
         (value) async {
           if (value != null) {
             log(value.toString());

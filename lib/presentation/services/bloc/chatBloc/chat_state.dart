@@ -21,7 +21,16 @@ class BackToWaitingChatState extends ChatState with EquatableMixin {
   @override
   List<Object?> get props => [chatManager];
 }
+class InitializeChatState extends ChatState with EquatableMixin {
+  final BehaviorSubject<List<ChatUserAndPresence>> listChatController;
+  InitializeChatState({
+    required this.listChatController,
+    required ChatManager chatManager,
+  }) : super(chatManager: chatManager);
 
+  @override
+  List<Object?> get props => [chatManager];
+}
 class JoinedChatState extends ChatState {
   final ChatUserAndPresence chatUserAndPresence;
   JoinedChatState({

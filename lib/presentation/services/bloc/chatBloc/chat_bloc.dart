@@ -12,13 +12,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatManager chatManager;
   final UserRepository userRepository;
   final NotificationService noti;
-  ChatBloc(
-    {
+  ChatBloc({
     required this.chatManager,
     required this.userRepository,
-    required this.noti, 
+    required this.noti,
   }) : super(
-          BackToWaitingChatState(
+          InitializeChatState(
             listChatController: BehaviorSubject<List<ChatUserAndPresence>>(),
             chatManager: chatManager,
           ),
@@ -28,7 +27,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           WentToSettingMenuChatState(
-              chatManager: chatManager,),
+            chatManager: chatManager,
+          ),
         );
       },
     );
@@ -66,9 +66,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         chatManager.listChatController.add([]);
       }
       emit(
-        BackToWaitingChatState(
-            listChatController: chatManager.listChatController,
-            chatManager: chatManager),
+        InitializeChatState(
+          listChatController: chatManager.listChatController,
+          chatManager: chatManager,
+        ),
       );
     });
     on<JoinChatEvent>((event, emit) {

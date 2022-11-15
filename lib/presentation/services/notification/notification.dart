@@ -11,7 +11,6 @@ class NotificationService {
   Map<String, dynamic>? initDataNotification;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  NotificationService();
   Future<void> initNotification() async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
