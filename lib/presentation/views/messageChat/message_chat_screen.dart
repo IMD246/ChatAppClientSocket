@@ -8,6 +8,7 @@ import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
 import 'package:testsocketchatapp/data/repositories/chat_message_repository.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_manager.dart';
@@ -150,7 +151,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Online ",
+                          text: "${context.loc.online} ",
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Colors.black54,

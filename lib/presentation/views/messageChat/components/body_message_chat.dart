@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/presentation/enum/enum.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_event.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/components/listview_message.dart';
@@ -32,11 +33,13 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
     });
     super.initState();
   }
+
   @override
   void dispose() {
     messageBloc.messageManager.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final messageBloc = context.read<MessageBloc>();
@@ -82,13 +85,13 @@ class _BodyMessageChatState extends State<BodyMessageChat> {
                           child: TextField(
                             maxLines: null,
                             controller: textController,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(
+                            decoration: InputDecoration(
+                              labelStyle: const TextStyle(
                                 decoration: TextDecoration.none,
                                 color: Colors.red,
                               ),
-                              hintText: "Type message",
-                              hintStyle: TextStyle(
+                              hintText: context.loc.type_message,
+                              hintStyle: const TextStyle(
                                 color: Colors.green,
                               ),
                               border: InputBorder.none,

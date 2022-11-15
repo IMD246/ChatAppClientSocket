@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,9 @@ import 'package:testsocketchatapp/presentation/extensions/google_sign_in_extensi
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
+import 'package:testsocketchatapp/presentation/services/provider/language_provider.dart';
+import 'package:testsocketchatapp/presentation/services/provider/theme_provider.dart';
+import 'package:testsocketchatapp/presentation/theme/theme_data.dart';
 import 'app.dart';
 import 'data/repositories/auth_repository.dart';
 
@@ -28,6 +30,8 @@ class _HomeAppState extends State<HomeApp> {
   @override
   Widget build(BuildContext context) {
     final value = Provider.of<ConfigAppProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
     return BlocProvider<AuthBloc>(
       create: (context) => AuthBloc(
         googleSignInExtension: GoogleSignInExtension(),
@@ -39,8 +43,11 @@ class _HomeAppState extends State<HomeApp> {
       child: MaterialApp(
         navigatorKey: value.navigatorKey,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: Locale(Platform.localeName),
+        locale: languageProvider.locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
+        themeMode: themeProvider.themeMode,
+        theme: lightThemeData(context),
+        darkTheme: darkThemeData(context),
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         home: const App(),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_bloc.dart';
 import 'package:testsocketchatapp/presentation/utilities/format_date.dart';
+import 'package:testsocketchatapp/presentation/utilities/handle_value.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/components/text_message.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/online_icon_widget.dart';
 
@@ -98,7 +98,7 @@ class _MessageItemState extends State<MessageItem> {
                 isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
                     clipBehavior: Clip.none,
@@ -131,7 +131,10 @@ class _MessageItemState extends State<MessageItem> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.0.w),
                       child: textWidget(
-                        text: context.loc.sent,
+                        text: UtilHandleValue.setStatusMessageText(
+                          widget.message.messageStatus!,
+                          context,
+                        ),
                         color: Colors.black54,
                         size: 12.h,
                       ),

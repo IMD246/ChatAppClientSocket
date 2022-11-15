@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
       children: [
         const Spacer(),
         imageAssetWidget(
-          urlImage: ImageSoruces.imgChatIcon,
+          urlImage: ImageSources.imgChatIcon,
           packageName: null,
           width: 300.w.toInt(),
           height: 300.h.toInt(),
@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                     size: 20.h,
                   ),
                   imageAssetWidget(
-                    urlImage: ImageSoruces.imgGooleIcon,
+                    urlImage: ImageSources.imgGooleIcon,
                     packageName: null,
                     width: 50.w.toInt(),
                     height: 50.h.toInt(),

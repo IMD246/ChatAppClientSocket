@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,8 +8,12 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:testsocketchatapp/data/models/environment.dart';
+import 'package:testsocketchatapp/data/repositories/language_repository.dart';
+import 'package:testsocketchatapp/data/repositories/theme_repository.dart';
 import 'package:testsocketchatapp/presentation/services/notification/notification.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
+import 'package:testsocketchatapp/presentation/services/provider/language_provider.dart';
+import 'package:testsocketchatapp/presentation/services/provider/theme_provider.dart';
 import 'package:testsocketchatapp/presentation/utilities/handle_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -78,19 +83,33 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ConfigAppProvider>(
-      create: (context) => ConfigAppProvider(
-        env: Environment(
-          isProduct: false,
+    final env = Environment(isProduct: false);
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ConfigAppProvider>(
+          create: (context) => ConfigAppProvider(
+            env: env,
+            noti: noti,
+            navigatorKey: GlobalKey<NavigatorState>(),
+          ),
         ),
-        noti: noti,
-        navigatorKey: GlobalKey<NavigatorState>(),
-      ),
-      child: Consumer<ConfigAppProvider>(
-        builder: (context, value, child) {
-          return const HomeApp();
-        },
-      ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(
+            themeModeRepository: ThemeModeRepository(
+              env: env,
+            ),
+          ),
+        ),
+        ChangeNotifierProvider<LanguageProvider>(
+          create: (context) => LanguageProvider(
+            Platform.localeName.split("_"),
+            LanguageRepository(env: env)
+          ),
+        ),
+      ],
+      builder: (context, child) {
+        return const HomeApp();
+      },
     );
   }
 }

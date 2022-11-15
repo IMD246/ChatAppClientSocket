@@ -127,5 +127,17 @@
                 "type" : "String"
             }
         }
-    }
+    },
+    "error_length_text": "Độ dài của chuỗi phải lớn hơn {lengthText}",
+    "@error_length_text":{
+        "placeholders" :{
+            "lengthText": 
+            {
+                "type" : "int"
+            }
+        }
+    },
+    "logout" : "Đăng xuất",
+    "update_information" : "Cập nhật thông tin",
+    "update" : "Cập nhật"
 }

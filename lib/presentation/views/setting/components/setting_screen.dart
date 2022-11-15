@@ -1,29 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting_bloc.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting_event.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting_state.dart';
 import 'package:testsocketchatapp/presentation/views/UpdateInfoSetting/update_info_setting_screen.dart';
-import 'package:testsocketchatapp/presentation/views/UpdateThemeModeSetting/update_info_setting_screen.dart';
-import '../../widgets/animated_switcher_widget.dart';
 import 'components/body_setting_screen.dart';
 
 class SettingScreen extends StatelessWidget {
-  const SettingScreen({super.key, required this.userInformation});
+  const SettingScreen({
+    super.key,
+    required this.userInformation,
+    required this.socket,
+  });
   final UserInformation userInformation;
+  final Socket socket;
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(
         userInformation: userInformation,
+        settingManager:
+            SettingManager(socket: socket, userInfomation: userInformation),
       ),
-      child: BlocBuilder<SettingBloc, SettingState>(
+      child: BlocConsumer<SettingBloc, SettingState>(
+        listener: (context, state) {
+          if (state is InsideUpdateInfoState) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return UpdateInfoSettingScreen(
+                    userInformation: state.userInformation,
+                  );
+                },
+              ),
+            ).then((value) {
+              context.read<SettingBloc>().add(
+                    BackToMenuSettingEvent(
+                      userInformation: state.userInformation,
+                    ),
+                  );
+            });
+          }
+        },
         builder: (context, state) {
-          return AnimatedSwitcherWidget(
-            widget: dynamicThemeScreen(
-              state,
-            ),
+          return dynamicThemeScreen(
+            state,
           );
         },
       ),
@@ -35,20 +59,9 @@ class SettingScreen extends StatelessWidget {
       return BodySettingScreen(
         userInformation: state.userInformation,
       );
-    } else if (state is InsideUpdateInfoState) {
-      return UpdateInfoSettingScreen(userInformation: state.userInformation,);
-    } else if (state is InsideUpdateThemeModeState) {
-      return UpdateThemeModeSetting(userInformation: state.userInformation,);
     } else {
       return Scaffold(
-        body: Column(
-          children: [
-            textWidget(text: "Lỗi rồi !"),
-            BackButton(
-              onPressed: () {},
-            ),
-          ],
-        ),
+        body: Container(),
       );
     }
   }

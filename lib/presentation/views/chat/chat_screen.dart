@@ -34,6 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final configAppProvider = Provider.of<ConfigAppProvider>(context);
+   
     return BlocProvider<ChatBloc>(
       create: (context) => ChatBloc(
         noti: configAppProvider.noti,
@@ -145,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
         MaterialPageRoute(
           builder: (context) {
             return SettingScreen(
-              userInformation: state.userInformation,
+              userInformation: state.userInformation, socket: state.chatManager.socket,
             );
           },
         ),

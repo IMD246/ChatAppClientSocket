@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/widgets/outline_button_widget.dart';
 import 'package:flutter_basic_utilities/widgets/text_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting_event.dart';
 import 'package:testsocketchatapp/presentation/views/setting/components/components/image_and_name.dart';
-
+import 'package:testsocketchatapp/presentation/views/setting/components/components/languages_setting.dart';
+import 'package:testsocketchatapp/presentation/views/setting/components/components/setting_item_menu_button.dart';
 import '../../../../services/bloc/authBloc/auth_bloc.dart';
 import '../../../../services/bloc/authBloc/auth_event.dart';
+import 'dark_mode_switch.dart';
 
 class BodySettingScreen extends StatelessWidget {
   const BodySettingScreen({
@@ -30,8 +33,8 @@ class BodySettingScreen extends StatelessWidget {
           },
         ),
         title: textWidget(
-          text: "Tôi",
-          size: 17.h,
+          text: context.loc.me,
+          size: 20.h,
         ),
       ),
       body: Column(
@@ -39,9 +42,12 @@ class BodySettingScreen extends StatelessWidget {
           ImageAndName(
             userInformation: userInformation,
           ),
+          const DarkModeSwitch(),
+          SizedBox(height: 8.h),
+          const LanguageSetting(),
           SizedBox(height: 16.h),
           SettingItemMenuButton(
-            text: 'Đăng xuất',
+            text: context.loc.logout,
             press: () {
               context.read<AuthBloc>().add(
                     AuthEventLogOut(
@@ -53,7 +59,7 @@ class BodySettingScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           SettingItemMenuButton(
-            text: 'Update Infomation',
+            text: context.loc.update_information,
             press: () {
               context.read<SettingBloc>().add(
                     GoToUpdateInfoSettingEvent(
@@ -63,29 +69,6 @@ class BodySettingScreen extends StatelessWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class SettingItemMenuButton extends StatelessWidget {
-  const SettingItemMenuButton({
-    Key? key,
-    required this.text,
-    required this.press,
-  }) : super(key: key);
-
-  final String text;
-  final VoidCallback press;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: FillOutlineButton(
-        press: press,
-        color: Colors.white.withOpacity(0.7),
-        minWidth: double.infinity,
-        text: text,
       ),
     );
   }

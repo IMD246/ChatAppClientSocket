@@ -5,6 +5,8 @@ class User {
   bool? isDarkMode;
   String? urlImage;
   String? deviceToken;
+  String? languageCode;
+  String? countryCode;
   int? iV;
 
   User(
@@ -22,6 +24,8 @@ class User {
     isDarkMode = json['isDarkMode'];
     urlImage = json['urlImage'];
     deviceToken = json['deviceToken'];
+    languageCode = json['languageCode'];
+    countryCode = json['countryCode'];
     iV = json['__v'];
   }
 
@@ -33,6 +37,8 @@ class User {
     data['isDarkMode'] = isDarkMode;
     data['urlImage'] = urlImage;
     data['deviceToken'] = deviceToken;
+    data['languageCode'] = languageCode;
+    data['countryCode'] = countryCode;
     data['__v'] = iV;
     return data;
   }

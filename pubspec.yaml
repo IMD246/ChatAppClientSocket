@@ -54,6 +54,7 @@ dependencies:
   socket_io_client: ^2.0.0
   cached_network_image: ^3.2.2
   rxdart: ^0.27.5
+  google_fonts: ^2.0.0
   flutter_keyboard_visibility: ^5.2.0
   scrollable_positioned_list: ^0.3.1
   path_provider: ^2.0.2

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/views/chat/components/list_chat.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 
@@ -38,7 +39,7 @@ class BodyChatScreen extends StatelessWidget {
           ),
         ),
         title: textWidget(
-          text: "Đoạn Chat",
+          text: context.loc.chat,
           size: 20.h,
         ),
       ),
@@ -109,7 +110,7 @@ class BodyChatScreen extends StatelessWidget {
                 color: Colors.black54,
               ),
               textWidget(
-                text: "Tìm kiếm",
+                text: context.loc.search,
                 color: Colors.black54,
               ),
             ],

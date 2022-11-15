@@ -7,6 +7,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/repositories/friend_repository.dart';
 import 'package:testsocketchatapp/data/repositories/user_repository.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/searchBloc/search_manager.dart';
@@ -91,6 +92,7 @@ class SearchFriendScreen extends StatelessWidget {
                         textField: searchText.text,
                         controller: searchText,
                         onSubmitted: (value) {},
+                        hintText: context.loc.search,
                         onChanged: (value) {
                           context.read<SearchBloc>().add(
                                 TypingSearchEvent(
@@ -114,7 +116,7 @@ class SearchFriendScreen extends StatelessWidget {
                   visible: state is RecommendedResultSearchState,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0.w),
-                    child: textWidget(text: "Recommded"),
+                    child: textWidget(text: context.loc.recommended),
                   ),
                 ),
                 if (state is RecommendedResultSearchState)
