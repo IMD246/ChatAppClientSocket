@@ -28,12 +28,4 @@ class SearchManager {
       },
     );
   }
-
-  void emitLoggedInApp(String userID) {
-    if (userID.isNotEmpty) {
-      socket.emit("LoggedIn", {
-        "userID": userID,
-      });
-    }
-  }
 }

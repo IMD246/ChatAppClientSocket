@@ -45,9 +45,8 @@ class _ChatScreenState extends State<ChatScreen> {
               "transports": ["websocket"],
             },
           ),
-          userID: widget.userInformation.user!.sId!,
+          userInformation: widget.userInformation,
         ),
-        userInformation: widget.userInformation,
         userRepository: UserRepository(
           baseUrl: configAppProvider.env.apiURL,
         ),
@@ -64,14 +63,14 @@ class _ChatScreenState extends State<ChatScreen> {
                 context: context,
                 listChatUser: state.chatManager.listChat,
                 socket: state.chatManager.socket,
-                userInformation: state.userInformation,
+                userInformation: state.chatManager.userInformation,
               );
             } else {
               configAppProvider.handlerNotification(
                 context: context,
                 listChatUser: state.chatManager.listChat,
                 socket: state.chatManager.socket,
-                userInformation: state.userInformation,
+                userInformation: state.chatManager.userInformation,
               );
             }
           }
@@ -89,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget dynamicScreen(ChatState state) {
     if (state is BackToWaitingChatState) {
       return BodyChatScreen(
-        userInformation: state.userInformation,
+        userInformation: state.chatManager.userInformation,
         $chats: state.listChatController,
       );
     } else {
@@ -107,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
           builder: (context) {
             return MessageChatScreen(
               chatUserAndPresence: state.chatUserAndPresence,
-              userInformation: state.userInformation,
+              userInformation: state.chatManager.userInformation,
               socket: state.chatManager.socket,
             );
           },
@@ -117,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ).then((value) {
         context.read<ChatBloc>().add(
               BackToWaitingChatEvent(
-                userInformation: state.userInformation,
+                userInformation: state.chatManager.userInformation,
               ),
             );
       });
@@ -128,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
           builder: (context) {
             return SearchFriendScreen(
               userRepository: state.userRepository,
-              userInformation: state.userInformation,
+              userInformation: state.chatManager.userInformation,
               socket: state.chatManager.socket,
             );
           },
@@ -136,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ).then((value) {
         context.read<ChatBloc>().add(
               BackToWaitingChatEvent(
-                userInformation: state.userInformation,
+                userInformation: state.chatManager.userInformation,
               ),
             );
       });
@@ -146,14 +145,14 @@ class _ChatScreenState extends State<ChatScreen> {
         MaterialPageRoute(
           builder: (context) {
             return SettingScreen(
-              userInformation: state.userInformation, socket: state.chatManager.socket,
+              userInformation: state.chatManager.userInformation, socket: state.chatManager.socket,
             );
           },
         ),
       ).then((value) {
         context.read<ChatBloc>().add(
               BackToWaitingChatEvent(
-                userInformation: state.userInformation,
+                userInformation: state.chatManager.userInformation,
               ),
             );
       });

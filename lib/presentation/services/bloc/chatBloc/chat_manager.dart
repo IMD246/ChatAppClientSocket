@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/chat.dart';
+import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
 
 import '../../../../data/models/chat_user_and_presence.dart';
@@ -12,10 +13,10 @@ class ChatManager {
   final BehaviorSubject<List<ChatUserAndPresence>> listChatController =
       BehaviorSubject<List<ChatUserAndPresence>>();
   List<ChatUserAndPresence> listChat = [];
-  final String userID;
+  final UserInformation userInformation;
   ChatManager({
     required this.socket,
-    required this.userID,
+    required this.userInformation,
   });
   listenSocket() {
     onConnecet();
@@ -36,6 +37,8 @@ class ChatManager {
     userLoggedOut();
 
     emitLoggedInApp();
+
+    receiveNameUser();
   }
 
   void onConnecet() {
@@ -78,9 +81,9 @@ class ChatManager {
   }
 
   void emitLoggedInApp() {
-    if (userID.isNotEmpty) {
+    if (userInformation.user!.sId!.isNotEmpty) {
       socket.emit("LoggedIn", {
-        "userID": userID,
+        "userID": userInformation.user!.sId,
       });
     }
   }
@@ -103,12 +106,32 @@ class ChatManager {
 
   void userDisconnected() {
     socket.on("userDisconnected", (data) {
-      log("start received Message");
+      log("start user Disconnected");
       final presence = UserPresence.fromJson(data["presence"]);
       presence.presenceTimeStamp = DateTime.now().toString();
       for (var i = 0; i < listChat.length; i++) {
         if (presence.sId == listChat[i].presence!.sId) {
           listChat.elementAt(i).presence = presence;
+          listChatController.add(listChat);
+          log("check list presence element i new");
+          log(listChat.elementAt(i).presence!.presence.toString());
+          break;
+        }
+      }
+    });
+  }
+
+  void receiveNameUser() {
+    socket.on("receiveNameUser", (data) {
+      log("start received Name User");
+      final String userID = data["userID"];
+      final String newName = data["name"];
+      if (userInformation.user!.sId == userID) {
+        userInformation.user!.name = newName;
+      }
+      for (var i = 0; i < listChat.length; i++) {
+        if (userID == listChat[i].user!.sId) {
+          listChat.elementAt(i).user!.name = newName;
           listChatController.add(listChat);
           log("check list presence element i new");
           log(listChat.elementAt(i).presence!.presence.toString());

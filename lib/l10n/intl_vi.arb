@@ -66,7 +66,7 @@
     "no_friend_available" : "Không có bất kỳ người bạn nào",
     "no_request_friend_available" : "Không có bất kỳ yêu cầu kết bạn nào",
     "no_file_selected" : "Không có file nào được chọn",
-    "update_user_profile" : "Cập nhật hồ sơ",
+    "update_user_profile_failed" : "Cập nhật hồ sơ thất bại!",
     "update_password" : "Cập nhật mật khẩu",
     "sign_out" : "Đăng xuất",
     "dark_mode" : "Chế độ tối",

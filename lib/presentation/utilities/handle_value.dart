@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:testsocketchatapp/presentation/enum/enum.dart';
 import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 
@@ -29,5 +29,9 @@ class UtilHandleValue {
     {
       return context.loc.not_sent;
     }
+  }
+
+   static bool isDarkMode(ThemeMode themeMode) {
+    return themeMode == ThemeMode.dark ? true : false;
   }
 }

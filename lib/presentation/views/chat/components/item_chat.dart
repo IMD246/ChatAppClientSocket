@@ -24,7 +24,7 @@ class _ItemChatScreenState extends State<ItemChatScreen> {
   String _handleMessageChat(BuildContext context, ChatBloc chatBloc) {
     if (widget.chat.chat!.userIDLastMessage != "") {
       if (widget.chat.chat!.userIDLastMessage ==
-          chatBloc.userInformation.user!.sId) {
+          chatBloc.chatManager.userInformation.user!.sId) {
         return "${context.loc.you}: ";
       } else {
         return "";

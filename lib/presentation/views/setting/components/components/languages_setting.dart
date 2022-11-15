@@ -7,6 +7,7 @@ import 'package:testsocketchatapp/presentation/views/setting/components/componen
 
 import '../../../../UIData/image_sources.dart';
 import '../../../../services/provider/language_provider.dart';
+import '../../../../services/provider/theme_provider.dart';
 import '../../../../utilities/handle_value.dart';
 
 class LanguageSetting extends StatelessWidget {
@@ -16,6 +17,8 @@ class LanguageSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
     final settingBloc = context.read<SettingBloc>();
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = UtilHandleValue.isDarkMode(themeProvider.themeMode);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -36,6 +39,7 @@ class LanguageSetting extends StatelessWidget {
               backgroundImage: const AssetImage(
                 ImageSources.imgLanguage,
               ),
+              backgroundColor: isDarkMode ? Colors.white : Colors.yellowAccent,
               radius: 20.w,
             ),
             SizedBox(width: 1.w),

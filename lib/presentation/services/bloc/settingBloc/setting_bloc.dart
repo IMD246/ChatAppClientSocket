@@ -7,6 +7,7 @@ import 'package:testsocketchatapp/presentation/services/bloc/settingBloc/setting
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
   final UserInformation userInformation;
   final SettingManager settingManager;
+  
   SettingBloc({
     required this.userInformation,
     required this.settingManager,

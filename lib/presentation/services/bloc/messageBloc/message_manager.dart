@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/chat.dart';
 import 'package:testsocketchatapp/data/models/chat_message.dart';
+import 'package:testsocketchatapp/data/models/user.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
 import 'package:testsocketchatapp/presentation/enum/enum.dart';
 import 'package:testsocketchatapp/presentation/utilities/validate.dart';
@@ -16,6 +17,8 @@ class MessageManager {
   late BehaviorSubject<UserPresence> userPresenceSubject;
   late BehaviorSubject<List<ChatMessage>> listChatMessagesSubject;
   late BehaviorSubject<Chat> chatSubject;
+  late BehaviorSubject<User> userSubject;
+  late User user;
   final ChatMessageRepository chatMessageRepository;
   Chat chat = Chat();
   List<ChatMessage> chatMessages = [];
@@ -30,6 +33,7 @@ class MessageManager {
     required this.chatMessageRepository,
     required this.chat,
     required this.ownerUserID,
+    required this.user,
   }) {
     scrollController = ScrollController();
 
@@ -39,8 +43,10 @@ class MessageManager {
     chatSubject = BehaviorSubject<Chat>();
     userPresenceSubject = BehaviorSubject<UserPresence>();
     listChatMessagesSubject = BehaviorSubject<List<ChatMessage>>();
+    userSubject = BehaviorSubject<User>();
     userPresenceSubject.add(userPresence);
     chatSubject.add(chat);
+    userSubject.add(user);
     fetchChatMessages(chatID: chatID);
   }
 
@@ -78,6 +84,8 @@ class MessageManager {
     getMessagesUpdated();
 
     userLoggedOut();
+
+    receiveNameUser();
   }
 
   void onConnect() {
@@ -125,8 +133,20 @@ class MessageManager {
       final presence = UserPresence.fromJson(data["presence"]);
       presence.presenceTimeStamp = DateTime.now().toString();
       if (userPresence.sId == presence.sId) {
-      userPresence = presence;
+        userPresence = presence;
         userPresenceSubject.add(userPresence);
+      }
+    });
+  }
+
+  void receiveNameUser() {
+    socket.on("receiveNameUser", (data) {
+      log("start received Name User");
+      final String userID = data["userID"];
+      final String newName = data["name"];
+      if (user.sId == userID) {
+        user.name = newName;
+        userSubject.add(user);
       }
     });
   }

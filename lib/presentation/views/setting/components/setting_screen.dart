@@ -22,8 +22,10 @@ class SettingScreen extends StatelessWidget {
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(
         userInformation: userInformation,
-        settingManager:
-            SettingManager(socket: socket, userInfomation: userInformation),
+        settingManager: SettingManager(
+          socket: socket,
+          userInfomation: userInformation,
+        ),
       ),
       child: BlocConsumer<SettingBloc, SettingState>(
         listener: (context, state) {
@@ -37,9 +39,13 @@ class SettingScreen extends StatelessWidget {
                 },
               ),
             ).then((value) {
+              final userInfo = state.userInformation;
+              if (value != null) {
+                userInfo.user!.name = value;
+              }
               context.read<SettingBloc>().add(
                     BackToMenuSettingEvent(
-                      userInformation: state.userInformation,
+                      userInformation: userInfo,
                     ),
                   );
             });

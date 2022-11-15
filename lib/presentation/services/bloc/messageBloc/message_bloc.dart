@@ -13,26 +13,23 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       this.messageManager, this.userInformation, this.chatUserAndPresence)
       : super(
           InsideMessageState(
-              $messages: messageManager.listChatMessagesSubject.stream,
-              userInformation: userInformation,
-              userPresence: messageManager.userPresenceSubject.stream),
+            messageManager: messageManager,
+            userInformation: userInformation,
+          ),
         ) {
     messageManager.listenSocket();
     on<InitializingMessageEvent>((event, emit) {
       emit(
         InsideMessageState(
-            $messages: messageManager.listChatMessagesSubject.stream,
-            userInformation: userInformation,
-            userPresence: messageManager.userPresenceSubject.stream),
+            userInformation: userInformation, messageManager: messageManager),
       );
     });
     on<LeaveChatMessageEvent>(
       (event, emit) {
         emit(
           LeavedChatMessageState(
-            $messages: messageManager.listChatMessagesSubject.stream,
+            messageManager: messageManager,
             userInformation: userInformation,
-            userPresence: messageManager.userPresenceSubject.stream,
           ),
         );
       },

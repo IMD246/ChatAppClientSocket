@@ -10,4 +10,6 @@ class ImageSources {
   static const imgDarkMode = "${imgDir}darkmode.png";
 
   static const imgLanguage = "${imgDir}languages.png";
+
+  static const imgLightMode = "${imgDir}light_mode.png";
 }

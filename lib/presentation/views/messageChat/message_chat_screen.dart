@@ -71,6 +71,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
             chatMessageRepository: ChatMessageRepository(
               baseUrl: configProvider.env.apiURL,
             ),
+            user: widget.chatUserAndPresence.user!,
             chat: widget.chatUserAndPresence.chat!,
             ownerUserID: widget.userInformation.user!.sId!,
           ),
@@ -90,13 +91,14 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: buildAppbar(
-                context,
-                state.userPresence,
-                widget.chatUserAndPresence.chat!,
-                widget.chatUserAndPresence.user!,
-                state.userInformation),
+              context,
+              state.messageManager.userPresenceSubject.stream,
+              widget.chatUserAndPresence.chat!,
+              state.messageManager.userSubject.stream,
+              state.userInformation,
+            ),
             body: BodyMessageChat(
-              messages: state.$messages,
+              messages: state.messageManager.listChatMessagesSubject.stream,
               chatUserAndPresence: widget.chatUserAndPresence,
             ),
           );
@@ -106,7 +108,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
   }
 
   AppBar buildAppbar(BuildContext context, Stream<UserPresence> userPresence,
-      Chat chat, User user, UserInformation userInformation) {
+      Chat chat, Stream<User> user, UserInformation userInformation) {
     return AppBar(
       backgroundColor: Colors.greenAccent,
       leading: BackButton(
@@ -130,11 +132,17 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
                 clipBehavior: Clip.none,
                 alignment: AlignmentDirectional.bottomCenter,
                 children: [
-                  circleImageWidget(
-                    urlImage: user.urlImage!.isNotEmpty
-                        ? user.urlImage!
-                        : "https://i.stack.imgur.com/l60Hf.png",
-                    radius: 20.w,
+                  Observer(
+                    stream: user,
+                    onSuccess: (context, data) {
+                      final user = data;
+                      return circleImageWidget(
+                        urlImage: user!.urlImage!.isNotEmpty
+                            ? user.urlImage!
+                            : "https://i.stack.imgur.com/l60Hf.png",
+                        radius: 20.w,
+                      );
+                    },
                   ),
                   if (userPresence?.presence == true) onlineIcon(),
                 ],
@@ -143,9 +151,15 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  textWidget(
-                    text: user.name ?? "Unknown",
-                    size: 16.sp,
+                  Observer(
+                    stream: user,
+                    onSuccess: (context, data) {
+                      final user = data;
+                      return textWidget(
+                        text: user?.name ?? "Unknown",
+                        size: 16.sp,
+                      );
+                    },
                   ),
                   RichText(
                     text: TextSpan(

@@ -1,18 +1,22 @@
-import 'package:testsocketchatapp/data/models/chat_message.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
-import 'package:testsocketchatapp/data/models/user_presence.dart';
+import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message_manager.dart';
+
 abstract class MessageState {
-  final Stream<List<ChatMessage>> $messages;
+  final MessageManager messageManager;
   final UserInformation userInformation;
-  final Stream<UserPresence> userPresence;
-  MessageState({required this.$messages,required this.userInformation, required this.userPresence});
+  MessageState({required this.messageManager,required this.userInformation});
 }
 
 class InsideMessageState extends MessageState {
-  InsideMessageState({required super.$messages, required super.userInformation, required super.userPresence});
-  
+  InsideMessageState(
+      {
+      required super.userInformation,
+      required super.messageManager});
 }
 
 class LeavedChatMessageState extends MessageState {
-  LeavedChatMessageState({required super.$messages, required super.userInformation, required super.userPresence});
+  LeavedChatMessageState(
+       {
+      required super.userInformation,
+      required super.messageManager});
 }

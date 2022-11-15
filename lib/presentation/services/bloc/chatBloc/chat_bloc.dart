@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
@@ -11,18 +10,15 @@ import 'package:testsocketchatapp/presentation/utilities/validate.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatManager chatManager;
-  final UserInformation userInformation;
   final UserRepository userRepository;
   final NotificationService noti;
   ChatBloc(
     {
-    required this.userInformation,
     required this.chatManager,
     required this.userRepository,
     required this.noti, 
   }) : super(
           BackToWaitingChatState(
-            userInformation: userInformation,
             listChatController: BehaviorSubject<List<ChatUserAndPresence>>(),
             chatManager: chatManager,
           ),
@@ -32,7 +28,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           WentToSettingMenuChatState(
-              userInformation: userInformation, chatManager: chatManager),
+              chatManager: chatManager,),
         );
       },
     );
@@ -40,7 +36,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           WentToSearchChatState(
-            userInformation: userInformation,
             chatManager: chatManager,
             userRepository: userRepository,
           ),
@@ -51,7 +46,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       (event, emit) {
         emit(
           BackToWaitingChatState(
-              userInformation: userInformation,
               listChatController: chatManager.listChatController,
               chatManager: chatManager),
         );
@@ -73,7 +67,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
       emit(
         BackToWaitingChatState(
-            userInformation: userInformation,
             listChatController: chatManager.listChatController,
             chatManager: chatManager),
       );
@@ -82,7 +75,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(
         JoinedChatState(
             chatUserAndPresence: event.chatUserAndPresence,
-            userInformation: userInformation,
             chatManager: chatManager),
       );
     });
