@@ -139,5 +139,6 @@
     },
     "logout" : "Đăng xuất",
     "update_information" : "Cập nhật thông tin",
-    "update" : "Cập nhật"
+    "update" : "Cập nhật",
+    "waiting_internet" : "Đang đợi mạng"
 }

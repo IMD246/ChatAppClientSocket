@@ -5,8 +5,10 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:testsocketchatapp/data/models/chat.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/data/models/user_presence.dart';
+import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 
 import '../../../../data/models/chat_user_and_presence.dart';
+import '../../../utilities/validate.dart';
 
 class ChatManager {
   final io.Socket socket;
@@ -14,9 +16,12 @@ class ChatManager {
       BehaviorSubject<List<ChatUserAndPresence>>();
   List<ChatUserAndPresence> listChat = [];
   final UserInformation userInformation;
+  final UserRepository userRepository;
+  int count = 0;
   ChatManager({
     required this.socket,
     required this.userInformation,
+    required this.userRepository,
   });
   listenSocket() {
     onConnecet();
@@ -36,18 +41,30 @@ class ChatManager {
 
     userLoggedOut();
 
-    emitLoggedInApp();
-
     receiveNameUser();
+
+    reConnected();
   }
 
   void onConnecet() {
     return socket.onConnect(
       (data) {
         log("Connection established");
-        emitLoggedInApp();
+        bool isRequestReloadData = count > 0 ? true : false;
+        count++;
+        emitLoggedInApp(isRequestReloadData: isRequestReloadData);
       },
     );
+  }
+
+  void reConnected() async {
+    socket.on("reload", (data) async {
+      bool reload = data["reloadData"] as bool;
+      if (reload) {
+        log("start load data");
+        await fetchChatData();
+      }
+    });
   }
 
   void onDisconnect() {
@@ -80,10 +97,11 @@ class ChatManager {
     });
   }
 
-  void emitLoggedInApp() {
+  void emitLoggedInApp({required bool isRequestReloadData}) {
     if (userInformation.user!.sId!.isNotEmpty) {
       socket.emit("LoggedIn", {
         "userID": userInformation.user!.sId,
+        "requestReloadData": isRequestReloadData
       });
     }
   }
@@ -180,5 +198,20 @@ class ChatManager {
         }
       }
     });
+  }
+
+  Future<void> fetchChatData() async {
+    final chatResponse = await userRepository.getData(
+      body: {"userID": userInformation.user?.sId ?? ""},
+      urlAPI: userRepository.getChatsURL,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (ValidateUtilities.checkBaseResponse(baseResponse: chatResponse)) {
+      listChat = userRepository.convertDynamicToList(value: chatResponse!);
+      listChatController.add(listChat);
+    } else {
+      listChat = [];
+      listChatController.add([]);
+    }
   }
 }

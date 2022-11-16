@@ -20,6 +20,7 @@ import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 import '../../../data/models/chat.dart';
 import '../../../data/models/user.dart';
 import '../../services/provider/config_app_provider.dart';
+import '../../services/provider/internet_provider.dart';
 import '../widgets/online_icon_widget.dart';
 
 class MessageChatScreen extends StatefulWidget {
@@ -60,6 +61,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final internetProvider = Provider.of<InternetProvider>(context);
     final configProvider = Provider.of<ConfigAppProvider>(context);
     // startTimer(context);
     return BlocProvider<MessageBloc>(
@@ -67,7 +69,6 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
           MessageManager(
             socket: widget.socket,
             userPresence: widget.chatUserAndPresence.presence!,
-            chatID: widget.chatUserAndPresence.chat!.sId!,
             chatMessageRepository: ChatMessageRepository(
               baseUrl: configProvider.env.apiURL,
             ),
@@ -96,6 +97,7 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
               widget.chatUserAndPresence.chat!,
               state.messageManager.userSubject.stream,
               state.userInformation,
+              internetProvider,
             ),
             body: BodyMessageChat(
               messages: state.messageManager.listChatMessagesSubject.stream,
@@ -107,8 +109,13 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
     );
   }
 
-  AppBar buildAppbar(BuildContext context, Stream<UserPresence> userPresence,
-      Chat chat, Stream<User> user, UserInformation userInformation) {
+  AppBar buildAppbar(
+      BuildContext context,
+      Stream<UserPresence> userPresence,
+      Chat chat,
+      Stream<User> user,
+      UserInformation userInformation,
+      InternetProvider internetProvider) {
     return AppBar(
       backgroundColor: Colors.greenAccent,
       leading: BackButton(
@@ -122,6 +129,24 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
               );
         },
       ),
+      bottom: !internetProvider.isConnectedInternet
+          ? PreferredSize(
+              preferredSize: Size(
+                20.w,
+                20.h,
+              ),
+              child: Visibility(
+                visible: !internetProvider.isConnectedInternet,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 4.0.h),
+                  child: textWidget(
+                    text: context.loc.waiting_internet,
+                    size: 15.h,
+                  ),
+                ),
+              ),
+            )
+          : null,
       title: Observer(
         stream: userPresence,
         onSuccess: (context, data) {

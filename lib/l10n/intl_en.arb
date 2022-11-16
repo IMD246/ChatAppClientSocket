@@ -139,5 +139,6 @@
     },
     "logout" : "Logout",
     "update_information" : "Update Information",
-    "update" : "Update"
+    "update" : "Update",
+    "waiting_internet" : "Waiting internet"
 }

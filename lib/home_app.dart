@@ -7,6 +7,7 @@ import 'package:testsocketchatapp/presentation/extensions/google_sign_in_extensi
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
+import 'package:testsocketchatapp/presentation/services/provider/internet_provider.dart';
 import 'package:testsocketchatapp/presentation/services/provider/language_provider.dart';
 import 'package:testsocketchatapp/presentation/services/provider/theme_provider.dart';
 import 'package:testsocketchatapp/presentation/theme/theme_data.dart';
@@ -16,7 +17,9 @@ import 'data/repositories/auth_repository.dart';
 class HomeApp extends StatefulWidget {
   const HomeApp({
     Key? key,
+    required this.isHaveInternet,
   }) : super(key: key);
+  final bool isHaveInternet;
   @override
   State<HomeApp> createState() => _HomeAppState();
 }
@@ -32,6 +35,10 @@ class _HomeAppState extends State<HomeApp> {
     final value = Provider.of<ConfigAppProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
     final languageProvider = Provider.of<LanguageProvider>(context);
+    final internetProvider = Provider.of<InternetProvider>(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      internetProvider.setStatusInternet(value: widget.isHaveInternet);
+    });
     return BlocProvider<AuthBloc>(
       create: (context) => AuthBloc(
         googleSignInExtension: GoogleSignInExtension(),

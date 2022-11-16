@@ -23,13 +23,12 @@ class MessageManager {
   Chat chat = Chat();
   List<ChatMessage> chatMessages = [];
   late ScrollController scrollController;
-  final String chatID;
   final String ownerUserID;
   late UserPresence userPresence;
+  int count = 0;
   MessageManager({
     required this.socket,
     required this.userPresence,
-    required this.chatID,
     required this.chatMessageRepository,
     required this.chat,
     required this.ownerUserID,
@@ -47,12 +46,12 @@ class MessageManager {
     userPresenceSubject.add(userPresence);
     chatSubject.add(chat);
     userSubject.add(user);
-    fetchChatMessages(chatID: chatID);
+    fetchChatMessages();
   }
 
-  fetchChatMessages({required String chatID}) async {
+  fetchChatMessages() async {
     final response = await chatMessageRepository.getData(
-      body: {"chatID": chatID},
+      body: {"chatID": chat.sId},
       urlAPI: chatMessageRepository.getChatMessagesURL,
       headers: {
         'Content-Type': 'application/json',
@@ -86,14 +85,24 @@ class MessageManager {
     userLoggedOut();
 
     receiveNameUser();
+
+    reConnected();
   }
 
   void onConnect() {
     return socket.onConnect(
-      (data) {
-        log("Connection established");
-      },
+      (data) {},
     );
+  }
+
+  void reConnected() async {
+    socket.on("reload", (data) async {
+      bool reload = data["reloadData"] as bool;
+      if (reload) {
+        log("start load data");
+        await fetchChatMessages();
+      }
+    });
   }
 
   void onConnectError() {
@@ -175,13 +184,13 @@ class MessageManager {
     socket.on("receiveMessagesUpdated", (data) {
       final List<dynamic> listMessagesUpdated = data["ListIDMessage"];
       if (listMessagesUpdated.isNotEmpty) {
-        fetchChatMessages(chatID: chatID);
+        fetchChatMessages();
       }
     });
   }
 
   void updateActiveChat() {
-    socket.emit("sendActiveChat", {"chatID": chatID});
+    socket.emit("sendActiveChat", {"chatID": chat.sId});
   }
 
   void emitUpdateSentMessages() {
@@ -192,7 +201,7 @@ class MessageManager {
               MessageStatus.sent.name.toLowerCase()) {
         socket.emit(
           "updateSentMessages",
-          {"chatID": chatID, "userID": ownerUserID},
+          {"chatID": chat.sId, "userID": ownerUserID},
         );
       }
     }

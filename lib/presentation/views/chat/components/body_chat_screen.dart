@@ -1,12 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/extensions/localization.dart';
+import 'package:testsocketchatapp/presentation/services/provider/internet_provider.dart';
 import 'package:testsocketchatapp/presentation/views/chat/components/list_chat.dart';
 import 'package:testsocketchatapp/presentation/views/widgets/observer.dart';
 
@@ -20,6 +21,7 @@ class BodyChatScreen extends StatelessWidget {
   final StreamController<List<ChatUserAndPresence>> $chats;
   @override
   Widget build(BuildContext context) {
+    final internetProvider = Provider.of<InternetProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -42,6 +44,24 @@ class BodyChatScreen extends StatelessWidget {
           text: context.loc.chat,
           size: 20.h,
         ),
+        bottom: !internetProvider.isConnectedInternet
+            ? PreferredSize(
+                preferredSize: Size(
+                  20.w,
+                  20.h,
+                ),
+                child: Visibility(
+                  visible: !internetProvider.isConnectedInternet,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 4.0.h),
+                    child: textWidget(
+                      text: context.loc.waiting_internet,
+                      size: 15.h,
+                    ),
+                  ),
+                ),
+              )
+            : null,
       ),
       body: SingleChildScrollView(
         child: Column(

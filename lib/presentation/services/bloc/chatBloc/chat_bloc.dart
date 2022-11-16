@@ -1,20 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/data/repositories/user_repository.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
 import 'package:testsocketchatapp/presentation/services/notification/notification.dart';
-import 'package:testsocketchatapp/presentation/utilities/validate.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatManager chatManager;
-  final UserRepository userRepository;
   final NotificationService noti;
   ChatBloc({
     required this.chatManager,
-    required this.userRepository,
     required this.noti,
   }) : super(
           InitializeChatState(
@@ -37,7 +33,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(
           WentToSearchChatState(
             chatManager: chatManager,
-            userRepository: userRepository,
+            userRepository: chatManager.userRepository,
           ),
         );
       },
@@ -52,19 +48,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       },
     );
     on<InitializeChatEvent>((event, emit) async {
-      final chatResponse = await userRepository.getData(
-        body: {"userID": event.userInformation.user?.sId ?? ""},
-        urlAPI: userRepository.getChatsURL,
-        headers: {'Content-Type': 'application/json'},
-      );
-      if (ValidateUtilities.checkBaseResponse(baseResponse: chatResponse)) {
-        final listChat =
-            userRepository.convertDynamicToList(value: chatResponse!);
-        chatManager.listChatController.add(listChat);
-        chatManager.listChat = listChat;
-      } else {
-        chatManager.listChatController.add([]);
-      }
+      await chatManager.fetchChatData();
       emit(
         InitializeChatState(
           listChatController: chatManager.listChatController,

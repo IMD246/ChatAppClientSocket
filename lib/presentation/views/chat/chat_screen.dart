@@ -44,10 +44,9 @@ class _ChatScreenState extends State<ChatScreen> {
               "transports": ["websocket"],
             },
           ),
-          userInformation: widget.userInformation,
-        ),
-        userRepository: UserRepository(
+          userInformation: widget.userInformation, userRepository: UserRepository(
           baseUrl: configAppProvider.env.apiURL,
+        ),
         ),
       )..add(
           InitializeChatEvent(
