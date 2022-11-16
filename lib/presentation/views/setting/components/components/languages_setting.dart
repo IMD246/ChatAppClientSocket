@@ -53,7 +53,6 @@ class LanguageSetting extends StatelessWidget {
                     context.loc.language,
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
@@ -63,7 +62,6 @@ class LanguageSetting extends StatelessWidget {
                     ),
                     style: const TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

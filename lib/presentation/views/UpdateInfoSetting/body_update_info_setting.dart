@@ -55,8 +55,15 @@ class _BodyUpdateInfoSettingState extends State<BodyUpdateInfoSetting> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isKeyboard) SizedBox(height: size.height * 0.05),
-          Padding(
-            padding: EdgeInsets.all(12.0.w),
+          Container(
+            margin: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: kPrimaryColor,
+              borderRadius: BorderRadius.circular(
+                20.w,
+              ),
+            ),
             child: TextFieldWidget(
               borderRadius: 20.w,
               controller: firstName,
@@ -95,8 +102,15 @@ class _BodyUpdateInfoSettingState extends State<BodyUpdateInfoSetting> {
           SizedBox(
             height: 10.h,
           ),
-          Padding(
-            padding: EdgeInsets.all(12.0.w),
+          Container(
+            margin: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: kPrimaryColor,
+              borderRadius: BorderRadius.circular(
+                20.w,
+              ),
+            ),
             child: TextFieldWidget(
               controller: lastName,
               padding: 12.w,

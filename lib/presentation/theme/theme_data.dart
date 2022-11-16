@@ -7,15 +7,30 @@ ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
     primaryColor: kPrimaryColor,
     scaffoldBackgroundColor: Colors.white,
-    appBarTheme: appbarTheme(context: context, color: kPrimaryColor),
+    appBarTheme: appbarTheme(
+      context: context,
+      color: Colors.black.withOpacity(
+        0.7,
+      ),
+    ),
     iconTheme: const IconThemeData(color: kContentColorLightTheme),
-    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorLightTheme),
+    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(
+        bodyColor: kContentColorLightTheme,
+        displayColor: kContentColorLightTheme),
     colorScheme: const ColorScheme.light(
       primary: kPrimaryColor,
       secondary: kSecondaryColor,
       error: kErrorColor,
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      suffixIconColor: Colors.black.withOpacity(0.7),
+      suffixStyle: TextStyle(
+        color: Colors.black.withOpacity(0.7),
+      ),
+      prefixIconColor: Colors.black.withOpacity(0.7),
+    ),
+    primaryTextTheme:
+        const TextTheme(headline6: TextStyle(color: kContentColorLightTheme)),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
       selectedItemColor: kContentColorLightTheme.withOpacity(0.7),
@@ -32,14 +47,25 @@ ThemeData darkThemeData(BuildContext context) {
   return ThemeData.dark().copyWith(
     primaryColor: kPrimaryColor,
     scaffoldBackgroundColor: kContentColorLightTheme,
-    appBarTheme: appbarTheme(context: context, color: kPrimaryColor),
+    appBarTheme: appbarTheme(context: context, color: Colors.white60),
     iconTheme: const IconThemeData(color: kContentColorDarkTheme),
-    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-        .apply(bodyColor: kContentColorDarkTheme),
+    textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(
+        bodyColor: kContentColorDarkTheme,
+        displayColor: kContentColorDarkTheme),
     colorScheme: const ColorScheme.dark().copyWith(
       primary: kPrimaryColor,
       secondary: kSecondaryColor,
       error: kErrorColor,
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      suffixIconColor: Colors.white70,
+      suffixStyle: TextStyle(color: Colors.white70),
+      prefixIconColor: Colors.white70,
+    ),
+    primaryTextTheme: const TextTheme(
+      headline6: TextStyle(
+        color: kContentColorDarkTheme,
+      ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: kContentColorLightTheme,
@@ -52,7 +78,15 @@ ThemeData darkThemeData(BuildContext context) {
 }
 
 AppBarTheme appbarTheme({required BuildContext context, required Color color}) {
-  final appBarTheme =
-      AppBarTheme(centerTitle: false, elevation: 0, backgroundColor: color);
+  final appBarTheme = AppBarTheme(
+    backgroundColor: kPrimaryColor,
+    actionsIconTheme: IconThemeData(
+      color: color,
+    ),
+    iconTheme: IconThemeData(
+      color: color,
+    ),
+    foregroundColor: color,
+  );
   return appBarTheme;
 }

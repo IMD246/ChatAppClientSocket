@@ -27,7 +27,6 @@ class BodySettingScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.green,
         leading: BackButton(
-          color: Colors.black,
           onPressed: () {
             Navigator.of(context).pop();
           },
