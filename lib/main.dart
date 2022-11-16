@@ -15,7 +15,7 @@ import 'package:testsocketchatapp/presentation/services/provider/config_app_prov
 import 'package:testsocketchatapp/presentation/services/provider/internet_provider.dart';
 import 'package:testsocketchatapp/presentation/services/provider/language_provider.dart';
 import 'package:testsocketchatapp/presentation/services/provider/theme_provider.dart';
-import 'package:testsocketchatapp/presentation/utilities/check_internet.dart';
+import 'package:testsocketchatapp/presentation/utilities/handle_internet.dart';
 import 'package:testsocketchatapp/presentation/utilities/handle_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
