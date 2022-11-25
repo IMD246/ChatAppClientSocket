@@ -140,5 +140,6 @@
     "logout" : "Đăng xuất",
     "update_information" : "Cập nhật thông tin",
     "update" : "Cập nhật",
-    "waiting_internet" : "Đang đợi mạng"
+    "waiting_internet" : "Đang đợi mạng",
+    "login_with_google" : "Đăng nhập Google"
 }

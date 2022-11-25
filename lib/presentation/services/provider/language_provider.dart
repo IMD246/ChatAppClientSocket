@@ -1,40 +1,37 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:testsocketchatapp/data/repositories/language_repository.dart';
-import 'package:testsocketchatapp/presentation/utilities/validate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:testsocketchatapp/constants/constant.dart';
 
 class LanguageProvider extends ChangeNotifier {
   late Locale locale;
-  final LanguageRepository languageRepository;
-  LanguageProvider(List<String> localeString, this.languageRepository) {
-    locale = Locale(localeString[0], localeString[1]);
+  final SharedPreferences sharedPref;
+  LanguageProvider(this.sharedPref) {
+    _init();
   }
   Future<void> changeLocale(
-      {required String languageCode,
-      required String? countryCode,
-      required String userID}) async {
-    final response = await languageRepository.getData(
-        body: {
-          "userID": userID,
-          "languageCode": languageCode,
-          "countryCode": countryCode
-        },
-        urlAPI: languageRepository.languageURL,
-        headers: {"Content-Type": "application/json"});
-    if (ValidateUtilities.checkBaseResponse(baseResponse: response)) {
-      locale = Locale(languageCode, countryCode);
+      {required String language, required String userID}) async {
+    final value =
+        await sharedPref.setString(Constants.languageKey, language);
+    if (value) {
+      setLocale(language: language);
     }
-    notifyListeners();
   }
 
-  void setLocale(
-      {required String? languageCode, required String? countryCode}) {
-    if (languageCode == null && countryCode == null) {
+  _init() {
+    final language = sharedPref.getString(Constants.languageKey);
+    if (language == null) {
       locale = Locale(Platform.localeName);
     } else {
-      locale = Locale(languageCode ?? "vi", countryCode ?? "VN");
+      final splitLanguage = language.split("_");
+      locale = Locale(splitLanguage[0], splitLanguage[1]);
     }
+  }
+
+  void setLocale({required String language}) {
+    final splitLanguage = language.split("_");
+    locale = Locale(splitLanguage[0], splitLanguage[1]);
     notifyListeners();
   }
 }

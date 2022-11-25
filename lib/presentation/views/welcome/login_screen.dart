@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 
 import '../../UIData/image_sources.dart';
 import '../../services/bloc/authBloc/auth_bloc.dart';
@@ -51,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   textWidget(
-                    text: "Login with google",
+                    text: context.loc.login_with_google,
                     size: 20.h,
                   ),
                   imageAssetWidget(

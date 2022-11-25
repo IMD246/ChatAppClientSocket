@@ -1,15 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testsocketchatapp/data/models/environment.dart';
-import 'package:testsocketchatapp/data/repositories/language_repository.dart';
-import 'package:testsocketchatapp/data/repositories/theme_repository.dart';
 import 'package:testsocketchatapp/presentation/services/notification/notification.dart';
 import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
 import 'package:testsocketchatapp/presentation/services/provider/internet_provider.dart';
@@ -18,7 +15,6 @@ import 'package:testsocketchatapp/presentation/services/provider/theme_provider.
 import 'package:testsocketchatapp/presentation/utilities/handle_internet.dart';
 import 'package:testsocketchatapp/presentation/utilities/handle_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
 import 'home_app.dart';
 
 late NotificationService noti;
@@ -62,15 +58,23 @@ Future<void> main() async {
   noti = NotificationService();
   await Firebase.initializeApp();
   await noti.initNotification();
+  final sharedPref = await SharedPreferences.getInstance();
+  final deviceToken = await FirebaseMessaging.instance.getToken();
   tz.initializeTimeZones();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(
-    const MyApp(),
+    MyApp(sharedPref: sharedPref, deviceToken: deviceToken),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+    required this.sharedPref,
+    this.deviceToken,
+  });
+  final SharedPreferences sharedPref;
+  final String? deviceToken;
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -98,23 +102,19 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<ConfigAppProvider>(
           create: (context) => ConfigAppProvider(
-            env: env,
-            noti: noti,
-            navigatorKey: GlobalKey<NavigatorState>(),
-          ),
+              sharedPref: widget.sharedPref,
+              env: env,
+              noti: noti,
+              navigatorKey: GlobalKey<NavigatorState>(),
+              deviceToken: widget.deviceToken),
         ),
         ChangeNotifierProvider<ThemeProvider>(
           create: (context) => ThemeProvider(
-            themeModeRepository: ThemeModeRepository(
-              env: env,
-            ),
+            sharedPref: widget.sharedPref,
           ),
         ),
         ChangeNotifierProvider<LanguageProvider>(
-          create: (context) => LanguageProvider(
-            Platform.localeName.split("_"),
-            LanguageRepository(env: env),
-          ),
+          create: (context) => LanguageProvider(widget.sharedPref),
         ),
       ],
       builder: (context, child) {

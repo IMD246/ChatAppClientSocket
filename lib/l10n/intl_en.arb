@@ -140,5 +140,6 @@
     "logout" : "Logout",
     "update_information" : "Update Information",
     "update" : "Update",
-    "waiting_internet" : "Waiting internet"
+    "waiting_internet" : "Waiting internet",
+    "login_with_google" : "Login with Google"
 }

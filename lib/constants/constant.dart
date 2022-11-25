@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+
 class Constants {
   static const String defaultNotificationChannelId = "com.chatappsocketclient";
   static const String notificationName = "ChatAppSocket";
+  
+  static const tokenKey = "token";
+
+  static const themeKey = "theme";
+
+  static const languageKey = "language";
 }
 
 const kPrimaryColor = Color(0xFF00BF6D);

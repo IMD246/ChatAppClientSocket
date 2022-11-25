@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testsocketchatapp/data/repositories/auth_repository.dart';
@@ -8,37 +6,37 @@ import 'package:testsocketchatapp/presentation/extensions/google_sign_in_extensi
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_state.dart';
 import 'package:testsocketchatapp/presentation/utilities/validate.dart';
+import '../../../../constants/constant.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final Future<SharedPreferences> sharedPref;
+  final SharedPreferences sharedPref;
   final AuthRepository authRepository;
   final GoogleSignInExtension googleSignInExtension;
-  AuthBloc({
-    required this.sharedPref,
-    required this.authRepository,
-    required this.googleSignInExtension,
-  }) : super(
+  final String? deviceToken;
+  AuthBloc(
+      {required this.sharedPref,
+      required this.authRepository,
+      required this.googleSignInExtension,
+      required this.deviceToken})
+      : super(
           AuthStateLoading(isLoading: false),
         ) {
     on<AuthEventLoginWithToken>(
       (event, emit) async {
         try {
-          emit(
-            AuthStateLoggedOut(
-              isLoading: true,
-            ),
-          );
-          final pref = await sharedPref;
-          final token = pref.getString("token");
-          final deviceToken = await FirebaseMessaging.instance.getToken();
-          log("Device Token${deviceToken ?? "Dont have data"}");
-          if (token == null || token.isEmpty) {
+          final token = sharedPref.getString(Constants.tokenKey);
+          if (token == "" || token == null) {
             emit(
               AuthStateLoggedOut(
                 isLoading: false,
               ),
             );
           } else {
+            emit(
+              AuthStateLoggedOut(
+                isLoading: true,
+              ),
+            );
             final checkInfoToken = await authRepository.getData(
               body: {"deviceToken": deviceToken ?? ""},
               urlAPI: authRepository.loginByTokenURL,
@@ -85,7 +83,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             ),
           );
           final googleSignInAcc = await googleSignInExtension.login();
-          final deviceToken = await FirebaseMessaging.instance.getToken();
           if (googleSignInAcc != null) {
             final loginResponse = await authRepository.getData(
               body: {
@@ -104,8 +101,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               final userInfor = authRepository.convertDynamicToObject(
                 loginResponse!.data[0],
               );
-              final pref = await sharedPref;
-              await pref.setString("token", userInfor.accessToken!.token ?? "");
+              await sharedPref.setString(
+                Constants.tokenKey,
+                userInfor.accessToken!.token ?? "",
+              );
               emit(
                 AuthStateLoggedIn(
                   isLoading: false,
@@ -146,8 +145,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               isLoading: true,
             ),
           );
-          final pref = await sharedPref;
-          await pref.setString("token", "");
+          await sharedPref.setString(
+            Constants.tokenKey,
+            "",
+          );
           final logoutResponse = await authRepository.getData(
             body: {"userID": event.userInformation.user?.sId},
             urlAPI: authRepository.logoutURL,

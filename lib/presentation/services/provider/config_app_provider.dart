@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
 import 'package:testsocketchatapp/data/models/environment.dart';
@@ -15,9 +16,16 @@ class ConfigAppProvider extends ChangeNotifier {
   final Environment env;
   NotificationService noti;
   final GlobalKey<NavigatorState> navigatorKey;
+  final SharedPreferences sharedPref;
+  final String? deviceToken;
   int count = 0;
-  ConfigAppProvider(
-      {required this.env, required this.noti, required this.navigatorKey});
+  ConfigAppProvider({
+    required this.env,
+    required this.noti,
+    required this.navigatorKey,
+    required this.sharedPref,
+    required this.deviceToken, 
+  });
 
   void initNotification({
     required BuildContext context,

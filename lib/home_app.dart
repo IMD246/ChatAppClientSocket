@@ -2,7 +2,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testsocketchatapp/presentation/extensions/google_sign_in_extension.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_bloc.dart';
 import 'package:testsocketchatapp/presentation/services/bloc/authBloc/auth_event.dart';
@@ -42,7 +41,8 @@ class _HomeAppState extends State<HomeApp> {
     return BlocProvider<AuthBloc>(
       create: (context) => AuthBloc(
         googleSignInExtension: GoogleSignInExtension(),
-        sharedPref: SharedPreferences.getInstance(),
+        sharedPref: value.sharedPref,
+        deviceToken: value.deviceToken,
         authRepository: AuthRepository(
           baseUrl: value.env.apiURL,
         ),

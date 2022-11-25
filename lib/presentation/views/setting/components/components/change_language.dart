@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:testsocketchatapp/data/models/user_info.dart';
 import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 import 'package:testsocketchatapp/presentation/services/provider/language_provider.dart';
-import 'package:testsocketchatapp/presentation/utilities/handle_value.dart';
 import 'package:testsocketchatapp/presentation/views/setting/components/components/language_radio.dart';
 
 class ChangeLanguage extends StatefulWidget {
@@ -41,13 +40,10 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
               children: [
                 LanguageRadio(
                   value: "vi_VN",
-                  groupValue:
-                      UtilHandleValue.getFullLocale(languageProvider.locale),
+                  groupValue: languageProvider.locale.toString(),
                   onChanged: (val) async {
-                    final getLocale = val!.split("_");
                     await languageProvider.changeLocale(
-                      languageCode: getLocale[0],
-                      countryCode: getLocale[1],
+                      language: val,
                       userID: widget.userInformation.user!.sId!,
                     );
                   },
@@ -59,13 +55,10 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
               children: [
                 LanguageRadio(
                   value: "en_US",
-                  groupValue:
-                      UtilHandleValue.getFullLocale(languageProvider.locale),
+                  groupValue: languageProvider.locale.toString(),
                   onChanged: (val) async {
-                    final getLocale = val!.split("_");
                     await languageProvider.changeLocale(
-                      languageCode: getLocale[0],
-                      countryCode: getLocale[1],
+                      language: val,
                       userID: widget.userInformation.user!.sId!,
                     );
                   },

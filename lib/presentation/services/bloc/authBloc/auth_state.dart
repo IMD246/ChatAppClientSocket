@@ -1,7 +1,7 @@
 import 'package:testsocketchatapp/data/models/user_info.dart';
 
 abstract class AuthState {
-  final bool isLoading;
+final bool isLoading;
   final String textLoading;
   AuthState({
     required this.isLoading,
@@ -19,5 +19,8 @@ class AuthStateLoggedOut extends AuthState {
 
 class AuthStateLoggedIn extends AuthState {
   final UserInformation userInformation;
-  AuthStateLoggedIn({required this.userInformation, required super.isLoading,});
+  AuthStateLoggedIn({
+    required this.userInformation,
+    required super.isLoading,
+  });
 }

@@ -57,7 +57,7 @@ class LanguageSetting extends StatelessWidget {
                   ),
                   Text(
                     UtilHandleValue.getLanguage(
-                      languageProvider.locale.languageCode,
+                      languageProvider.locale,
                       context,
                     ),
                     style: const TextStyle(
