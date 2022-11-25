@@ -96,7 +96,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               },
               headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
               },
               urlAPI: authRepository.loginByGoogleURL,
             );

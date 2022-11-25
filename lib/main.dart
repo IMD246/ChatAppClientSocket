@@ -112,7 +112,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<LanguageProvider>(
           create: (context) => LanguageProvider(
-              Platform.localeName.split("_"), LanguageRepository(env: env)),
+            Platform.localeName.split("_"),
+            LanguageRepository(env: env),
+          ),
         ),
       ],
       builder: (context, child) {
