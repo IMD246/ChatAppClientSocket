@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -14,10 +15,14 @@ import '../../../../data/repositories/chat_message_repository.dart';
 
 class MessageManager {
   final io.Socket socket;
-  late BehaviorSubject<UserPresence> userPresenceSubject;
-  late BehaviorSubject<List<ChatMessage>> listChatMessagesSubject;
-  late BehaviorSubject<Chat> chatSubject;
-  late BehaviorSubject<User> userSubject;
+  late BehaviorSubject<UserPresence> _userPresenceSubject;
+  late BehaviorSubject<List<ChatMessage>> _listChatMessagesSubject;
+  late BehaviorSubject<Chat> _chatSubject;
+  late BehaviorSubject<User> _userSubject;
+  Stream<Chat> get streamChat => _chatSubject.stream;
+  Stream<User> get streamUser => _userSubject.stream;
+  Stream<UserPresence> get streamUserPresence => _userPresenceSubject.stream;
+  Stream<List<ChatMessage>> get streamListChatMessage => _listChatMessagesSubject.stream; 
   late User user;
   final ChatMessageRepository chatMessageRepository;
   Chat chat = Chat();
@@ -39,13 +44,13 @@ class MessageManager {
     initValue(userPresence: userPresence);
   }
   initValue({required UserPresence userPresence}) {
-    chatSubject = BehaviorSubject<Chat>();
-    userPresenceSubject = BehaviorSubject<UserPresence>();
-    listChatMessagesSubject = BehaviorSubject<List<ChatMessage>>();
-    userSubject = BehaviorSubject<User>();
-    userPresenceSubject.add(userPresence);
-    chatSubject.add(chat);
-    userSubject.add(user);
+    _chatSubject = BehaviorSubject<Chat>();
+    _userPresenceSubject = BehaviorSubject<UserPresence>();
+    _listChatMessagesSubject = BehaviorSubject<List<ChatMessage>>();
+    _userSubject = BehaviorSubject<User>();
+    _userPresenceSubject.add(userPresence);
+    _chatSubject.add(chat);
+    _userSubject.add(user);
     fetchChatMessages();
   }
 
@@ -65,7 +70,7 @@ class MessageManager {
       chatMessages = [];
     }
     emitUpdateSentMessages();
-    listChatMessagesSubject.add(chatMessages);
+    _listChatMessagesSubject.add(chatMessages);
   }
 
   listenSocket() {
@@ -87,6 +92,8 @@ class MessageManager {
     receiveNameUser();
 
     reConnected();
+    
+    updateActiveChat();
   }
 
   void onConnect() {
@@ -119,7 +126,7 @@ class MessageManager {
       final presence = UserPresence.fromJson(data["presence"]);
       if (userPresence.sId == presence.sId) {
         userPresence = presence;
-        userPresenceSubject.add(userPresence);
+        _userPresenceSubject.add(userPresence);
       }
     });
   }
@@ -131,7 +138,7 @@ class MessageManager {
       presence.presenceTimeStamp = DateTime.now().toString();
       if (userPresence.sId == presence.sId) {
         userPresence = presence;
-        userPresenceSubject.add(userPresence);
+        _userPresenceSubject.add(userPresence);
       }
     });
   }
@@ -143,7 +150,7 @@ class MessageManager {
       presence.presenceTimeStamp = DateTime.now().toString();
       if (userPresence.sId == presence.sId) {
         userPresence = presence;
-        userPresenceSubject.add(userPresence);
+        _userPresenceSubject.add(userPresence);
       }
     });
   }
@@ -155,7 +162,7 @@ class MessageManager {
       final String newName = data["name"];
       if (user.sId == userID) {
         user.name = newName;
-        userSubject.add(user);
+        _userSubject.add(user);
       }
     });
   }
@@ -164,7 +171,7 @@ class MessageManager {
     socket.on("serverSendMessage", (data) async {
       final chatMessage = ChatMessage.fromJson(data);
       chatMessages.add(chatMessage);
-      listChatMessagesSubject.add(chatMessages);
+      _listChatMessagesSubject.add(chatMessages);
       if (scrollController.hasClients) {
         if (chatMessage.userID == ownerUserID) {
           await scrollController.animateTo(
@@ -180,6 +187,15 @@ class MessageManager {
     });
   }
 
+  void updateActiveChat() {
+    socket.on("receiveActiveChat", (data) {
+      if (chat.sId == data["chatID"]) {
+        chat.active = true;
+        _chatSubject.add(chat);
+      }
+    });
+  }
+
   void getMessagesUpdated() {
     socket.on("receiveMessagesUpdated", (data) {
       final List<dynamic> listMessagesUpdated = data["ListIDMessage"];
@@ -189,7 +205,7 @@ class MessageManager {
     });
   }
 
-  void updateActiveChat() {
+  void sendActiveChat() {
     socket.emit("sendActiveChat", {"chatID": chat.sId});
   }
 
@@ -233,9 +249,9 @@ class MessageManager {
   }
 
   Future<void> dispose() async {
-    await userPresenceSubject.drain();
-    await userPresenceSubject.close();
-    await listChatMessagesSubject.drain();
-    await listChatMessagesSubject.close();
+    await _userPresenceSubject.drain();
+    await _userPresenceSubject.close();
+    await _listChatMessagesSubject.drain();
+    await _listChatMessagesSubject.close();
   }
 }

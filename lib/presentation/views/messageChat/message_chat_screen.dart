@@ -93,14 +93,14 @@ class _MessageChatScreenState extends State<MessageChatScreen> {
           return Scaffold(
             appBar: buildAppbar(
               context,
-              state.messageManager.userPresenceSubject.stream,
+              state.messageManager.streamUserPresence,
               widget.chatUserAndPresence.chat!,
-              state.messageManager.userSubject.stream,
+              state.messageManager.streamUser,
               state.userInformation,
               internetProvider,
             ),
             body: BodyMessageChat(
-              messages: state.messageManager.listChatMessagesSubject.stream,
+              messages: state.messageManager.streamListChatMessage,
               chatUserAndPresence: widget.chatUserAndPresence,
             ),
           );

@@ -6,6 +6,8 @@ import 'package:testsocketchatapp/presentation/services/bloc/messageBloc/message
 import 'package:testsocketchatapp/presentation/views/messageChat/components/message_item.dart';
 import 'package:testsocketchatapp/presentation/views/messageChat/components/welcome_chat_message.dart';
 
+import '../../../../data/models/chat.dart';
+
 class ListViewMessage extends StatefulWidget {
   const ListViewMessage({super.key, required this.messages});
   final List<ChatMessage> messages;
@@ -34,39 +36,48 @@ class _ListViewMessageState extends State<ListViewMessage> {
   @override
   Widget build(BuildContext context) {
     final messages = widget.messages.reversed;
-    return !messageBloc.chatUserAndPresence.chat!.active!
-        ? const WelcomeChatMessage()
-        : ListView.builder(
-            itemCount: messages.length,
-            controller: messageBloc.messageManager.scrollController,
-            reverse: true,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              final message = messages.elementAt(index);
-              ChatMessage? nextMessage;
-              ChatMessage? previousMessage;
-              if (index + 1 <= widget.messages.length - 1) {
-                nextMessage = messages.elementAt(index + 1);
-              } else {
-                nextMessage = null;
-              }
-              if (index <= 0) {
-                previousMessage = null;
-              } else {
-                previousMessage = messages.elementAt(index - 1);
-              }
-              return Padding(
-                padding: EdgeInsets.only(
-                    top: index == messages.length - 1 ? 16.0.h : 0),
-                child: MessageItem(
-                  totalCountIndex: messages.length - 1,
-                  message: message,
-                  index: index,
-                  nextMessage: nextMessage,
-                  previousMessage: previousMessage,
-                ),
-              );
-            },
-          );
+    return StreamBuilder<Chat>(
+      stream: messageBloc.messageManager.streamChat,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final bool isActive = snapshot.data!.active ?? false;
+          return !isActive
+              ? const WelcomeChatMessage()
+              : ListView.builder(
+                  itemCount: messages.length,
+                  controller: messageBloc.messageManager.scrollController,
+                  reverse: true,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final message = messages.elementAt(index);
+                    ChatMessage? nextMessage;
+                    ChatMessage? previousMessage;
+                    if (index + 1 <= widget.messages.length - 1) {
+                      nextMessage = messages.elementAt(index + 1);
+                    } else {
+                      nextMessage = null;
+                    }
+                    if (index <= 0) {
+                      previousMessage = null;
+                    } else {
+                      previousMessage = messages.elementAt(index - 1);
+                    }
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          top: index == messages.length - 1 ? 16.0.h : 0),
+                      child: MessageItem(
+                        totalCountIndex: messages.length - 1,
+                        message: message,
+                        index: index,
+                        nextMessage: nextMessage,
+                        previousMessage: previousMessage,
+                      ),
+                    );
+                  },
+                );
+        }
+        return Container();
+      },
+    );
   }
 }

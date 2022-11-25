@@ -36,8 +36,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     );
     on<SendTextMessageEvent>(
       (event, emit) async {
-        if (messageManager.chatMessages.isEmpty) {
-          messageManager.updateActiveChat();
+        if (!messageManager.chat.active!) {
+          messageManager.sendActiveChat();
         }
         messageManager.sendMessage(
             event.message,

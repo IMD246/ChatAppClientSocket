@@ -102,11 +102,12 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<ConfigAppProvider>(
           create: (context) => ConfigAppProvider(
-              sharedPref: widget.sharedPref,
-              env: env,
-              noti: noti,
-              navigatorKey: GlobalKey<NavigatorState>(),
-              deviceToken: widget.deviceToken),
+            sharedPref: widget.sharedPref,
+            env: env,
+            noti: noti,
+            navigatorKey: GlobalKey<NavigatorState>(),
+            deviceToken: widget.deviceToken,
+          ),
         ),
         ChangeNotifierProvider<ThemeProvider>(
           create: (context) => ThemeProvider(
