@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_basic_utilities/flutter_basic_utilities.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:testsocketchatapp/presentation/extensions/localization.dart';
 
 import '../../UIData/image_sources.dart';
@@ -15,23 +16,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Spacer(),
-        imageAssetWidget(
-          urlImage: ImageSources.imgChatIcon,
-          packageName: null,
-          width: 300.w.toInt(),
-          height: 300.h.toInt(),
-        ),
-        InkWell(
-          borderRadius: BorderRadius.circular(16.w),
-          onTap: () {
-            context.read<AuthBloc>().add(
-                  AuthEventLogin(),
-                );
-          },
-          child: Center(
+    return Center(
+      child: Column(
+        children: [
+          const Spacer(),
+          imageAssetWidget(
+            urlImage: ImageSources.imgChatIcon,
+            packageName: null,
+            width: 300.w.toInt(),
+            height: 300.h.toInt(),
+          ),
+          GestureDetector(
+            onTap: () {
+              context.read<AuthBloc>().add(
+                    AuthEventLogin(),
+                  );
+            },
             child: Container(
               width: 300.w,
               height: 100.h,
@@ -40,6 +40,7 @@ class LoginScreen extends StatelessWidget {
                 vertical: 1.h,
               ),
               decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(0.7),
                 border: Border.all(
                   color: Colors.black54,
                 ),
@@ -65,9 +66,9 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-        ),
-        const Spacer(),
-      ],
+          const Spacer(),
+        ],
+      ),
     );
   }
 }

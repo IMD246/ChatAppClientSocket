@@ -25,7 +25,7 @@ class BodySettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
         leading: BackButton(
           onPressed: () {
             Navigator.of(context).pop();
