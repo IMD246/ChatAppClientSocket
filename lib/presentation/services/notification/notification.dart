@@ -13,7 +13,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
   Future<void> initNotification() async {
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/chat_icon');
     const DarwinInitializationSettings iosInitializationSettings =
         DarwinInitializationSettings(
       requestAlertPermission: false,

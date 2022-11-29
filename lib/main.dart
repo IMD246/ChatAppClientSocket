@@ -88,7 +88,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final env = Environment(isProduct: true);
+    final env = Environment(isProduct: false);
     return MultiProvider(
       providers: [
         StreamProvider<ConnectivityResult>(
