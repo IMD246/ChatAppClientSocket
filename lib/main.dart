@@ -1,21 +1,24 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:testsocketchatapp/data/models/environment.dart';
-import 'package:testsocketchatapp/presentation/services/notification/notification.dart';
-import 'package:testsocketchatapp/presentation/services/provider/config_app_provider.dart';
-import 'package:testsocketchatapp/presentation/services/provider/internet_provider.dart';
-import 'package:testsocketchatapp/presentation/services/provider/language_provider.dart';
-import 'package:testsocketchatapp/presentation/services/provider/theme_provider.dart';
-import 'package:testsocketchatapp/presentation/utilities/handle_internet.dart';
-import 'package:testsocketchatapp/presentation/utilities/handle_file.dart';
 import 'package:timezone/data/latest.dart' as tz;
+
+import 'data/models/environment.dart';
+import 'firebase_options.dart';
 import 'home_app.dart';
+import 'presentation/services/notification/notification.dart';
+import 'presentation/services/provider/config_app_provider.dart';
+import 'presentation/services/provider/internet_provider.dart';
+import 'presentation/services/provider/language_provider.dart';
+import 'presentation/services/provider/theme_provider.dart';
+import 'presentation/utilities/handle_file.dart';
+import 'presentation/utilities/handle_internet.dart';
 
 late NotificationService noti;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {}
@@ -56,7 +59,7 @@ Future<void> setupInteractedMessage() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   noti = NotificationService();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await noti.initNotification();
   final sharedPref = await SharedPreferences.getInstance();
   final deviceToken = await FirebaseMessaging.instance.getToken();
