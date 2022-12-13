@@ -9,7 +9,6 @@ import '../../../constants/constant.dart';
 class NotificationService {
   final ReplaySubject<Map<String, dynamic>?> onNotificationClick =
       ReplaySubject<Map<String, dynamic>?>();
-  Map<String, dynamic>? initDataNotification;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   Future<void> initNotification() async {
@@ -30,13 +29,13 @@ class NotificationService {
         onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
   }
 
-  Future<void> showNotification(
-      {required int id,
-      required String title,
-      required String body,
-      String? payload,
-      String urlImage = "",
-      required bool isBackground}) async {
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+    String urlImage = "",
+  }) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       title,

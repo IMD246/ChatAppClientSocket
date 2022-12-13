@@ -21,12 +21,10 @@ import 'presentation/utilities/handle_file.dart';
 import 'presentation/utilities/handle_internet.dart';
 
 late NotificationService noti;
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {
-}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {}
 
 void _handleMessage(
   RemoteMessage message,
-  bool isBackground,
 ) async {
   final image = await UtilsDownloadFile.downloadFile(
       message.notification?.android?.imageUrl ?? "", "largeIcon");
@@ -36,7 +34,6 @@ void _handleMessage(
     body: message.notification?.body ?? "",
     urlImage: image ?? "",
     payload: jsonEncode(message.data),
-    isBackground: isBackground,
   );
 }
 
@@ -52,7 +49,7 @@ Future<void> setupInteractedMessage() async {
   });
   FirebaseMessaging.onMessage.listen((event) {
     log("onMessage");
-    _handleMessage(event, false);
+    _handleMessage(event);
   });
 }
 
