@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:testsocketchatapp/data/models/user_info.dart';
-import 'package:testsocketchatapp/data/repositories/user_repository.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_bloc.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_manager.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_state.dart';
-import 'package:testsocketchatapp/presentation/views/chat/components/body_chat_screen.dart';
-import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_screen.dart';
-import 'package:testsocketchatapp/presentation/views/searchFriend/search_friend_screen.dart';
-import 'package:testsocketchatapp/presentation/views/setting/components/setting_screen.dart';
-import 'package:testsocketchatapp/presentation/views/widgets/animated_switcher_widget.dart';
+
+import '../../../data/models/user_info.dart';
+import '../../../data/repositories/user_repository.dart';
+import '../../services/bloc/chatBloc/chat_bloc.dart';
+import '../../services/bloc/chatBloc/chat_event.dart';
+import '../../services/bloc/chatBloc/chat_manager.dart';
+import '../../services/bloc/chatBloc/chat_state.dart';
 import '../../services/provider/config_app_provider.dart';
+import '../messageChat/message_chat_screen.dart';
+import '../searchFriend/search_friend_screen.dart';
+import '../setting/components/setting_screen.dart';
+import '../widgets/animated_switcher_widget.dart';
+import 'components/body_chat_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
@@ -26,6 +27,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  int count = 0;
   @override
   void initState() {
     super.initState();
@@ -44,9 +46,10 @@ class _ChatScreenState extends State<ChatScreen> {
               "transports": ["websocket"],
             },
           ),
-          userInformation: widget.userInformation, userRepository: UserRepository(
-          baseUrl: configAppProvider.env.apiURL,
-        ),
+          userInformation: widget.userInformation,
+          userRepository: UserRepository(
+            baseUrl: configAppProvider.env.apiURL,
+          ),
         ),
       )..add(
           InitializeChatEvent(
@@ -55,15 +58,8 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       child: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
-          if (state is BackToWaitingChatState) {
+          if (state is InitializeChatState) {
             configAppProvider.handlerNotification(
-              context: context,
-              listChatUser: state.chatManager.listChat,
-              socket: state.chatManager.socket,
-              userInformation: state.chatManager.userInformation,
-            );
-          } else if (state is InitializeChatState) {
-            configAppProvider.initNotification(
               context: context,
               listChatUser: state.chatManager.listChat,
               socket: state.chatManager.socket,

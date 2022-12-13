@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:testsocketchatapp/constants/constant.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../constants/constant.dart';
+
 class NotificationService {
-  final PublishSubject<Map<String, dynamic>?> onNotificationClick =
-      PublishSubject<Map<String, dynamic>?>();
+  final ReplaySubject<Map<String, dynamic>?> onNotificationClick =
+      ReplaySubject<Map<String, dynamic>?>();
   Map<String, dynamic>? initDataNotification;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();

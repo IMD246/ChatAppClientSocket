@@ -1,15 +1,14 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:testsocketchatapp/data/models/chat_user_and_presence.dart';
-import 'package:testsocketchatapp/data/models/environment.dart';
-import 'package:testsocketchatapp/data/models/user_info.dart';
-import 'package:testsocketchatapp/presentation/services/bloc/chatBloc/chat_event.dart';
-import 'package:testsocketchatapp/presentation/views/messageChat/message_chat_screen.dart';
+
+import '../../../data/models/chat_user_and_presence.dart';
+import '../../../data/models/environment.dart';
+import '../../../data/models/user_info.dart';
 import '../../../router/routers.dart';
-import '../bloc/chatBloc/chat_bloc.dart';
+import '../../views/messageChat/message_chat_screen.dart';
 import '../notification/notification.dart';
 
 class ConfigAppProvider extends ChangeNotifier {
@@ -24,57 +23,8 @@ class ConfigAppProvider extends ChangeNotifier {
     required this.noti,
     required this.navigatorKey,
     required this.sharedPref,
-    required this.deviceToken, 
+    required this.deviceToken,
   });
-
-  void initNotification({
-    required BuildContext context,
-    required List<ChatUserAndPresence> listChatUser,
-    required Socket socket,
-    required UserInformation userInformation,
-  }) async {
-    final navigator = Navigator.of(context);
-    if (count <= 0) {
-      count++;
-      notifyListeners();
-      final value = noti.initDataNotification;
-      context.read<ChatBloc>().add(
-            BackToWaitingChatEvent(
-              userInformation: userInformation,
-            ),
-          );
-      if (value != null) {
-        log(value.toString());
-        final namePath = RoutesHandler.getNamePath(globalKey: navigatorKey);
-        final ChatUserAndPresence checkChatAvailable = listChatUser.firstWhere(
-          (element) => element.chat!.sId == value["chatID"],
-          orElse: () => ChatUserAndPresence(),
-        );
-        if (namePath != null) {
-          if (checkChatAvailable.chat?.sId != null) {
-            if (namePath == "/") {
-              log("check get inside");
-              await navigator.push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return MessageChatScreen(
-                      socket: socket,
-                      chatUserAndPresence: checkChatAvailable,
-                      userInformation: userInformation,
-                    );
-                  },
-                  settings: RouteSettings(
-                    name: "chat:${checkChatAvailable.chat!.sId!}",
-                  ),
-                ),
-              );
-            }
-          }
-        }
-      }
-    }
-  }
-
   void handlerNotification({
     required BuildContext context,
     required List<ChatUserAndPresence> listChatUser,
@@ -82,51 +32,50 @@ class ConfigAppProvider extends ChangeNotifier {
     required UserInformation userInformation,
   }) async {
     final navigator = Navigator.of(context);
-    if (count >= 0) {
-      noti.onNotificationClick.listen(
-        (value) async {
-          if (value != null) {
-            log(value.toString());
-            final namePath = RoutesHandler.getNamePath(globalKey: navigatorKey);
-            final ChatUserAndPresence checkChatAvailable =
-                listChatUser.firstWhere(
-              (element) => element.chat!.sId == value["chatID"],
-              orElse: () => ChatUserAndPresence(),
-            );
-            if (namePath != null) {
-              if (checkChatAvailable.chat?.sId != null) {
-                if (namePath == "/") {
-                  log("check get inside");
-                  await navigator.push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return MessageChatScreen(
-                          socket: socket,
-                          chatUserAndPresence: checkChatAvailable,
-                          userInformation: userInformation,
-                        );
-                      },
-                      settings: RouteSettings(
-                        name: "chat:${checkChatAvailable.chat!.sId!}",
-                      ),
+    log("start onnoti");
+    noti.onNotificationClick.listen(
+      (value) async {
+        log("start onNotificationClick");
+        if (value != null) {
+          log(value.toString());
+          final namePath = RoutesHandler.getNamePath(globalKey: navigatorKey);
+          final ChatUserAndPresence checkChatAvailable =
+              listChatUser.firstWhere(
+            (element) => element.chat!.sId == value["chatID"],
+            orElse: () => ChatUserAndPresence(),
+          );
+          if (namePath != null) {
+            if (checkChatAvailable.chat?.sId != null) {
+              if (namePath == "/") {
+                log("check get inside");
+                await navigator.push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return MessageChatScreen(
+                        socket: socket,
+                        chatUserAndPresence: checkChatAvailable,
+                        userInformation: userInformation,
+                      );
+                    },
+                    settings: RouteSettings(
+                      name: "chat:${checkChatAvailable.chat!.sId!}",
                     ),
-                  );
-                } else {
-                  await _checkChatPageOrReplace(
-                    namePath: namePath,
-                    navigator: navigator,
-                    socket: socket,
-                    chatUserAndPresence: checkChatAvailable,
-                    userInformation: userInformation,
-                  );
-                }
+                  ),
+                );
+              } else {
+                await _checkChatPageOrReplace(
+                  namePath: namePath,
+                  navigator: navigator,
+                  socket: socket,
+                  chatUserAndPresence: checkChatAvailable,
+                  userInformation: userInformation,
+                );
               }
             }
           }
-          await noti.onNotificationClick.drain();
-        },
-      );
-    }
+        }
+      },
+    );
   }
 }
 

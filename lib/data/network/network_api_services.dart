@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:testsocketchatapp/data/network/base_api_services.dart';
+import 'base_api_services.dart';
 
 import 'app_exception.dart';
 
@@ -19,7 +19,7 @@ class NetworkApiService extends BaseApiServices {
             headers: headers,
           )
           .timeout(
-            const Duration(seconds: 20),
+            const Duration(seconds: 10),
           );
       responseJson = returnResponse(response);
     } on SocketException {

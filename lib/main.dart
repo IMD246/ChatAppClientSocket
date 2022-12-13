@@ -21,7 +21,8 @@ import 'presentation/utilities/handle_file.dart';
 import 'presentation/utilities/handle_internet.dart';
 
 late NotificationService noti;
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage event) async {
+}
 
 void _handleMessage(
   RemoteMessage message,
@@ -44,7 +45,6 @@ Future<void> setupInteractedMessage() async {
   if (initialMessage != null) {
     log("initMes");
     noti.onNotificationClick.add(initialMessage.data);
-    noti.initDataNotification = initialMessage.data;
   }
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
     log("onMessOpened");
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final env = Environment(isProduct: true);
+    final env = Environment(isProduct: false);
     return MultiProvider(
       providers: [
         StreamProvider<ConnectivityResult>(
