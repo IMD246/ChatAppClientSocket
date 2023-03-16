@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic_utilities/widgets/outline_button_widget.dart';
+import 'package:flutter_basic_utilities/widgets/fill_out_line_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SettingItemMenuButton extends StatelessWidget {
