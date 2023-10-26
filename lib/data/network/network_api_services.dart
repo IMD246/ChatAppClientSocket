@@ -19,7 +19,7 @@ class NetworkApiService extends BaseApiServices {
             headers: headers,
           )
           .timeout(
-            const Duration(seconds: 10),
+            const Duration(seconds: 30),
           );
       responseJson = returnResponse(response);
     } on SocketException {
